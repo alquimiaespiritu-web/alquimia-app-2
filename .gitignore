@@ -1,0 +1,15 @@
+# La plataforma nueva (Next.js) tiene su propio repositorio aparte
+platform/
+
+# Sistema y dependencias
+.DS_Store
+node_modules/
+*.log
+
+# Netlify / entorno
+.netlify/
+.env
+.env.*
+
+# Herramientas
+.claude/

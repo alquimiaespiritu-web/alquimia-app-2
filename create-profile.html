@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crear perfil — Alquimia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="create">
+<div id="site-header"></div>
+<main>
+  <form name="vendedora-nueva" method="POST" data-netlify="true" hidden>
+    <input type="hidden" name="form-name" value="vendedora-nueva">
+    <input type="text" name="evento"><input type="text" name="nombre"><input type="email" name="email"><input type="text" name="rol"><input type="text" name="categorias"><input type="text" name="instagram"><input type="text" name="boletin">
+  </form>
+  <div class="wrap">
+    <div class="page-head">
+      <span class="eyebrow" data-i18n="cp.eyebrow">Crea tu perfil</span>
+      <h1 data-i18n="cp.title">Cuenta quién eres y qué ofreces.</h1>
+      <p class="sub" data-i18n="cp.sub">Esto es lo que verán tus clientes. Puedes editarlo después.</p>
+    </div>
+
+    <div class="coach" id="coachPanel">
+      <div class="coach-head">
+        <span class="coach-spark">✨</span>
+        <div class="coach-htext">
+          <div class="coach-t" data-i18n="coach.t">Tu coach de marca personal</div>
+          <div class="coach-s" data-i18n="coach.s">Te acompaño a crear tu perfil paso a paso. Cuéntame de tu proyecto.</div>
+        </div>
+        <button type="button" class="coach-toggle" id="coachToggle" aria-label="Mostrar u ocultar el coach">▾</button>
+      </div>
+      <div class="coach-body" id="coachBody" aria-live="polite"></div>
+      <div class="coach-input">
+        <input id="coachInput" type="text" placeholder="Escríbele a tu coach…" data-i18n-ph="coach.ph" aria-label="Mensaje para el coach">
+        <button type="button" class="btn btn-gold btn-sm" id="coachSend" data-i18n="coach.send">Enviar</button>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="avatar-pick">
+        <span class="avatar lg" id="avatarPrev">+</span>
+        <label class="upload" style="flex:1">
+          <span data-i18n="cp.photo">Sube tu foto o logo</span>
+          <input type="file" id="avatarInput" accept="image/*">
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="grid-2">
+        <div class="field"><label data-i18n="cp.f.brand">Nombre o marca</label><input id="p-name" placeholder="Ej. Lina Restrepo" data-i18n-ph="cp.f.brand.ph"></div>
+        <div class="field"><label data-i18n="cp.f.role">Oficio / rol</label><input id="p-role" placeholder="Ej. Coach de propósito" data-i18n-ph="cp.f.role.ph"></div>
+      </div>
+      <div class="field"><label data-i18n="cp.f.cats">Categorías (elige las que apliquen)</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="cp-cat" value="Cuerpo"><span data-i18n="cat.Cuerpo">Cuerpo</span></label>
+          <label class="check"><input type="checkbox" class="cp-cat" value="Mente"><span data-i18n="cat.Mente">Mente</span></label>
+          <label class="check"><input type="checkbox" class="cp-cat" value="Alma"><span data-i18n="cat.Alma">Alma</span></label>
+          <label class="check"><input type="checkbox" class="cp-cat" value="Planeta"><span data-i18n="cat.Planeta">Planeta</span></label>
+          <label class="check"><input type="checkbox" class="cp-cat" value="Comunidad"><span data-i18n="cat.Comunidad">Comunidad</span></label>
+        </div>
+      </div>
+      <div class="field"><label data-i18n="cp.f.langs">Idiomas en los que atiendes</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="cp-lang" value="Español"><span>Español</span></label>
+          <label class="check"><input type="checkbox" class="cp-lang" value="English"><span>English</span></label>
+          <label class="check"><input type="checkbox" class="cp-lang" value="Nederlands"><span>Nederlands</span></label>
+          <label class="check"><input type="checkbox" class="cp-lang" value="Português"><span>Português</span></label>
+          <label class="check"><input type="checkbox" class="cp-lang" value="Français"><span>Français</span></label>
+          <label class="check"><input type="checkbox" class="cp-lang" value="Italiano"><span>Italiano</span></label>
+          <label class="check"><input type="checkbox" class="cp-lang" value="Deutsch"><span>Deutsch</span></label>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label data-i18n="cp.f.loc">Ubicación</label><input id="p-loc" placeholder="Ej. Medellín · CO" data-i18n-ph="cp.f.loc.ph"></div>
+        <div class="field"><label data-i18n="cp.f.currency">Moneda de tus precios</label>
+          <select id="p-currency">
+            <option value="EUR">EUR — Euro (€)</option>
+            <option value="COP">COP — Peso colombiano ($)</option>
+            <option value="USD">USD — Dólar ($)</option>
+            <option value="MXN">MXN — Peso mexicano ($)</option>
+            <option value="ARS">ARS — Peso argentino ($)</option>
+            <option value="CLP">CLP — Peso chileno ($)</option>
+            <option value="PEN">PEN — Sol peruano (S/)</option>
+            <option value="BRL">BRL — Real brasileño (R$)</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label data-i18n="cp.f.instagram">Instagram (si tienes)</label><input id="p-instagram" placeholder="@tucuenta" data-i18n-ph="cp.f.instagram.ph"></div>
+      <div class="field"><label data-i18n="cp.f.whatsapp">WhatsApp (con prefijo, opcional)</label><input id="p-whatsapp" placeholder="+57 300 000 0000" data-i18n-ph="cp.f.whatsapp.ph"></div>
+      <div class="field"><label data-i18n="cp.f.notify">¿Cómo quieres recibir a los interesados?</label>
+        <select id="p-notify">
+          <option value="email" data-i18n="cp.notify.email">Por correo (te avisamos a tu email)</option>
+          <option value="whatsapp" data-i18n="cp.notify.whatsapp">Por WhatsApp</option>
+          <option value="instagram" data-i18n="cp.notify.instagram">Por Instagram</option>
+        </select>
+      </div>
+      <div class="field"><label data-i18n="cp.f.pay">Tu link de pago (acepta tarjeta)</label><input id="p-pay" placeholder="Mercado Pago, PayPal, Stripe, Wompi…" data-i18n-ph="cp.f.pay.ph"></div>
+      <div class="field"><label data-i18n="cp.f.story">Tu historia</label><textarea id="p-bio" placeholder="Qué haces, para quién y por qué te importa." data-i18n-ph="cp.f.story.ph"></textarea></div>
+      <div class="field"><label data-i18n="cp.f.conciencia">¿Por qué eres un emprendedor con conciencia?</label><textarea id="p-conciencia" placeholder="Qué te mueve y por qué encajas con Alquimia." data-i18n-ph="cp.f.conciencia.ph"></textarea></div>
+
+      <div class="divider"></div>
+      <label style="display:block;font-size:13.5px;color:var(--parchment-dim);margin-bottom:12px;font-weight:500" data-i18n="cp.sell">Lo que vendes</label>
+      <div id="listingsWrap"></div>
+      <button type="button" class="btn btn-ghost btn-sm" id="addListing" data-i18n="cp.addListing">+ Añadir otra publicación</button>
+
+      <div class="divider"></div>
+      <label style="display:block;font-size:13.5px;color:var(--parchment-dim);margin-bottom:7px;font-weight:500" data-i18n="cp.acct.h">Crea tu acceso</label>
+      <div id="acctFields">
+        <div class="field"><label data-i18n="cp.acct.email">Correo electrónico</label><input id="p-email" type="email" placeholder="tucorreo@ejemplo.com" data-i18n-ph="cp.acct.email.ph"></div>
+        <div class="grid-2">
+          <div class="field"><label data-i18n="cp.acct.pass">Crea una clave</label><input id="p-pass" type="password" placeholder="Mínimo 6 caracteres" data-i18n-ph="cp.acct.pass.ph"></div>
+          <div class="field"><label data-i18n="cp.acct.pass2">Repite la clave</label><input id="p-pass2" type="password" placeholder="Repite tu clave" data-i18n-ph="cp.acct.pass2.ph"></div>
+        </div>
+      </div>
+      <p class="note" id="loginHint" data-i18n-html="cp.acct.have">¿Ya tienes cuenta? <a href="#" id="goLogin" style="color:var(--gold-2)">Entra aquí</a>.</p>
+
+      <div class="consent">
+        <label class="check2"><input type="checkbox" id="p-terms"><span data-i18n-html="cp.terms">He leído y acepto las <a href="terminos.html" target="_blank" rel="noopener" style="color:var(--gold-2)">Condiciones de Uso</a> de Alquimia. Entiendo que Alquimia actúa como intermediaria y que se aplica una comisión del 10% a cada venta a través de la plataforma, y acepto no contactar a compradores fuera de la plataforma para evitar la comisión.</span></label>
+        <label class="check2"><input type="checkbox" id="p-privacy"><span data-i18n-html="cp.privacy">He leído y acepto la <a href="privacidad.html" target="_blank" rel="noopener" style="color:var(--gold-2)">Política de Privacidad</a>, incluido el almacenamiento de mis datos en servidores de la Unión Europea (Alemania) a través de Supabase.</span></label>
+        <label class="check2"><input type="checkbox" id="p-ai"><span data-i18n="cp.ai">Acepto que Alquimia use herramientas de inteligencia artificial (ubicadas en EE. UU., bajo Cláusulas Contractuales Tipo de la UE) para redactar contenidos y generar recomendaciones. Puedo revocarlo cuando quiera.</span></label>
+        <label class="check2"><input type="checkbox" id="p-age"><span data-i18n="cp.age">Declaro que soy mayor de 18 años y tengo capacidad legal para contratar.</span></label>
+        <label class="check2"><input type="checkbox" id="p-news"><span data-i18n="cp.news">Quiero recibir novedades, newsletters y descuentos de Alquimia (opcional).</span></label>
+      </div>
+
+      <div class="divider"></div>
+      <button class="btn btn-gold btn-lg btn-block" id="saveProfile" data-i18n="cp.save">Acepto y me uno a Alquimia</button>
+      <p id="formMsg" class="note center mt16"></p>
+      <p class="note center" data-i18n-html="cp.payNote">¿Vas a cobrar por aquí? Después podrás <a href="connect-payout.html" style="color:var(--gold-2)">conectar tu cuenta de pagos</a>.</p>
+    </div>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script src="assets/i18n.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

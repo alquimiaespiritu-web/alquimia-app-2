@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoría UX/UI — Alquimia</title>
+<meta name="description" content="Herramienta de evaluación de UX y UI del marketplace Alquimia: puntuación en vivo, hallazgos por dimensión y hoja de ruta priorizada.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#241029; --ink-2:#2E1535; --purple:#4B244A; --purple-soft:#3A1B3B;
+  --gold:#C6A15B; --gold-2:#E6CB8E; --emerald:#2ECC71;
+  --crit:#E0876B; --high:#D8B86A; --med:#A57BC9; --low:#5BBFD6; --win:#3FBF7A;
+  --parchment:#F4ECDD; --parchment-dim:rgba(244,236,221,.72); --parchment-faint:rgba(244,236,221,.5);
+  --line:rgba(198,161,91,.22); --line-strong:rgba(198,161,91,.45);
+  --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",system-ui,sans-serif; --mono:"Spline Sans Mono",ui-monospace,monospace;
+  --maxw:1080px; --panel:rgba(255,255,255,.03); --panel-2:rgba(255,255,255,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(1200px 700px at 80% -10%,rgba(75,36,74,.6),transparent 60%),var(--ink);color:var(--parchment);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;width:100%}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;line-height:1.15}
+a{color:var(--gold-2)}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:24px;height:1px;background:var(--gold);opacity:.7}
+:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px;border-radius:4px}
+
+/* header */
+header.top{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(36,16,41,.8);border-bottom:1px solid var(--line)}
+header.top .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 22px;max-width:var(--maxw);margin:0 auto}
+.brand{display:flex;align-items:center;gap:11px}
+.brand svg{width:30px;height:30px}
+.brand .name{font-family:var(--serif);font-size:20px;letter-spacing:.04em}
+.brand .tag{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--parchment-faint);border-left:1px solid var(--line-strong);padding-left:11px;margin-left:4px}
+.top .actions{display:flex;gap:8px}
+.tbtn{font-family:var(--sans);font-weight:600;font-size:13px;border:1px solid var(--line-strong);background:transparent;color:var(--parchment);border-radius:30px;padding:7px 14px;cursor:pointer;transition:.2s}
+.tbtn:hover{border-color:var(--gold);color:var(--gold-2)}
+.tbtn.solid{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.tbtn.solid:hover{transform:translateY(-1px)}
+@media(max-width:640px){.brand .tag{display:none}.tbtn{padding:7px 11px}}
+
+/* hero / score */
+.hero{padding:46px 0 18px}
+.hero-grid{display:grid;grid-template-columns:240px 1fr;gap:40px;align-items:center}
+@media(max-width:760px){.hero-grid{grid-template-columns:1fr;gap:26px;text-align:center}}
+.gauge{position:relative;width:220px;height:220px;margin:0 auto}
+.gauge svg{transform:rotate(-90deg)}
+.gauge .ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:14}
+.gauge .ring-fg{fill:none;stroke:url(#grad);stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1)}
+.gauge .center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.gauge .num{font-family:var(--serif);font-size:58px;line-height:1;color:var(--gold-2)}
+.gauge .den{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--parchment-faint);margin-top:4px}
+.gauge .grade{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-top:8px;color:var(--gold)}
+.hero h1{font-size:clamp(28px,4.4vw,42px)}
+.hero h1 em{font-style:italic;color:var(--gold-2)}
+.hero .lede{color:var(--parchment-dim);max-width:54ch;margin:14px 0 0}
+@media(max-width:760px){.hero .lede{margin-inline:auto}}
+.stat-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+@media(max-width:760px){.stat-row{justify-content:center}}
+.pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;border:1px solid var(--line);border-radius:30px;padding:6px 13px;color:var(--parchment-dim)}
+.pill b{font-family:var(--sans);color:var(--parchment)}
+.pill .d{width:8px;height:8px;border-radius:50%}
+
+/* section */
+section.block{padding:30px 0}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.sec-head h2{font-size:25px}
+.sec-head p{color:var(--parchment-faint);font-size:14px;max-width:46ch}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;border:1px solid var(--line-strong);background:transparent;color:var(--parchment-dim);border-radius:30px;padding:7px 13px;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:7px}
+.chip:hover{border-color:var(--gold);color:var(--parchment)}
+.chip.active{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600}
+.chip .c{width:8px;height:8px;border-radius:50%}
+
+/* dimension cards */
+.dims{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:760px){.dims{grid-template-columns:1fr}}
+.dim{border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden;transition:border-color .25s}
+.dim:hover{border-color:var(--line-strong)}
+.dim .d-head{display:flex;align-items:flex-start;gap:14px;padding:18px 18px 14px;cursor:pointer;user-select:none}
+.dim .ico{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);font-size:20px}
+.dim .d-h-txt{flex:1;min-width:0}
+.dim .d-h-txt h3{font-size:18px;display:flex;align-items:center;gap:9px}
+.dim .d-h-txt .meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--parchment-faint);margin-top:3px}
+.dim .d-score{text-align:right;flex:none}
+.dim .d-score .v{font-family:var(--serif);font-size:30px;line-height:1;color:var(--gold-2)}
+.dim .d-score .v small{font-size:14px;color:var(--parchment-faint)}
+.dim .bar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin:0 18px}
+.dim .bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--gold),var(--gold-2));transition:width 1s cubic-bezier(.4,0,.2,1)}
+.dim .caret{margin-left:6px;color:var(--parchment-faint);transition:transform .25s;font-size:12px}
+.dim.open .caret{transform:rotate(180deg)}
+.findings{display:none;padding:6px 18px 18px}
+.dim.open .findings{display:block}
+.finding{display:flex;gap:12px;padding:13px 0;border-top:1px solid var(--line)}
+.finding .cbx{flex:none;margin-top:2px}
+.finding .cbx input{appearance:none;-webkit-appearance:none;width:20px;height:20px;border:1.5px solid var(--line-strong);border-radius:6px;cursor:pointer;display:grid;place-items:center;transition:.18s;background:transparent}
+.finding .cbx input:hover{border-color:var(--gold)}
+.finding .cbx input:checked{background:var(--win);border-color:var(--win)}
+.finding .cbx input:checked::after{content:"✓";color:var(--ink);font-size:13px;font-weight:700}
+.finding .f-body{flex:1;min-width:0}
+.finding .f-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.finding .f-title{font-weight:600;font-size:14.5px}
+.finding.done .f-title{text-decoration:line-through;color:var(--parchment-faint)}
+.sev{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:30px;border:1px solid currentColor;flex:none}
+.sev.crit{color:var(--crit)} .sev.high{color:var(--high)} .sev.med{color:var(--med)} .sev.low{color:var(--low)} .sev.win{color:var(--win)}
+.finding .f-desc{color:var(--parchment-dim);font-size:13.5px;margin-top:5px}
+.finding .f-fix{font-size:13px;margin-top:7px;color:var(--parchment-dim);background:var(--panel-2);border-left:2px solid var(--gold);border-radius:0 8px 8px 0;padding:8px 11px}
+.finding .f-fix b{color:var(--gold-2);font-weight:600}
+.finding .f-ref{font-family:var(--mono);font-size:10.5px;color:var(--parchment-faint);margin-top:6px;display:inline-block}
+.finding .f-ref code{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:5px;color:var(--gold-2)}
+
+/* roadmap */
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:760px){.road{grid-template-columns:1fr}}
+.lane{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:18px}
+.lane h3{font-size:16px;display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.lane .when{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--parchment-faint)}
+.lane ol{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:11px;counter-reset:s}
+.lane li{counter-increment:s;position:relative;padding-left:30px;font-size:13.5px;color:var(--parchment-dim)}
+.lane li::before{content:counter(s);position:absolute;left:0;top:-1px;width:21px;height:21px;border-radius:50%;background:var(--panel-2);border:1px solid var(--line-strong);color:var(--gold-2);font-family:var(--mono);font-size:11px;display:grid;place-items:center}
+.lane li b{color:var(--parchment);font-weight:600}
+
+/* method + footer */
+.method{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:22px 24px}
+.method ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:10px 26px;margin-top:12px}
+@media(max-width:640px){.method ul{grid-template-columns:1fr}}
+.method li{font-size:13.5px;color:var(--parchment-dim);padding-left:18px;position:relative}
+.method li::before{content:"◆";position:absolute;left:0;color:var(--gold);font-size:9px;top:5px}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:26px 0 50px;color:var(--parchment-faint);font-size:12.5px;text-align:center}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink-2);border:1px solid var(--line-strong);border-radius:30px;padding:10px 20px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;z-index:80}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media print{header.top .actions,.filters,.toast{display:none}.dim .findings{display:block!important}body{background:#fff;color:#111}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <div class="brand">
+      <svg viewBox="0 0 200 200" fill="none" stroke="#C6A15B" stroke-width="6" aria-hidden="true">
+        <circle cx="100" cy="100" r="86"/><polygon points="100,28 158,140 42,140"/>
+        <circle cx="100" cy="104" r="26"/><line x1="78" y1="104" x2="92" y2="104"/><line x1="108" y1="104" x2="122" y2="104"/>
+      </svg>
+      <span class="name">Alquimia</span>
+      <span class="tag">Auditoría UX · UI</span>
+    </div>
+    <div class="actions">
+      <button class="tbtn" id="resetBtn" title="Reiniciar el progreso guardado">Reiniciar</button>
+      <button class="tbtn solid" onclick="window.print()">Exportar PDF</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero"><div class="wrap"><div class="hero-grid">
+  <div class="gauge">
+    <svg width="220" height="220" viewBox="0 0 220 220">
+      <defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#C6A15B"/><stop offset="1" stop-color="#E6CB8E"/></linearGradient></defs>
+      <circle class="ring-bg" cx="110" cy="110" r="96"/>
+      <circle class="ring-fg" id="ring" cx="110" cy="110" r="96" stroke-dasharray="603" stroke-dashoffset="603"/>
+    </svg>
+    <div class="center"><div><div class="num" id="scoreNum">0</div><div class="den">/ 100 PUNTOS</div><div class="grade" id="grade">—</div></div></div>
+  </div>
+  <div>
+    <span class="eyebrow">Evaluación de producto</span>
+    <h1>La interfaz de tu marketplace, <em>medida</em> y con un plan.</h1>
+    <p class="lede">Auditoría de las 25 páginas de Alquimia contra heurísticas de usabilidad de Nielsen, patrones de e-commerce de Baymard y WCAG 2.2. Marca cada hallazgo como resuelto y la puntuación sube en vivo — esta misma página es tu tablero de progreso.</p>
+    <div class="stat-row" id="statRow"></div>
+  </div>
+</div></div></section>
+
+<section class="block"><div class="wrap">
+  <div class="sec-head">
+    <div><span class="eyebrow">8 dimensiones</span><h2 style="margin-top:8px">Diagnóstico por área</h2></div>
+    <p>Toca una tarjeta para ver los hallazgos. Cada casilla que marques como resuelta recalcula la puntuación.</p>
+  </div>
+  <div class="filters" id="filters">
+    <button class="chip active" data-f="all">Todo</button>
+    <button class="chip" data-f="open"><span class="c" style="background:var(--crit)"></span>Pendientes</button>
+    <button class="chip" data-f="crit"><span class="c" style="background:var(--crit)"></span>Crítico</button>
+    <button class="chip" data-f="high"><span class="c" style="background:var(--high)"></span>Alto</button>
+    <button class="chip" data-f="win"><span class="c" style="background:var(--win)"></span>Logros</button>
+  </div>
+  <div class="dims" id="dims"></div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="sec-head"><div><span class="eyebrow">Prioridades</span><h2 style="margin-top:8px">Hoja de ruta</h2></div>
+    <p>Qué tocar primero para máximo impacto con mínimo esfuerzo.</p></div>
+  <div class="road">
+    <div class="lane">
+      <h3>✅ Hecho</h3><span class="when">Aplicado en este pase</span>
+      <ol>
+        <li><b>Texto alternativo</b> con el título de cada publicación en imágenes de contenido.</li>
+        <li><b>Buscador de texto</b> visible en el marketplace, filtrando en vivo.</li>
+        <li><b>Contraste reforzado</b> de textos tenues (dim 78% / faint 56%).</li>
+        <li><b>Lazy-load</b> en feed, perfiles, panel y tarjetas de IA.</li>
+      </ol>
+    </div>
+    <div class="lane">
+      <h3>🟡 Siguiente</h3><span class="when">Este mes · consolidar</span>
+      <ol>
+        <li><b>Contenido sin JS / SEO:</b> render del feed visible aunque falle el script.</li>
+        <li><b>Skeletons</b> mientras carga el feed y los perfiles.</li>
+        <li><b>Microcopy de confianza</b> en checkout y conexión de pagos.</li>
+        <li><b>Breadcrumbs</b> y botón volver en detalle de publicación.</li>
+      </ol>
+    </div>
+    <div class="lane">
+      <h3>🟢 Después</h3><span class="when">Pre-lanzamiento · escalar</span>
+      <ol>
+        <li><b>Backend real</b> (Supabase) y pagos (Stripe/Mollie) como dice el README.</li>
+        <li><b>Reseñas y valoraciones</b> de vendedores (prueba social).</li>
+        <li><b>Optimizar media</b>: imágenes responsive, lazy-load, peso del hero video.</li>
+        <li><b>Test con 5 usuarios</b> reales y métricas de conversión.</li>
+      </ol>
+    </div>
+  </div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <div class="method">
+    <span class="eyebrow">Metodología</span>
+    <h2 style="font-size:21px;margin:8px 0 4px">Cómo se calcula la puntuación</h2>
+    <p style="color:var(--parchment-dim);font-size:14px;max-width:64ch">Cada dimensión agrupa criterios ponderados por severidad (crítico ×4, alto ×3, medio ×2, bajo ×1). Los <em>logros</em> ya suman; los hallazgos abiertos restan hasta que los marcas como resueltos. La nota global es el promedio ponderado de las 8 dimensiones. Marco de referencia:</p>
+    <ul>
+      <li><b>10 heurísticas de Nielsen</b> — usabilidad general</li>
+      <li><b>Baymard Institute</b> — patrones de e-commerce y checkout</li>
+      <li><b>WCAG 2.2 AA</b> — accesibilidad</li>
+      <li><b>Core Web Vitals</b> — rendimiento percibido</li>
+      <li><b>Ley de Hick / Fitts</b> — carga cognitiva y objetivos táctiles</li>
+      <li><b>Trust & safety</b> — confianza en marketplaces de pago</li>
+    </ul>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">Auditoría generada para <b style="color:var(--gold-2)">Alquimia</b> · marketplace de emprendedores conscientes · El progreso se guarda en este navegador (localStorage).</div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== Datos de la auditoría (hallazgos reales del código de Alquimia) =====
+// pass:true = ya cumplido (logro). pass:false = hallazgo abierto. sev: crit|high|med|low
+const SEV_W = {crit:4, high:3, med:2, low:1, win:3};
+const DIMS = [
+  { id:"ui", icon:"🎨", name:"Identidad visual & UI",
+    items:[
+      {sev:"win", t:"Sistema de diseño con tokens", d:"Paleta, tipografía y espaciados centralizados como variables CSS reutilizables.", pass:true, ref:"assets/styles.css :2"},
+      {sev:"win", t:"Tipografía editorial con jerarquía", d:"Fraunces (serif) para títulos + Hanken Grotesk para texto crean una voz de marca premium y coherente.", pass:true},
+      {sev:"win", t:"Identidad de marca memorable", d:"Sello alquímico animado, símbolos por pilar y lenguaje visual ‘oro sobre ciruela’ muy diferenciado.", pass:true},
+      {sev:"low", t:"Logo dice ‘ALQUMIA’ en un sitio", d:"El README advierte un typo del logo; revísalo en todos los activos antes de lanzar.", fix:"Corregir el texto del logo a <b>ALQUIMIA</b> en SVG y assets de marca.", ref:"README.md :103"},
+      {sev:"med", t:"Sin modo claro / preferencia de tema", d:"El tema oscuro es bello pero algunos usuarios y entornos con mucha luz piden alternativa.", fix:"Opcional: variante clara con las mismas variables, o respetar <code>prefers-color-scheme</code>."},
+    ]},
+  { id:"nav", icon:"🧭", name:"Navegación & arquitectura",
+    items:[
+      {sev:"win", t:"Header sticky coherente en todo el sitio", d:"Inyectado por app.js: mismo nav, logo y estado activo en cada página.", pass:true, ref:"assets/app.js :104"},
+      {sev:"win", t:"Menú móvil con hamburguesa y aria-expanded", d:"Toggle accesible para pantallas pequeñas.", pass:true, ref:"assets/app.js :118"},
+      {sev:"high", t:"Buscador de texto en el marketplace", d:"Resuelto: campo de búsqueda con icono de lupa que filtra publicaciones, vendedores y categorías en vivo, sobre el buscador con IA.", pass:true, ref:"marketplace.html · app.js :633"},
+      {sev:"med", t:"Sin migas de pan ni ‘volver’ en el detalle", d:"En listing.html no hay forma clara de regresar al feed o a la categoría previa salvo el botón del navegador.", fix:"Añadir <b>breadcrumb</b> (Marketplace › Categoría › Producto) y botón volver."},
+      {sev:"low", t:"Filtros solo por categoría/pilar", d:"No hay filtro por precio, tipo (producto/servicio/experiencia) ni ubicación, habituales en un marketplace.", fix:"Sumar filtros de <b>precio, tipo y ciudad</b> al panel de filtros."},
+    ]},
+  { id:"conv", icon:"🛒", name:"Conversión & comercio",
+    items:[
+      {sev:"win", t:"Camino a la compra claro", d:"Feed → detalle → carrito/checkout, con CTA dorados consistentes y jerárquicos.", pass:true},
+      {sev:"win", t:"Buscador con IA diferencial", d:"‘Cuéntale a la IA qué necesitas’ baja la fricción de descubrimiento; gran gancho.", pass:true, ref:"assets/app.js :641"},
+      {sev:"win", t:"Estados vacíos contemplados", d:"Mensajes para feed sin resultados y perfiles sin publicaciones.", pass:true, ref:"assets/app.js :624"},
+      {sev:"high", t:"Sin prueba social (reseñas/valoraciones)", d:"No hay estrellas, reseñas ni nº de ventas por vendedor. Es el factor #1 de confianza para comprar a desconocidos.", fix:"Añadir <b>valoraciones y reseñas</b> al perfil y al detalle de publicación."},
+      {sev:"med", t:"Galería de producto de una sola imagen", d:"El detalle muestra una sola imagen; el e-commerce convierte mejor con varias fotos y zoom.", fix:"Permitir <b>varias fotos por publicación</b> con miniaturas/zoom."},
+      {sev:"low", t:"Sin urgencia ni escasez honesta", d:"Faltan señales suaves tipo ‘últimas plazas’ o ‘disponible esta semana’ en experiencias/servicios.", fix:"Opcional: indicadores de disponibilidad reales (sin oscuridad)."},
+    ]},
+  { id:"trust", icon:"🛡️", name:"Confianza & pagos",
+    items:[
+      {sev:"win", t:"Comisión transparente", d:"El reparto (10%) se calcula y muestra de verdad en el checkout.", pass:true, ref:"README.md :96"},
+      {sev:"win", t:"Términos y privacidad presentes", d:"Páginas dedicadas enlazadas desde el footer.", pass:true, ref:"terminos.html · privacidad.html"},
+      {sev:"win", t:"Aviso de ‘modo demostración’ en pagos", d:"Checkout y conexión de cuenta ya muestran un banner claro de prototipo / modo prueba; el comprador no se confunde.", pass:true, ref:"checkout.html :17 · connect-payout.html :21"},
+      {sev:"win", t:"Backend real conectado (Supabase)", d:"Las publicaciones, perfiles y medios se sirven desde Supabase (sellers/listings/media), no solo localStorage.", pass:true, ref:"assets/data.js :53"},
+      {sev:"high", t:"Sin sellos de seguridad en el checkout", d:"Falta microcopy y señales (pago cifrado, devoluciones, soporte) justo donde el usuario duda.", fix:"Añadir <b>candado, ‘pago seguro’, política de devoluciones</b> y datos de contacto en checkout."},
+      {sev:"med", t:"KYC/IVA aún no resueltos", d:"El propio README advierte obligaciones legales (verificación de vendedores, IVA, disputas) antes del primer euro.", fix:"Plan de <b>verificación de vendedor y gestión de disputas</b> antes de pagos reales.", ref:"README.md :89"},
+    ]},
+  { id:"a11y", icon:"♿", name:"Accesibilidad (WCAG 2.2)",
+    items:[
+      {sev:"win", t:"Respeta prefers-reduced-motion", d:"Animaciones del sello y partículas se desactivan para quien lo pide.", pass:true, ref:"assets/app.js :384"},
+      {sev:"win", t:"aria-labels en controles de icono", d:"Botones de menú, idioma, moneda y logout tienen etiqueta accesible.", pass:true},
+      {sev:"crit", t:"Texto alternativo en imágenes de contenido", d:"Resuelto: el feed, el detalle, los perfiles y el panel ahora usan el título de la publicación como <code>alt</code>; los avatares quedan decorativos (nombre adyacente).", pass:true, ref:"assets/app.js :618, :679, :719"},
+      {sev:"high", t:"Contraste de textos reforzado", d:"Resuelto: <code>--parchment-dim</code> subió a 78% y <code>--parchment-faint</code> a 56% para mejorar legibilidad sobre fondo oscuro.", pass:true, ref:"assets/styles.css :6"},
+      {sev:"win", t:"Estados de foco visibles para teclado", d:"<code>*:focus-visible</code> global con contorno dorado en enlaces, botones y campos.", pass:true, ref:"assets/styles.css :437"},
+      {sev:"med", t:"Jerarquía de encabezados a revisar", d:"Con contenido inyectado por JS conviene verificar que cada página tiene un solo h1 y orden lógico.", fix:"Auditar el árbol de <b>h1–h4</b> por página con un validador."},
+    ]},
+  { id:"mobile", icon:"📱", name:"Responsive & móvil",
+    items:[
+      {sev:"win", t:"Grids fluidos por breakpoint", d:"Marketplace 2→3→4 columnas y perfil adaptan bien a cada ancho.", pass:true, ref:"assets/styles.css :114"},
+      {sev:"win", t:"Overlay siempre visible en táctil", d:"@media(hover:none) muestra el texto sobre la imagen sin depender del hover.", pass:true, ref:"assets/styles.css :118"},
+      {sev:"med", t:"Objetivos táctiles a verificar", d:"Algunos toggles (idioma/moneda) y chips son pequeños; el mínimo recomendado es 44×44px.", fix:"Asegurar <b>área táctil ≥44px</b> en toggles, chips y cierres de modal."},
+      {sev:"low", t:"Sin navegación inferior en móvil", d:"En apps tipo marketplace una barra inferior (inicio/buscar/perfil) mejora el alcance del pulgar.", fix:"Opcional: <b>bottom-nav</b> en móvil para las 3–4 acciones clave."},
+    ]},
+  { id:"perf", icon:"⚡", name:"Rendimiento & SEO técnico",
+    items:[
+      {sev:"win", t:"Fuentes con preconnect y display=swap", d:"Carga tipográfica optimizada para evitar texto invisible.", pass:true, ref:"index.html :7"},
+      {sev:"win", t:"Partículas limitan densidad y DPR", d:"El canvas acota nº de partículas y devicePixelRatio para no recalentar móviles.", pass:true, ref:"assets/app.js :390"},
+      {sev:"crit", t:"Contenido invisible sin JavaScript", d:"Header, feed y footer se inyectan por JS. Si el script falla o tarda, la página queda casi en blanco; y los buscadores ven poco contenido (mal SEO).", fix:"Renderizar contenido base en HTML o pre-renderizar; dejar JS como mejora progresiva.", ref:"marketplace.html :13"},
+      {sev:"high", t:"Hero video pesado autoplay", d:"El home carga un MP4 HD remoto en autoplay; impacta LCP y datos en móvil.", fix:"Usar <b>poster + carga diferida</b>, versión ligera y respetar datos móviles.", ref:"index.html :17"},
+      {sev:"med", t:"Lazy-load en imágenes (parcial)", d:"Resuelto en parte: el feed, perfiles, panel y tarjetas IA ya usan <code>loading=\"lazy\"</code> y <code>decoding=\"async\"</code>. Pendiente: declarar width/height y srcset para evitar saltos de layout.", ref:"assets/app.js :618"},
+      {sev:"low", t:"Sin meta OG / favicon verificados", d:"Conviene confirmar Open Graph, favicon y title por página para compartir en redes.", fix:"Añadir <b>og:image, descripción y favicon</b> consistentes."},
+    ]},
+  { id:"content", icon:"✍️", name:"Contenido & i18n",
+    items:[
+      {sev:"win", t:"Bilingüe ES/EN con i18n", d:"Sistema de traducción por claves data-i18n en toda la interfaz.", pass:true, ref:"assets/i18n.js"},
+      {sev:"win", t:"Multimoneda con tasas en vivo", d:"8 monedas (EUR + Latam) con conversión cacheada y respaldo offline.", pass:true, ref:"assets/data.js :7"},
+      {sev:"win", t:"Voz de marca cálida y con propósito", d:"Microcopy coherente con el posicionamiento ‘negocios conscientes’.", pass:true},
+      {sev:"med", t:"Sin onboarding para vendedor nuevo", d:"Crear perfil es potente pero falta una guía de primeros pasos / checklist de perfil completo.", fix:"Añadir <b>progreso de perfil</b> (‘80% completo’) y tips para destacar."},
+      {sev:"low", t:"Mensajes de error genéricos", d:"Varios catch caen en un ‘ai.err’ genérico; conviene mensajes accionables.", fix:"Errores específicos y con siguiente paso claro para el usuario."},
+    ]},
+];
+
+// ===== Estado persistente =====
+const KEY="alq_audit_v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)||"{}"); } catch(e){ state={}; }
+const fid = (d,i)=> d+"-"+i;
+
+function dimScore(d){
+  let got=0, tot=0;
+  d.items.forEach((it,i)=>{
+    const w = SEV_W[it.sev]||1;
+    if(it.sev==="win"){ got+=w; tot+=w; return; }
+    tot+=w;
+    const done = it.pass || state[fid(d.id,i)];
+    if(done) got+=w;
+  });
+  return tot? Math.round(got/tot*100):100;
+}
+function overall(){
+  const s = DIMS.map(dimScore);
+  return Math.round(s.reduce((a,b)=>a+b,0)/s.length);
+}
+function grade(n){ return n>=90?"Excelente":n>=80?"Muy bueno":n>=70?"Sólido":n>=60?"Aceptable":n>=45?"En progreso":"Inicial"; }
+
+function openCount(){
+  let c=0; DIMS.forEach(d=>d.items.forEach((it,i)=>{ if(it.sev!=="win" && !it.pass && !state[fid(d.id,i)]) c++; })); return c;
+}
+function critOpen(){
+  let c=0; DIMS.forEach(d=>d.items.forEach((it,i)=>{ if((it.sev==="crit"||it.sev==="high") && !it.pass && !state[fid(d.id,i)]) c++; })); return c;
+}
+
+function renderTop(){
+  const n=overall();
+  const ring=document.getElementById("ring"); const C=2*Math.PI*96;
+  ring.style.strokeDashoffset = C*(1-n/100);
+  // count up
+  const el=document.getElementById("scoreNum"); const from=+el.textContent||0;
+  const t0=performance.now();
+  (function step(t){ const p=Math.min(1,(t-t0)/700); el.textContent=Math.round(from+(n-from)*p); if(p<1)requestAnimationFrame(step); })(t0);
+  setTimeout(()=>{ el.textContent=n; },760); // garantía: valor final aunque rAF se pause (pestaña oculta)
+  document.getElementById("grade").textContent=grade(n);
+  document.getElementById("statRow").innerHTML =
+    `<span class="pill"><span class="d" style="background:var(--crit)"></span>${critOpen()} <b>prioritarios</b> abiertos</span>`+
+    `<span class="pill"><span class="d" style="background:var(--gold)"></span>${openCount()} <b>hallazgos</b> por resolver</span>`+
+    `<span class="pill"><span class="d" style="background:var(--win)"></span>8 <b>dimensiones</b> evaluadas</span>`;
+}
+
+let filter="all";
+function visible(it,d,i){
+  const done = it.pass || state[fid(d.id,i)];
+  if(filter==="all") return true;
+  if(filter==="open") return it.sev!=="win" && !done;
+  if(filter==="win") return it.sev==="win";
+  if(filter==="crit") return it.sev==="crit";
+  if(filter==="high") return it.sev==="high";
+  return true;
+}
+const SEVLBL={crit:"Crítico",high:"Alto",med:"Medio",low:"Bajo",win:"Logro"};
+
+function renderDims(){
+  const wrap=document.getElementById("dims");
+  wrap.innerHTML = DIMS.map(d=>{
+    const sc=dimScore(d);
+    const rows=d.items.map((it,i)=>{
+      if(!visible(it,d,i)) return "";
+      const done = it.pass || state[fid(d.id,i)];
+      const isWin = it.sev==="win";
+      const cb = isWin
+        ? `<span class="cbx"><input type="checkbox" checked disabled></span>`
+        : `<span class="cbx"><input type="checkbox" data-k="${fid(d.id,i)}" ${done?"checked":""}></span>`;
+      return `<div class="finding ${done?'done':''}">
+        ${cb}
+        <div class="f-body">
+          <div class="f-top"><span class="f-title">${it.t}</span><span class="sev ${it.sev}">${SEVLBL[it.sev]}</span></div>
+          <div class="f-desc">${it.d}</div>
+          ${it.fix?`<div class="f-fix"><b>Solución:</b> ${it.fix}</div>`:""}
+          ${it.ref?`<span class="f-ref">📍 <code>${it.ref}</code></span>`:""}
+        </div></div>`;
+    }).join("");
+    const opened = d._open ? "open":"";
+    const hasRows = rows.trim().length>0;
+    return `<div class="dim ${opened}" data-d="${d.id}">
+      <div class="d-head" data-toggle="${d.id}">
+        <div class="ico">${d.icon}</div>
+        <div class="d-h-txt"><h3>${d.name}<span class="caret">▼</span></h3>
+          <div class="meta">${d.items.filter(x=>x.sev==='win').length} logros · ${d.items.filter(x=>x.sev!=='win').length} por revisar</div></div>
+        <div class="d-score"><div class="v">${sc}<small>/100</small></div></div>
+      </div>
+      <div class="bar"><i style="width:${sc}%"></i></div>
+      <div class="findings">${hasRows?rows:'<p style="color:var(--parchment-faint);font-size:13px;padding:14px 0">Sin elementos para este filtro.</p>'}</div>
+    </div>`;
+  }).join("");
+}
+
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),1800); }
+
+document.addEventListener("click",e=>{
+  const tg=e.target.closest("[data-toggle]");
+  if(tg){ const d=DIMS.find(x=>x.id===tg.dataset.toggle); d._open=!d._open; renderDims(); return; }
+  const chip=e.target.closest(".chip");
+  if(chip){ filter=chip.dataset.f; document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active")); chip.classList.add("active"); DIMS.forEach(d=>d._open=true); renderDims(); }
+});
+document.addEventListener("change",e=>{
+  const cb=e.target.closest('input[data-k]');
+  if(!cb) return;
+  state[cb.dataset.k]=cb.checked;
+  localStorage.setItem(KEY,JSON.stringify(state));
+  const d=DIMS.find(x=>cb.dataset.k.startsWith(x.id+"-")); if(d)d._open=true;
+  renderDims(); renderTop();
+  toast(cb.checked?"✓ Resuelto — puntuación actualizada":"Reabierto");
+});
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(!confirm("¿Reiniciar todo el progreso guardado de la auditoría?")) return;
+  state={}; localStorage.removeItem(KEY); DIMS.forEach(d=>d._open=false); renderDims(); renderTop(); toast("Progreso reiniciado");
+});
+
+// init
+DIMS[0]._open=true;
+renderDims();
+setTimeout(renderTop,120);
+</script>
+</body>
+</html>

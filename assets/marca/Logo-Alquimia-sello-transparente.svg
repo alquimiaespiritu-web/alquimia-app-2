@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 400" width="320" height="400">
+  <g transform="translate(60,24)" fill="none" stroke="#C6A15B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <circle cx="100" cy="100" r="86"/>
+    <polygon points="100,14 174.5,143 25.5,143" fill="rgba(142,91,176,0.28)"/>
+    <line x1="82.7" y1="44" x2="117.3" y2="44"/>
+    <polygon points="43.4,118 72.3,118 57.85,143"/>
+    <polygon points="127.7,118 156.6,118 142.15,143"/>
+    <line x1="136.4" y1="133" x2="147.9" y2="133"/>
+    <circle cx="100" cy="100" r="33"/>
+    <line x1="67" y1="100" x2="92" y2="100"/>
+    <line x1="108" y1="100" x2="133" y2="100"/>
+    <circle cx="100" cy="100" r="8"/>
+    <circle cx="100" cy="100" r="3" fill="#C6A15B" stroke="none"/>
+  </g>
+  <text x="160" y="298" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="40" letter-spacing="6" fill="#C6A15B" stroke="none">ALQUIMIA</text>
+  <text x="160" y="328" text-anchor="middle" font-family="Georgia, serif" font-size="12.5" letter-spacing="5" fill="#C6A15B" opacity="0.82" stroke="none">TRANSMUTACIÓN</text>
+</svg>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conectar pagos — Alquimia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="connect">
+<div id="site-header"></div>
+<main>
+  <div class="wrap">
+    <div class="page-head">
+      <span class="eyebrow" data-i18n="pa.eyebrow">Pagos del proveedor</span>
+      <h1 data-i18n="pa.title">Conecta tu cuenta y recibe tus ventas.</h1>
+      <p class="sub" data-i18n="pa.sub">Aunque no tengas página web, puedes vender por Alquimia y recibir el dinero directo en tu banco.</p>
+    </div>
+    <div class="demo-banner"><b data-i18n="pa.banner.b">Modo prueba</b><span data-i18n="pa.banner.text">Esto usa Stripe Connect en modo prueba: no se mueve dinero real. Stripe te pedirá tus datos en su propia página segura.</span></div>
+
+    <div class="connect-grid">
+      <div class="form-card" style="max-width:none">
+        <div class="field"><label data-i18n="pa.f.country">País de tu cuenta</label>
+          <select class="cn-country">
+            <option value="NL" data-i18n="pa.country.nl">Países Bajos</option>
+            <option value="ES" data-i18n="pa.country.es">España</option>
+            <option value="DE">Alemania</option>
+            <option value="FR">Francia</option>
+            <option value="BE">Bélgica</option>
+          </select>
+        </div>
+        <p class="note" data-i18n="pa.stripe.intro">Te llevamos a Stripe para verificar tu identidad y añadir tu banco. Vuelves aquí al terminar.</p>
+        <button class="btn btn-gold btn-lg btn-block" id="connectBtn" data-i18n="pa.connect">Conectar con Stripe</button>
+        <p id="connectMsg" class="note center mt16" aria-live="polite"></p>
+        <p class="note center" data-i18n="pa.terms">Al conectar aceptas que Alquimia retenga un 10% de comisión por venta.</p>
+      </div>
+
+      <div>
+        <div class="proc">
+          <div class="pstep"><span class="n">1</span><div><b data-i18n="pa.step1.b">Verifica tu identidad</b><p data-i18n="pa.step1.p">Un paso de seguridad estándar (KYC) que hace el procesador de pagos.</p></div></div>
+          <div class="pstep"><span class="n">2</span><div><b data-i18n="pa.step2.b">Añade tu cuenta bancaria</b><p data-i18n="pa.step2.p">Donde recibirás el dinero de cada venta.</p></div></div>
+          <div class="pstep"><span class="n">3</span><div><b data-i18n="pa.step3.b">Listo para vender</b><p data-i18n="pa.step3.p">Cada pago se reparte solo: tú recibes el neto, Alquimia su comisión.</p></div></div>
+        </div>
+        <div class="fee-card mt24" id="connectDone" style="display:none">
+          <b class="serif" style="font-size:19px;color:var(--emerald)" data-i18n="pa.done.b">✓ Cuenta conectada</b>
+          <p class="muted mt8" style="font-size:14.5px" data-i18n-html="pa.done.p">Ya puedes recibir pagos. Por cada venta de €100, recibes <b style="color:var(--emerald)">€90</b> y Alquimia retiene <b>€10</b>.</p>
+          <a class="btn btn-ghost btn-sm mt16" href="dashboard.html" data-i18n="pa.done.go">Ir a mi panel →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script src="assets/i18n.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

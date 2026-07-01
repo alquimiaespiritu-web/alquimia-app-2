@@ -1,0 +1,6 @@
+# Configuración de Netlify para Alquimia
+# Define dónde viven las funciones del servidor (el "motor" de pagos con Stripe).
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regístrate — Alquimia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="registro">
+<div id="site-header"></div>
+<main>
+  <div class="wrap">
+    <div class="page-head">
+      <span class="eyebrow" data-i18n="rg.eyebrow">Únete a Alquimia</span>
+      <h1 data-i18n="rg.title">Elige cómo quieres entrar.</h1>
+      <p class="sub" data-i18n="rg.sub">Como comprador para descubrir negocios con propósito, o como vendedor para ofrecer lo tuyo.</p>
+    </div>
+
+    <div class="reg-grid">
+      <div class="reg-main">
+    <div class="tabs" role="tablist">
+      <button data-t="vendedor" class="active" data-i18n="rg.tab.seller">Tengo un negocio</button>
+      <button data-t="comprador" data-i18n="rg.tab.buyer">Busco con propósito</button>
+    </div>
+
+    <!-- VENDEDOR (negocio) -->
+    <div class="tabpane active" data-p="vendedor">
+      <form class="form-card" onsubmit="return false">
+        <h2 style="font-size:22px;margin-bottom:6px" data-i18n="rg.seller.h">Vende lo que haces</h2>
+        <p class="muted" style="margin-bottom:14px" data-i18n="rg.seller.intro">Crea tu perfil con tu foto, tu historia y tus productos o servicios. Lo revisamos y, cuando lo aprobemos, apareces en el marketplace.</p>
+        <p class="muted" style="margin-bottom:18px" data-i18n="rg.seller.founder">Programa Fundadores: las primeras 20 personas tienen 0% de comisión durante 3 meses.</p>
+        <a class="btn btn-gold btn-lg btn-block" href="create-profile.html" data-i18n="rg.seller.go">Crear mi perfil</a>
+      </form>
+    </div>
+
+    <!-- COMPRADOR -->
+    <div class="tabpane" data-p="comprador">
+      <form name="comprador" method="POST" data-netlify="true" action="gracias.html?tipo=comprador" class="form-card">
+        <input type="hidden" name="form-name" value="comprador">
+        <h2 style="font-size:22px;margin-bottom:6px" data-i18n="rg.buyer.h">Compra con propósito</h2>
+        <p class="muted" style="margin-bottom:18px" data-i18n="rg.buyer.p">Te avisamos cuando abramos el marketplace y te recomendamos negocios alineados contigo.</p>
+        <div class="avatar-pick"><span class="avatar lg" id="b-avatarPrev">+</span><label class="upload" style="flex:1"><span data-i18n="cb.photo">Sube tu foto</span><input type="file" id="b-avatar" accept="image/*"></label></div>
+        <div class="divider"></div>
+        <div class="grid-2">
+          <div class="field"><label data-i18n="rg.f.name">Tu nombre</label><input type="text" name="nombre" placeholder="Ej. Camila" data-i18n-ph="rg.f.name.ph" required></div>
+          <div class="field"><label data-i18n="rg.f.email">Correo</label><input type="email" name="email" placeholder="tucorreo@ejemplo.com" data-i18n-ph="rg.f.email.ph" required></div>
+        </div>
+        <div class="field"><label data-i18n="rg.buyer.interest">¿Qué te interesa encontrar? (elige las que quieras)</label>
+          <div class="checks">
+            <label class="check"><input type="checkbox" name="interes[]" value="Cuerpo"><span data-i18n="cat.Cuerpo">Cuerpo</span></label>
+            <label class="check"><input type="checkbox" name="interes[]" value="Mente"><span data-i18n="cat.Mente">Mente</span></label>
+            <label class="check"><input type="checkbox" name="interes[]" value="Alma"><span data-i18n="cat.Alma">Alma</span></label>
+            <label class="check"><input type="checkbox" name="interes[]" value="Planeta"><span data-i18n="cat.Planeta">Planeta</span></label>
+            <label class="check"><input type="checkbox" name="interes[]" value="Comunidad"><span data-i18n="cat.Comunidad">Comunidad</span></label>
+          </div>
+        </div>
+        <div class="consent">
+          <label class="check2"><input type="checkbox" name="privacidad" value="aceptada" required><span data-i18n-html="rg.buyer.privacy">He leído y acepto la <a href="privacidad.html" target="_blank" rel="noopener" style="color:var(--gold-2)">Política de Privacidad</a> de Alquimia.</span></label>
+          <label class="check2"><input type="checkbox" name="newsletter" value="si"><span data-i18n="rg.buyer.news">Quiero recibir novedades, newsletters y descuentos de Alquimia (opcional).</span></label>
+        </div>
+        <button type="submit" class="btn btn-gold btn-lg btn-block mt8" data-i18n="rg.buyer.submit">Crear mi cuenta de comprador</button>
+      </form>
+    </div>
+      </div>
+      <aside class="reg-how">
+        <span class="eyebrow" data-i18n="idx.how.eyebrow">Cómo funciona</span>
+        <div class="how-step"><span class="how-num">01</span><div><h4 data-i18n="idx.step1.title">Crea tu perfil</h4><p data-i18n="idx.step1.desc">Cuenta tu historia, sube fotos y videos, y publica lo que vendes: productos o servicios.</p></div></div>
+        <div class="how-step"><span class="how-num">02</span><div><h4 data-i18n="idx.step2.title">Aparece en el marketplace</h4><p data-i18n="idx.step2.desc">Tu negocio entra al directorio curado y queda listo para que te encuentren y te compren.</p></div></div>
+        <div class="how-step"><span class="how-num">03</span><div><h4 data-i18n="idx.step3.title">Vende y recibe tu pago</h4><p data-i18n="idx.step3.desc">Conecta tu cuenta y recibe transferencias por cada venta. Alquimia retiene una pequeña comisión.</p></div></div>
+      </aside>
+    </div>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script src="assets/i18n.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

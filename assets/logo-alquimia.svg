@@ -1,0 +1,43 @@
+<svg viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Alquimia — transmutación">
+  <defs>
+    <path id="tcurve" d="M 165,35 L 267,209" fill="none"/>
+  </defs>
+  <g fill="none" stroke="#C6A15B" stroke-width="7" stroke-linejoin="round">
+    <!-- círculo exterior -->
+    <circle cx="150" cy="148" r="132"/>
+    <!-- triángulo grande -->
+    <polygon points="150,20 38,212 262,212"/>
+    <!-- cuadrado -->
+    <rect x="96" y="104" width="108" height="108"/>
+    <!-- círculo interior -->
+    <circle cx="150" cy="158" r="54"/>
+  </g>
+
+  <!-- montaña sólida -->
+  <polygon points="58,212 140,212 99,150" fill="#C6A15B"/>
+
+  <!-- líneas técnicas con puntos -->
+  <g stroke="#C6A15B" stroke-width="3" fill="#C6A15B">
+    <line x1="12" y1="212" x2="58" y2="212"/>
+    <circle cx="9" cy="212" r="5"/>
+    <line x1="204" y1="212" x2="286" y2="212"/>
+    <circle cx="290" cy="212" r="5" fill="none"/>
+  </g>
+  <g stroke="#C6A15B" stroke-width="1.6" fill="#C6A15B">
+    <line x1="204" y1="172" x2="252" y2="172"/>
+    <circle cx="204" cy="172" r="3"/>
+  </g>
+
+  <!-- líneas punteadas inferior izquierda -->
+  <line x1="36" y1="248" x2="150" y2="248" stroke="#C6A15B" stroke-width="2" stroke-dasharray="2 7"/>
+  <circle cx="34" cy="248" r="4" fill="#C6A15B"/>
+
+  <!-- triángulo punteado inferior (transmutación descendente) -->
+  <polyline points="96,212 150,302 204,212" fill="none" stroke="#C6A15B" stroke-width="2" stroke-dasharray="2 7"/>
+  <circle cx="150" cy="305" r="4" fill="none" stroke="#C6A15B" stroke-width="2"/>
+
+  <!-- palabra curvada: transmutación -->
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="18" letter-spacing="1" fill="#C6A15B" font-weight="600">
+    <textPath href="#tcurve" startOffset="6">transmutación</textPath>
+  </text>
+</svg>

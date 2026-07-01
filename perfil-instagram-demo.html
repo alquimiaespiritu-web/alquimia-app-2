@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil — Alquimia (vista estilo Instagram)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B1322; --panel:#261A30; --panel-2:#2E1F3A; --edge:#3A2A47;
+  --gold:#C6A15B; --gold-2:#E6CB8E; --emerald:#2ECC71;
+  --text:#ECE3D6; --muted:#A99CB4; --faint:rgba(236,227,214,.40);
+  --line:rgba(198,161,91,.22); --line-2:rgba(198,161,91,.45);
+  --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",system-ui,sans-serif; --mono:"Spline Sans Mono",ui-monospace,monospace;
+  --maxw:935px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+::selection{background:var(--gold);color:var(--ink)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px;width:100%}
+
+/* top bar */
+header.top{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(27,19,34,.78);border-bottom:1px solid var(--line)}
+header.top nav{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;max-width:var(--maxw);margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:30px;height:30px}
+.brand .name{font-family:var(--serif);font-size:20px;letter-spacing:.04em}
+.back{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.back:hover{color:var(--gold-2)}
+
+/* profile header */
+.phead{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;padding:40px 0 26px}
+@media(max-width:680px){.phead{grid-template-columns:auto 1fr;gap:20px;padding:26px 0 18px}}
+
+.avatar-ring{width:150px;height:150px;border-radius:50%;padding:4px;background:conic-gradient(from 210deg,var(--gold-2),var(--gold),var(--purple,#4B244A),var(--gold-2));display:grid;place-items:center;flex:none}
+.avatar-ring .inner{width:100%;height:100%;border-radius:50%;border:3px solid var(--ink);overflow:hidden;background:var(--panel)}
+.avatar-ring img{width:100%;height:100%;object-fit:cover}
+@media(max-width:680px){.avatar-ring{width:92px;height:92px}}
+
+.pinfo .toprow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.pinfo .handle{font-family:var(--serif);font-size:26px;line-height:1.1}
+.pinfo .role{color:var(--muted);font-size:14px}
+.live{display:inline-flex;align-items:center;gap:7px;color:var(--emerald);font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+.live .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 0 0 rgba(46,204,113,.5);animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,204,113,.5)}70%{box-shadow:0 0 0 8px rgba(46,204,113,0)}100%{box-shadow:0 0 0 0 rgba(46,204,113,0)}}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:none;border-radius:9px;padding:10px 18px;font-family:var(--sans);font-weight:600;font-size:14px;cursor:pointer;transition:transform .16s,box-shadow .2s,border-color .2s,color .2s}
+.btn-gold{background:var(--gold);color:var(--ink)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(198,161,91,.55)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line-2)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-2)}
+
+.stats{display:flex;gap:34px;margin:18px 0 6px}
+@media(max-width:680px){.stats{gap:22px}}
+.stat .n{font-family:var(--serif);font-size:20px;color:var(--gold-2)}
+.stat .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+
+.bio{max-width:60ch;margin-top:8px}
+.bio b{font-family:var(--serif);font-weight:500}
+.bio .tags{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;border:1px solid var(--line);color:var(--gold);padding:3px 10px;border-radius:30px}
+
+/* highlights (historias) */
+.highlights{display:flex;gap:22px;padding:24px 0 8px;overflow-x:auto}
+.hl{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
+.hl .circle{width:70px;height:70px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--gold-2),var(--purple,#4B244A));display:grid;place-items:center}
+.hl .circle div{width:100%;height:100%;border-radius:50%;border:2px solid var(--ink);background-size:cover;background-position:center}
+.hl span{font-size:12px;color:var(--muted)}
+
+/* grid */
+.tabbar{display:flex;justify-content:center;gap:40px;border-top:1px solid var(--line);margin-top:18px}
+.tabbar .t{padding:16px 0;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);border-top:1px solid transparent;margin-top:-1px}
+.tabbar .t.on{color:var(--gold);border-top-color:var(--gold)}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px 0 40px}
+@media(min-width:680px){.grid{gap:14px;padding:18px 0 50px}}
+.cell{position:relative;aspect-ratio:1/1;overflow:hidden;border-radius:4px;cursor:pointer;background:var(--panel)}
+@media(min-width:680px){.cell{border-radius:10px}}
+.cell img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .3s}
+.cell:hover img{transform:scale(1.06);filter:brightness(.5)}
+.cell .kind{position:absolute;top:10px;left:10px;z-index:2;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,0,0,.5);color:#fff;padding:3px 8px;border-radius:30px}
+.cell .play{position:absolute;top:10px;right:10px;z-index:2;color:#fff;font-size:15px;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.cell .over{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;padding:14px;opacity:0;transition:opacity .3s;background:linear-gradient(180deg,transparent 40%,rgba(27,19,34,.55))}
+.cell:hover .over{opacity:1}
+.cell .over .ttl{font-family:var(--serif);font-size:15px;line-height:1.2;color:#fff}
+.cell .over .price{font-family:var(--serif);font-size:16px;color:var(--gold-2)}
+
+.note{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--faint);text-align:center;padding:8px 0 40px;line-height:1.7}
+
+/* reveal */
+.grid .cell{opacity:0;transform:translateY(10px);animation:rise .5s ease forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}.grid .cell{opacity:1;transform:none}.cell:hover img{transform:none}}
+*:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <nav>
+    <a class="brand" href="marketplace.html" aria-label="Alquimia">
+      <svg viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="#C6A15B" stroke-width="6" stroke-linejoin="round">
+        <circle cx="100" cy="100" r="90"/><polygon points="100,14 24,140 176,140"/>
+        <rect x="62" y="74" width="76" height="76"/><circle cx="100" cy="112" r="32"/>
+        <polygon points="38,140 92,140 64,100" fill="#C6A15B" stroke="none"/>
+      </svg>
+      <span class="name">Alquimia</span>
+    </a>
+    <a class="back" href="marketplace.html">← Volver al marketplace</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- CABECERA DE PERFIL -->
+  <section class="phead">
+    <div class="avatar-ring">
+      <div class="inner">
+        <img src="https://loremflickr.com/300/300/pottery,woman?lock=24" alt="Marta Kuijpers">
+      </div>
+    </div>
+    <div class="pinfo">
+      <div class="toprow">
+        <span class="handle">Marta Kuijpers</span>
+        <span class="live"><span class="dot"></span>Disponible</span>
+        <div class="actions" style="margin-left:auto">
+          <button class="btn btn-gold">Ver lo que ofrece</button>
+          <button class="btn btn-ghost">Mensaje</button>
+        </div>
+      </div>
+      <div class="role">Cerámica consciente · arcilla local, cero desperdicio</div>
+      <div class="stats">
+        <div class="stat"><div class="n">6</div><div class="l">Publicaciones</div></div>
+        <div class="stat"><div class="n">Arte</div><div class="l">Categoría</div></div>
+        <div class="stat"><div class="n">Utrecht</div><div class="l">Ubicación · NL</div></div>
+      </div>
+      <div class="bio">
+        <b>Piezas hechas a mano, una por una.</b><br>
+        Trabajo con arcilla local y esmaltes minerales. Cada cuenco nace en mi estudio de Utrecht y no hay dos iguales. También doy talleres en grupos pequeños.
+        <div class="tags"><span class="tag">Cerámica</span><span class="tag">Talleres</span><span class="tag">Hecho a mano</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORIAS / HIGHLIGHTS -->
+  <section class="highlights">
+    <div class="hl"><div class="circle"><div style="background-image:url('https://loremflickr.com/200/200/ceramic,studio?lock=2')"></div></div><span>El estudio</span></div>
+    <div class="hl"><div class="circle"><div style="background-image:url('https://loremflickr.com/200/200/pottery,hands?lock=3')"></div></div><span>El proceso</span></div>
+    <div class="hl"><div class="circle"><div style="background-image:url('https://loremflickr.com/200/200/ceramic,bowl?lock=4')"></div></div><span>Colección</span></div>
+    <div class="hl"><div class="circle"><div style="background-image:url('https://loremflickr.com/200/200/workshop,clay?lock=5')"></div></div><span>Talleres</span></div>
+  </section>
+
+  <div class="tabbar"><span class="t on">Publicaciones</span></div>
+
+  <!-- CUADRÍCULA ESTILO INSTAGRAM -->
+  <section class="grid">
+    <a class="cell" style="animation-delay:.02s">
+      <span class="kind">Producto</span>
+      <img src="https://loremflickr.com/600/600/ceramic,bowl?lock=11" alt="">
+      <div class="over"><div class="ttl">Cuenco de cerámica artesanal</div><div class="price">€38</div></div>
+    </a>
+    <a class="cell" style="animation-delay:.06s">
+      <span class="kind">Servicio</span>
+      <img src="https://loremflickr.com/600/600/pottery,workshop?lock=12" alt="">
+      <div class="over"><div class="ttl">Taller de cerámica (medio día)</div><div class="price">€65</div></div>
+    </a>
+    <a class="cell" style="animation-delay:.10s">
+      <span class="play">▶</span>
+      <img src="https://loremflickr.com/600/600/clay,wheel?lock=13" alt="">
+      <div class="over"><div class="ttl">Cómo nace una pieza</div><div class="price">Video · 3:45</div></div>
+    </a>
+    <a class="cell" style="animation-delay:.14s">
+      <span class="kind">Producto</span>
+      <img src="https://loremflickr.com/600/600/ceramic,mug?lock=14" alt="">
+      <div class="over"><div class="ttl">Taza esmaltada a mano</div><div class="price">€24</div></div>
+    </a>
+    <a class="cell" style="animation-delay:.18s">
+      <span class="kind">Producto</span>
+      <img src="https://loremflickr.com/600/600/ceramic,vase?lock=15" alt="">
+      <div class="over"><div class="ttl">Jarrón colección Tierra</div><div class="price">€54</div></div>
+    </a>
+    <a class="cell" style="animation-delay:.22s">
+      <span class="kind">Producto</span>
+      <img src="https://loremflickr.com/600/600/pottery,plate?lock=16" alt="">
+      <div class="over"><div class="ttl">Plato ondulado, edición corta</div><div class="price">€32</div></div>
+    </a>
+  </section>
+
+  <p class="note">Vista de muestra · las fotos son de ejemplo. Cuando conectemos Supabase, aquí irán las fotos reales de cada vendedora.</p>
+
+</main>
+</body>
+</html>
