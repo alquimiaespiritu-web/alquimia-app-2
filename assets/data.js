@@ -185,9 +185,15 @@ window.ALQ = (function () {
     }
     const row = {
       kind: meta.kind || "gasto", concept: meta.concept || "", amount: meta.amount != null ? meta.amount : null,
+      base_amount: meta.base_amount != null ? meta.base_amount : null,
       currency: meta.currency || "EUR", doc_date: meta.doc_date || new Date().toISOString().slice(0, 10), url: url
     };
-    const { error } = await c.from("documentos").insert(row);
+    let { error } = await c.from("documentos").insert(row);
+    // Si la columna base_amount aún no existe en la tabla, reintenta sin ella.
+    if (error && /base_amount|column|does not exist|schema/i.test(error.message || "")) {
+      delete row.base_amount;
+      ({ error } = await c.from("documentos").insert(row));
+    }
     if (error) throw error;
   }
   async function deleteDocument(id) {

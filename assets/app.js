@@ -2064,7 +2064,8 @@
             <option value="legal">Legal</option>
             <option value="otro">Otro</option></select></div>
           <div class="field"><label>Concepto</label><input id="doc-concept" placeholder="Ej: Dominio alquimiasoy.com"></div>
-          <div class="field"><label>Importe</label><input id="doc-amount" inputmode="decimal" placeholder="0,00"></div>
+          <div class="field"><label>Valor sin IVA</label><input id="doc-base" inputmode="decimal" placeholder="0,00"></div>
+          <div class="field"><label>Valor con IVA</label><input id="doc-amount" inputmode="decimal" placeholder="0,00"></div>
           <div class="field"><label>Moneda</label><select id="doc-cur">${currencyOptions("EUR")}</select></div>
           <div class="field"><label>Fecha</label><input id="doc-date" type="date" value="${today}"></div>
           <div class="field"><label>Archivo (PDF o imagen)</label><input id="doc-file" type="file" accept="image/*,application/pdf"></div>
@@ -2078,6 +2079,7 @@
     const msg = document.getElementById("doc-msg");
     document.getElementById("doc-save").addEventListener("click", async () => {
       const concept = (document.getElementById("doc-concept").value || "").trim();
+      const baseRaw = (document.getElementById("doc-base").value || "").trim().replace(",", ".");
       const amountRaw = (document.getElementById("doc-amount").value || "").trim().replace(",", ".");
       const file = document.getElementById("doc-file").files[0] || null;
       if (!concept && !file) { msg.style.color = "var(--gold-2)"; msg.textContent = "Pon al menos un concepto o un archivo."; return; }
@@ -2086,12 +2088,13 @@
         await A.addDocument({
           kind: document.getElementById("doc-kind").value,
           concept: concept,
+          base_amount: baseRaw ? parseFloat(baseRaw) : null,
           amount: amountRaw ? parseFloat(amountRaw) : null,
           currency: document.getElementById("doc-cur").value,
           doc_date: document.getElementById("doc-date").value || today
         }, file);
         msg.textContent = "Guardado ✓";
-        document.getElementById("doc-concept").value = ""; document.getElementById("doc-amount").value = "";
+        document.getElementById("doc-concept").value = ""; document.getElementById("doc-amount").value = ""; document.getElementById("doc-base").value = "";
         const fi = document.getElementById("doc-file"); fi.value = "";
         loadDocs();
       } catch (e) { msg.style.color = "var(--gold-2)"; msg.textContent = docErr(e); }
@@ -2102,18 +2105,41 @@
       try {
         const docs = await A.listDocuments();
         if (!docs.length) { box.innerHTML = `<p class="empty">Aún no hay documentos. Sube tu primera factura arriba.</p>`; return; }
-        let h = `<div class="ad-table"><div class="ad-tr ad-tr-doc ad-th"><span>Fecha</span><span>Tipo</span><span>Concepto</span><span>Importe</span><span>Archivo</span><span></span></div>`;
+        const r2 = n => Math.round((n || 0) * 100) / 100;
+        const ivaTot = {}, conTot = {};
+        let h = `<div class="ad-table"><div class="ad-tr ad-tr-doc ad-th"><span>Fecha</span><span>Tipo</span><span>Concepto</span><span>Valores (sin IVA · IVA · con IVA)</span><span>Archivo</span><span></span></div>`;
         docs.forEach(d => {
+          const cur = d.currency || "", con = d.amount, sin = d.base_amount;
+          let vals;
+          if (sin != null && con != null) {
+            const iva = r2(con - sin);
+            ivaTot[cur] = (ivaTot[cur] || 0) + iva; conTot[cur] = (conTot[cur] || 0) + con;
+            vals = `<span style="display:flex;flex-direction:column;font-size:12px;line-height:1.45">
+              <span>Sin IVA: ${esc(cur)} ${sin}</span>
+              <span style="color:var(--gold-2)">IVA: ${esc(cur)} ${iva}</span>
+              <span><b>Con IVA: ${esc(cur)} ${con}</b></span></span>`;
+          } else if (con != null) { conTot[cur] = (conTot[cur] || 0) + con; vals = esc(cur) + " " + con; }
+          else vals = "—";
           h += `<div class="ad-tr ad-tr-doc">
             <span>${adminDate(d.doc_date)}</span>
             <span>${esc(d.kind || "—")}</span>
             <span><b>${esc(d.concept || "—")}</b></span>
-            <span>${d.amount != null ? esc(d.currency || "") + " " + d.amount : "—"}</span>
+            <span>${vals}</span>
             <span>${d.url ? `<a class="ad-dl" href="${esc(d.url)}" target="_blank">Ver ↗</a>` : "—"}</span>
             <span><button class="btn btn-ghost ad-doc-del" data-id="${esc(d.id)}">Borrar</button></span>
           </div>`;
         });
         h += `</div>`;
+        const curs = [...new Set([...Object.keys(ivaTot), ...Object.keys(conTot)])];
+        if (curs.length) {
+          h += `<div class="ad-grid" style="margin-top:14px">`;
+          curs.forEach(c => {
+            const suf = curs.length > 1 ? ` (${esc(c)})` : "";
+            h += adStat(`${esc(c)} ${r2(ivaTot[c])}`, "Total impuestos (IVA)" + suf, "gold");
+            h += adStat(`${esc(c)} ${r2(conTot[c])}`, "Total con IVA" + suf, "ghost");
+          });
+          h += `</div>`;
+        }
         box.innerHTML = h;
         box.querySelectorAll(".ad-doc-del").forEach(b => b.addEventListener("click", async () => {
           if (!confirm("¿Borrar este documento?")) return;
@@ -2127,7 +2153,7 @@
       const m = String((e && e.message) || e || "");
       if (/documentos/i.test(m) && /(exist|relation|schema|find)/i.test(m)) {
         return "Falta crear la tabla de documentos en Supabase (una sola vez). Ábrela en SQL Editor y pega:\n\n"
-          + "create table if not exists documentos (id uuid primary key default gen_random_uuid(), kind text default 'gasto', concept text, amount numeric, currency text default 'EUR', doc_date date, url text, created_at timestamptz default now());\n"
+          + "create table if not exists documentos (id uuid primary key default gen_random_uuid(), kind text default 'gasto', concept text, amount numeric, base_amount numeric, currency text default 'EUR', doc_date date, url text, created_at timestamptz default now());\n"
           + "alter table documentos enable row level security;\n"
           + "create policy \"docs admin\" on documentos for all using (true) with check (true);";
       }
