@@ -58,6 +58,8 @@ window.I18N = (function () {
       "cf.model.eyebrow": "Nuestro modelo",
       "cf.model.h": "Cómo se sostiene Alquimia",
       "cf.model.p": "Alquimia se sostiene con servicios a emprendedores (branding, web, marketing) y, a medida que crece la comunidad, con membresías y comisiones.",
+      "nw.eyebrow": "Noticias de Alquimia",
+      "nw.join": "Únete a la comunidad",
 
       /* ---- sobre alquimia ---- */
       "ab.eyebrow": "Nuestra esencia",
@@ -638,6 +640,8 @@ window.I18N = (function () {
       "cf.model.eyebrow": "Our model",
       "cf.model.h": "How Alquimia sustains itself",
       "cf.model.p": "Alquimia sustains itself through services for entrepreneurs (branding, web, marketing) and, as the community grows, through memberships and commissions.",
+      "nw.eyebrow": "Alquimia News",
+      "nw.join": "Join the community",
 
       /* ---- about alquimia ---- */
       "ab.eyebrow": "Our essence",
@@ -1216,6 +1220,8 @@ nl: {
       "cf.model.eyebrow": "Ons model",
       "cf.model.h": "Hoe Alquimia zichzelf bekostigt",
       "cf.model.p": "Alquimia bekostigt zich met diensten voor ondernemers (branding, web, marketing) en, naarmate de gemeenschap groeit, met lidmaatschappen en commissies.",
+      "nw.eyebrow": "Nieuws van Alquimia",
+      "nw.join": "Sluit je aan bij de gemeenschap",
 
       /* ---- sobre alquimia ---- */
       "ab.eyebrow": "Onze essentie",
