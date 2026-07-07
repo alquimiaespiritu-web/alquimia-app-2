@@ -60,6 +60,10 @@ window.I18N = (function () {
       "cf.model.p": "Alquimia se sostiene con servicios a emprendedores (branding, web, marketing) y, a medida que crece la comunidad, con membresías y comisiones.",
       "nw.eyebrow": "Noticias de Alquimia",
       "nw.join": "Únete a la comunidad",
+      "am.eyebrow": "El equipo",
+      "am.h": "Sobre mí",
+      "am.role": "Mónica · Fundadora de Alquimia",
+      "am.p": "Soy Mónica, fundadora de Alquimia. Con experiencia en administración, mejora de procesos y automatización de negocios dentro de la Unión Europea, construyo Alquimia como un puente entre emprendedores conscientes de Europa y Latinoamérica. Mi objetivo: que los negocios con propósito ganen visibilidad y clientes, y que consumir de forma consciente y sostenible sea fácil.",
 
       /* ---- sobre alquimia ---- */
       "ab.eyebrow": "Nuestra esencia",
@@ -642,6 +646,10 @@ window.I18N = (function () {
       "cf.model.p": "Alquimia sustains itself through services for entrepreneurs (branding, web, marketing) and, as the community grows, through memberships and commissions.",
       "nw.eyebrow": "Alquimia News",
       "nw.join": "Join the community",
+      "am.eyebrow": "The team",
+      "am.h": "About me",
+      "am.role": "Mónica · Founder of Alquimia",
+      "am.p": "I'm Mónica, founder of Alquimia. With experience in administration, process improvement and business automation within the European Union, I'm building Alquimia as a bridge between conscious entrepreneurs from Europe and Latin America. My goal: that purpose-driven businesses gain visibility and customers, and that conscious, sustainable consumption becomes easy.",
 
       /* ---- about alquimia ---- */
       "ab.eyebrow": "Our essence",
@@ -1222,6 +1230,10 @@ nl: {
       "cf.model.p": "Alquimia bekostigt zich met diensten voor ondernemers (branding, web, marketing) en, naarmate de gemeenschap groeit, met lidmaatschappen en commissies.",
       "nw.eyebrow": "Nieuws van Alquimia",
       "nw.join": "Sluit je aan bij de gemeenschap",
+      "am.eyebrow": "Het team",
+      "am.h": "Over mij",
+      "am.role": "Mónica · Oprichter van Alquimia",
+      "am.p": "Ik ben Mónica, oprichter van Alquimia. Met ervaring in administratie, procesverbetering en bedrijfsautomatisering binnen de Europese Unie bouw ik Alquimia als een brug tussen bewuste ondernemers uit Europa en Latijns-Amerika. Mijn doel: dat betekenisvolle ondernemingen zichtbaarheid en klanten krijgen, en dat bewust en duurzaam consumeren makkelijk wordt.",
 
       /* ---- sobre alquimia ---- */
       "ab.eyebrow": "Onze essentie",
