@@ -110,9 +110,10 @@
             <a href="marketplace.html" class="${active==='marketplace'?'active':''}">${T("nav.marketplace")}</a>
             <a href="noticias.html" class="${active==='noticias'?'active':''}">${T("nav.news")}</a>
             <a href="sobre.html" class="${active==='sobre'?'active':''}">${T("nav.about")}</a>
+            <a href="contacto.html" class="${active==='contacto'?'active':''}">${T("nav.contact")}</a>
             <span id="nav-account" class="nav-account" style="display:contents"><a href="create-profile.html?login=1" class="cta">${T("nav.login")}</a></span>
           </div>
-          <button type="button" id="langToggle" class="lang-toggle" title="${T("nav.langTitle")}" aria-label="${T("nav.langTitle")}">${T("nav.langLabel")}</button>
+          <select id="langSelect" class="cur-toggle" title="${T("nav.langTitle")}" aria-label="${T("nav.langTitle")}"><option value="es" ${LANG()==="es"?"selected":""}>ES</option><option value="en" ${LANG()==="en"?"selected":""}>EN</option><option value="nl" ${LANG()==="nl"?"selected":""}>NL</option></select>
           <select id="curToggle" class="cur-toggle" title="${T("nav.curTitle")}" aria-label="${T("nav.curTitle")}">${A.currencyList().map(c => `<option value="${c}" ${A.displayCurrency()===c?"selected":""}>${c}</option>`).join("")}</select>
           <a href="cart.html" class="cart-link ${active==='cart'?'active':''}" title="Carrito" aria-label="Carrito" style="position:relative;display:inline-flex;align-items:center;color:var(--parchment-dim);padding:2px">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -143,6 +144,7 @@
             <a href="noticias.html">${T("nav.news")}</a>
             <a href="marketplace.html">${T("nav.marketplace")}</a>
             <a href="registro.html">${T("nav.register")}</a>
+            <a href="contacto.html">${T("nav.contact")}</a>
           </nav>
         </div>
         <div class="row" style="justify-content:space-between;align-items:center;gap:18px;margin-top:14px">
@@ -152,9 +154,13 @@
         <div class="row" style="justify-content:center;gap:18px;margin-top:10px">
           <a class="meta" href="terminos.html">${T("footer.terms")}</a>
           <a class="meta" href="privacidad.html">${T("footer.privacy")}</a>
+          <a class="meta" href="contacto.html">${T("nav.contact")}</a>
+        </div>
+        <div class="row" style="justify-content:center;margin-top:8px">
+          <span class="meta" style="opacity:.7;text-align:center">${T("footer.legal")}</span>
         </div></div></footer>`;
-    const lt = document.getElementById("langToggle");
-    if (lt && window.I18N) lt.addEventListener("click", () => window.I18N.toggle());
+    const lt = document.getElementById("langSelect");
+    if (lt && window.I18N) lt.addEventListener("change", () => window.I18N.set(lt.value));
     const ct = document.getElementById("curToggle");
     if (ct) ct.addEventListener("change", () => { A.setDisplayCurrency(ct.value); location.reload(); });
     const nt = document.getElementById("navToggle"), nl = document.getElementById("navLinks");

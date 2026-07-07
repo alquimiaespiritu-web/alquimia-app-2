@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacto — Alquimia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="contacto">
+<div id="site-header"></div>
+<main>
+  <section class="wrap" style="max-width:920px">
+    <div class="page-head">
+      <span class="eyebrow" data-i18n="ctc.eyebrow">Hablemos</span>
+      <h1 data-i18n="ctc.title">Contacto</h1>
+      <p class="sub" data-i18n="ctc.sub">¿Tienes una pregunta o quieres ser parte de Alquimia? Escríbenos y te respondemos pronto.</p>
+    </div>
+    <div class="cards2" style="margin-top:10px;align-items:start">
+      <div class="step">
+        <span class="eyebrow" data-i18n="ctc.email.h">Correo</span>
+        <p style="margin-top:10px"><a href="mailto:alquimiaespiritu@gmail.com" class="btn btn-gold btn-block">alquimiaespiritu@gmail.com</a></p>
+        <span class="eyebrow" style="margin-top:22px;display:inline-flex" data-i18n="ctc.loc.h">Ubicación</span>
+        <p class="muted" style="margin-top:6px" data-i18n="ctc.loc.v">Utrecht, Países Bajos</p>
+      </div>
+      <form name="contacto" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="step">
+        <input type="hidden" name="form-name" value="contacto">
+        <p hidden><label>No llenar: <input name="bot-field"></label></p>
+        <h3 style="font-size:20px;margin:0 0 14px" data-i18n="ctc.form.h">Envíanos un mensaje</h3>
+        <div class="field"><label data-i18n="ctc.form.name">Nombre</label><input type="text" name="nombre" required></div>
+        <div class="field"><label data-i18n="ctc.form.email">Correo</label><input type="email" name="email" required></div>
+        <div class="field"><label data-i18n="ctc.form.msg">Mensaje</label><textarea name="mensaje" rows="4" required></textarea></div>
+        <button type="submit" class="btn btn-gold btn-block mt8" data-i18n="ctc.form.send">Enviar mensaje</button>
+      </form>
+    </div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="assets/i18n.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
