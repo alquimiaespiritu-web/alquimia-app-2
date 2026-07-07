@@ -108,6 +108,7 @@
         <div class="nav-right">
           <div class="nav-links" id="navLinks">
             <a href="marketplace.html" class="${active==='marketplace'?'active':''}">${T("nav.marketplace")}</a>
+            <a href="como-funciona.html" class="${active==='como'?'active':''}">${T("nav.how")}</a>
             <a href="noticias.html" class="${active==='noticias'?'active':''}">${T("nav.news")}</a>
             <a href="sobre.html" class="${active==='sobre'?'active':''}">${T("nav.about")}</a>
             <a href="contacto.html" class="${active==='contacto'?'active':''}">${T("nav.contact")}</a>
@@ -143,6 +144,7 @@
             <a href="sobre.html">${T("footer.about")}</a>
             <a href="noticias.html">${T("nav.news")}</a>
             <a href="marketplace.html">${T("nav.marketplace")}</a>
+            <a href="como-funciona.html">${T("nav.how")}</a>
             <a href="registro.html">${T("nav.register")}</a>
             <a href="contacto.html">${T("nav.contact")}</a>
           </nav>
