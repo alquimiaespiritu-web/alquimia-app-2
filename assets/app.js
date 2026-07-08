@@ -145,6 +145,7 @@
             <a href="noticias.html">${T("nav.news")}</a>
             <a href="marketplace.html">${T("nav.marketplace")}</a>
             <a href="como-funciona.html">${T("nav.how")}</a>
+            <a href="faq.html">FAQ</a>
             <a href="registro.html">${T("nav.register")}</a>
             <a href="contacto.html">${T("nav.contact")}</a>
           </nav>
