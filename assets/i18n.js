@@ -69,6 +69,9 @@ window.I18N = (function () {
       "cred.curation.d": "Cada negocio entra por selección, no por volumen.",
       "cred.bridge.t": "Puente Europa ↔ Latinoamérica",
       "cred.bridge.d": "Conectamos la oferta consciente de Latinoamérica con clientes en Europa.",
+      "ref.eyebrow": "Reflexión del día",
+      "ref.q": "Para hoy",
+      "ref.cta": "Regístrate en Alquimia",
       "am.p": "Soy Mónica, fundadora de Alquimia. Con experiencia en administración, mejora de procesos y automatización de negocios dentro de la Unión Europea, construyo Alquimia como un puente entre emprendedores conscientes de Europa y Latinoamérica. Mi objetivo: que los negocios con propósito ganen visibilidad y clientes, y que consumir de forma consciente y sostenible sea fácil.",
 
       /* ---- sobre alquimia ---- */
@@ -661,6 +664,9 @@ window.I18N = (function () {
       "cred.curation.d": "Every business is selected, not mass-listed.",
       "cred.bridge.t": "Europe ↔ Latin America bridge",
       "cred.bridge.d": "We connect Latin America's conscious offer with customers in Europe.",
+      "ref.eyebrow": "Reflection of the day",
+      "ref.q": "For today",
+      "ref.cta": "Join Alquimia",
       "am.p": "I'm Mónica, founder of Alquimia. With experience in administration, process improvement and business automation within the European Union, I'm building Alquimia as a bridge between conscious entrepreneurs from Europe and Latin America. My goal: that purpose-driven businesses gain visibility and customers, and that conscious, sustainable consumption becomes easy.",
 
       /* ---- about alquimia ---- */
@@ -1251,6 +1257,9 @@ nl: {
       "cred.curation.d": "Elke onderneming wordt geselecteerd, niet massaal toegelaten.",
       "cred.bridge.t": "Brug Europa ↔ Latijns-Amerika",
       "cred.bridge.d": "We verbinden het bewuste aanbod uit Latijns-Amerika met klanten in Europa.",
+      "ref.eyebrow": "Reflectie van de dag",
+      "ref.q": "Voor vandaag",
+      "ref.cta": "Sluit je aan bij Alquimia",
       "am.p": "Ik ben Mónica, oprichter van Alquimia. Met ervaring in administratie, procesverbetering en bedrijfsautomatisering binnen de Europese Unie bouw ik Alquimia als een brug tussen bewuste ondernemers uit Europa en Latijns-Amerika. Mijn doel: dat betekenisvolle ondernemingen zichtbaarheid en klanten krijgen, en dat bewust en duurzaam consumeren makkelijk wordt.",
 
       /* ---- sobre alquimia ---- */
