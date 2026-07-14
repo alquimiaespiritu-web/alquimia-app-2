@@ -100,23 +100,27 @@ exports.handler = async (event) => {
     : { perfil: "suscriptora", intereses: d.intereses || "" };
   try { await upsertContact(email, name, props); } catch (e) {}
 
-  // 2) Envío de la bienvenida.
-  const tpl = type === "aliada" ? process.env.RESEND_TPL_ALIADA : process.env.RESEND_TPL_SUSCRIPTORA;
-  let sendBody;
-  if (tpl) {
-    const variables = type === "aliada"
-      ? { PRODUCTO: d.producto || "", INSTAGRAM: d.instagram || "" }
-      : { INTERESES: d.intereses || "" };
-    sendBody = { from: FROM, to: [email], template: tpl, variables: variables };
-  } else {
-    const built = type === "aliada" ? buildAliada(name, d.producto, d.instagram) : buildSuscriptora(name, d.intereses);
-    sendBody = { from: FROM, to: [email], subject: built.subject, html: built.html };
-  }
+  // 2) Envío de la bienvenida usando las plantillas publicadas de Resend (IDs por defecto,
+  //    se pueden sobrescribir con env vars). FIRST_NAME lo resuelve Resend desde el contacto.
+  const tpl = type === "aliada"
+    ? (process.env.RESEND_TPL_ALIADA || "88da14cf-21f0-487c-8eef-bd29d41b8df6")
+    : (process.env.RESEND_TPL_SUSCRIPTORA || "25da5b87-3385-4cd9-9c8a-90de9b64def3");
+  const variables = type === "aliada"
+    ? { PRODUCTO: d.producto || "", INSTAGRAM: d.instagram || "" }
+    : { INTERESES: d.intereses || "" };
 
   try {
-    const r = await api("/emails", sendBody);
+    // Intento con la plantilla publicada.
+    let r = await api("/emails", { from: FROM, to: [email], template: tpl, variables: variables });
+    let mode = "template";
+    // Respaldo: si la plantilla falla por lo que sea, enviamos un HTML propio para que SIEMPRE llegue.
+    if (!r.ok) {
+      const built = type === "aliada" ? buildAliada(name, d.producto, d.instagram) : buildSuscriptora(name, d.intereses);
+      r = await api("/emails", { from: FROM, to: [email], subject: built.subject, html: built.html });
+      mode = "html-fallback";
+    }
     if (!r.ok) return { statusCode: 502, body: JSON.stringify({ error: (r.out && (r.out.message || r.out.name)) || "Error de Resend", detail: r.out }) };
-    return { statusCode: 200, body: JSON.stringify({ ok: true, id: r.out.id || null, mode: tpl ? "template" : "html" }) };
+    return { statusCode: 200, body: JSON.stringify({ ok: true, id: r.out.id || null, mode: mode }) };
   } catch (e) {
     return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
   }
