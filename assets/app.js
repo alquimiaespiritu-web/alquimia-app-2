@@ -157,11 +157,34 @@
         <div class="row" style="justify-content:center;gap:18px;margin-top:10px">
           <a class="meta" href="terminos.html">${T("footer.terms")}</a>
           <a class="meta" href="privacidad.html">${T("footer.privacy")}</a>
+          <a class="meta" href="privacidad.html#cookies">${T("footer.cookies")}</a>
           <a class="meta" href="contacto.html">${T("nav.contact")}</a>
         </div>
         <div class="row" style="justify-content:center;margin-top:8px">
           <span class="meta" style="opacity:.7;text-align:center">${T("footer.legal")}</span>
         </div></div></footer>`;
+    // Aviso de cookies (GDPR/AVG) — visible hasta que se acepta o rechaza.
+    (function () {
+      let choice = null; try { choice = localStorage.getItem("alq_cookie_consent"); } catch (e) {}
+      if (choice) return;
+      if (document.getElementById("cookieBanner")) return;
+      const bar = document.createElement("div");
+      bar.id = "cookieBanner";
+      bar.setAttribute("role", "dialog");
+      bar.setAttribute("aria-live", "polite");
+      bar.setAttribute("aria-label", T("cookie.aria"));
+      bar.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:9999;max-width:680px;width:calc(100% - 32px);background:var(--ink,#2A152B);color:var(--parchment,#EFE7DA);border:1px solid var(--gold,#C6A15B);border-radius:14px;padding:16px 18px;box-shadow:0 10px 40px rgba(0,0,0,.45);font-size:14px;line-height:1.55";
+      bar.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px">
+          <p style="margin:0">${T("cookie.text")} <a href="privacidad.html#cookies" style="color:var(--gold,#C6A15B);text-decoration:underline">${T("cookie.more")}</a></p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+            <button type="button" id="ckReject" class="btn btn-ghost" style="padding:8px 16px">${T("cookie.reject")}</button>
+            <button type="button" id="ckAccept" class="btn btn-gold" style="padding:8px 16px">${T("cookie.accept")}</button>
+          </div></div>`;
+      document.body.appendChild(bar);
+      const done = v => { try { localStorage.setItem("alq_cookie_consent", v); } catch (e) {} bar.remove(); };
+      bar.querySelector("#ckAccept").addEventListener("click", () => done("accepted"));
+      bar.querySelector("#ckReject").addEventListener("click", () => done("rejected"));
+    })();
     const lt = document.getElementById("langSelect");
     if (lt && window.I18N) lt.addEventListener("change", () => window.I18N.set(lt.value));
     const ct = document.getElementById("curToggle");
