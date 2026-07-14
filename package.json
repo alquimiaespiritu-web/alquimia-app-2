@@ -1,0 +1,10 @@
+{
+  "name": "alquimia-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Alquimia — marketplace y comunidad de emprendedores conscientes. Dependencias de las funciones de Netlify (IA, pagos y notificaciones push).",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "web-push": "^3.6.7"
+  }
+}

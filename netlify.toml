@@ -1,6 +1,12 @@
 # Configuración de Netlify para Alquimia
-# Define dónde viven las funciones del servidor (el "motor" de pagos con Stripe).
+# Define dónde viven las funciones del servidor (IA, pagos y notificaciones).
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+# El Reto de Autoconocimiento se manda solo cada día.
+# Hora en UTC. "0 12 * * *" = 12:00 UTC (14:00 Países Bajos / 07:00 Colombia en verano).
+# Para cambiar la hora, edita solo el número de la hora (0-23).
+[functions."push-daily"]
+  schedule = "0 12 * * *"

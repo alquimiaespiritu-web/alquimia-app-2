@@ -50,6 +50,49 @@
     const a = A.catList(cat).map(c => PILLARS[c] && PILLARS[c].sym).filter(Boolean);
     return a.length ? `<span class="pf-pmark">${a.join(" ")}</span>` : "";
   }
+  // Embellece la descripción del producto: "Etiqueta: valor" → fila con título;
+  // respeta viñetas (-, •, *) y saltos de línea. Sin campos nuevos ni base de datos.
+  function renderDesc(raw) {
+    const text = String(raw == null ? "" : raw).replace(/\r\n?/g, "\n").trim();
+    if (!text) return "";
+    const lines = text.split("\n");
+    let html = "", bullets = [];
+    const flush = () => { if (bullets.length) { html += `<ul class="ds-list">${bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>`; bullets = []; } };
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) { flush(); continue; }
+      const b = line.match(/^[-•*–]\s+(.*)$/);
+      if (b) { bullets.push(b[1]); continue; }
+      flush();
+      const hd = line.match(/^([A-Za-zÁÉÍÓÚÑÜáéíóúñü][^:\n]{1,38}):$/);
+      if (hd) { html += `<div class="ds-h">${esc(hd[1].trim())}</div>`; continue; }
+      const kv = line.match(/^([A-Za-zÁÉÍÓÚÑÜáéíóúñü][^:\n]{1,38}):\s+(\S.*)$/);
+      if (kv) { html += `<div class="ds-row"><span class="ds-k">${esc(kv[1].trim())}</span><span class="ds-v">${esc(kv[2].trim())}</span></div>`; }
+      else { html += `<p>${esc(line)}</p>`; }
+    }
+    flush();
+    return html;
+  }
+  // Combina los campos guiados (Objetivo, Duración, Para quién, Qué incluye) + la
+  // descripción libre en un texto "Etiqueta: valor" que renderDesc pinta como secciones.
+  function composeListingDesc(o) {
+    const rows = [];
+    const add = (labelKey, val, allowBlock) => {
+      val = String(val == null ? "" : val).trim();
+      if (!val) return;
+      const label = T(labelKey);
+      if (allowBlock && /\n/.test(val)) rows.push(label + ":\n" + val);
+      else rows.push(label + ": " + val.replace(/\s*\n\s*/g, " "));
+    };
+    add("cp.lb.objetivo", o.objetivo);
+    add("cp.lb.duracion", o.duracion);
+    add("cp.lb.paraquien", o.paraquien);
+    add("cp.lb.incluye", o.incluye, true);
+    let out = rows.join("\n");
+    const free = String(o.desc == null ? "" : o.desc).trim();
+    if (free) out += (out ? "\n\n" : "") + free;
+    return out.trim();
+  }
   // Sello completo de Alquimia (como la home). La animación (qué pilar palpita) la
   // controla initSeal() ciclando solo los pilares de este perfil.
   function sealSVG() {
@@ -108,6 +151,7 @@
         <div class="nav-right">
           <div class="nav-links" id="navLinks">
             <a href="marketplace.html" class="${active==='marketplace'?'active':''}">${T("nav.marketplace")}</a>
+            <a href="reto.html" class="${active==='reto'?'active':''}">${T("nav.reto")}</a>
             <a href="como-funciona.html" class="${active==='como'?'active':''}">${T("nav.how")}</a>
             <a href="noticias.html" class="${active==='noticias'?'active':''}">${T("nav.news")}</a>
             <a href="sobre.html" class="${active==='sobre'?'active':''}">${T("nav.about")}</a>
@@ -144,6 +188,7 @@
             <a href="sobre.html">${T("footer.about")}</a>
             <a href="noticias.html">${T("nav.news")}</a>
             <a href="marketplace.html">${T("nav.marketplace")}</a>
+            <a href="reto.html">${T("nav.reto")}</a>
             <a href="como-funciona.html">${T("nav.how")}</a>
             <a href="faq.html">FAQ</a>
             <a href="registro.html">${T("nav.register")}</a>
@@ -712,13 +757,13 @@
     const avatar = s.avatarImg ? `<span class="avatar sm"><img src="${s.avatarImg}" alt=""></span>` : `<span class="avatar sm">${s.ini}</span>`;
     root.innerHTML = `
       <div>
-        <div class="hero-img ${gc(l.g)}">${l.img ? `<img class="pf-img" src="${l.img}" alt="${esc(A.fld(l, "title"))}" decoding="async">` : `<div class="glyphmark">${GLYPH}</div>`}</div>
+        <div class="hero-img ${gc(l.g)}">${pillarMarks(l.cat)}${l.img ? `<img class="pf-img" src="${l.img}" alt="${esc(A.fld(l, "title"))}" decoding="async">` : `<div class="glyphmark">${GLYPH}</div>`}</div>
       </div>
       <div>
         <span class="kindtag">${A.kindLabel(l.kind)} · ${A.catsLabel(l.cat)}</span>
         <h1>${A.fld(l, "title")}</h1>
         <div class="price-lg">${A.price(l.price, l.currency)}</div>
-        <p class="desc">${A.fld(l, "desc")}</p>
+        <div class="desc desc-rich">${renderDesc(A.fld(l, "desc"))}</div>
         ${s.payUrl ? `<a class="btn btn-gold btn-lg btn-block" href="${extUrl(s.payUrl)}" target="_blank" rel="noopener">${T("ls.pay")}</a>` : ""}
         ${interestBtn(s, `btn ${s.payUrl ? "btn-ghost" : "btn-gold"} btn-lg btn-block mt8`, A.fld(l, "title"))}
         <a class="seller-row" href="profile.html?id=${s.id}">
@@ -752,6 +797,7 @@
     const cells = (s.listings || []).map(l => `
       <a class="pf-cell ${gc(l.g)}" href="listing.html?id=${l.id}">
         <span class="kind">${A.kindLabel(l.kind)}</span>
+        ${pillarMarks(l.cat)}
         ${l.img ? `<img class="pf-img" src="${l.img}" alt="${esc(A.fld(l, "title"))}" loading="lazy" decoding="async">` : `<div class="glyphmark">${GLYPH}</div>`}
         <div class="over"><div class="ttl">${A.fld(l, "title")}</div><div class="price">${A.price(l.price, l.currency)}</div></div>
       </a>`).join("");
@@ -994,6 +1040,14 @@
         <div class="field"><label>${T("cp.lb.desc")}</label><textarea class="l-desc" placeholder="${T("cp.lb.desc.ph")}"></textarea>
           <div class="ai-row"><button type="button" class="btn-ai l-ai">✨ <span>${T("ai.improve")}</span></button><span class="ai-note l-ai-msg" aria-live="polite"></span></div>
         </div>
+        <div class="lb-details"><div class="lb-details-h">${T("cp.lb.details")}</div>
+          <div class="grid-2">
+            <div class="field"><label>${T("cp.lb.objetivo")}</label><input class="l-objetivo" placeholder="${T("cp.lb.objetivo.ph")}"></div>
+            <div class="field"><label>${T("cp.lb.duracion")}</label><input class="l-duracion" placeholder="${T("cp.lb.duracion.ph")}"></div>
+          </div>
+          <div class="field"><label>${T("cp.lb.paraquien")}</label><input class="l-paraquien" placeholder="${T("cp.lb.paraquien.ph")}"></div>
+          <div class="field"><label>${T("cp.lb.incluye")}</label><textarea class="l-incluye" placeholder="${T("cp.lb.incluye.ph")}"></textarea></div>
+        </div>
         <div class="field"><label>${T("cp.lb.photo")}</label><label class="upload"><span class="l-img-label">${T("cp.lb.photo.add")}</span><input type="file" class="l-img" accept="image/*"></label></div>`;
       div.querySelector(".rm").addEventListener("click", () => div.remove());
       const imgIn = div.querySelector(".l-img");
@@ -1100,7 +1154,13 @@
           listings.push({ id: id + "-" + i, title: t, kind: d.querySelector(".l-kind").value,
             price: Number(d.querySelector(".l-price").value) || 0, g: "grad-" + ((i % 6) + 1),
             cat: [...d.querySelectorAll(".l-cat:checked")].map(x => x.value).join(","),
-            desc: d.querySelector(".l-desc").value.trim() || T("cp.noDesc"), img: img });
+            desc: composeListingDesc({
+              desc: d.querySelector(".l-desc").value,
+              objetivo: (d.querySelector(".l-objetivo") || {}).value,
+              duracion: (d.querySelector(".l-duracion") || {}).value,
+              paraquien: (d.querySelector(".l-paraquien") || {}).value,
+              incluye: (d.querySelector(".l-incluye") || {}).value
+            }) || T("cp.noDesc"), img: img });
         }
         const media = [];
         for (let i = 0; i < galleryFiles.length; i++) {
@@ -1146,6 +1206,8 @@
       if (pw !== pw2) { btn.disabled = false; msg.style.color = "var(--gold-2)"; msg.textContent = T("cp.err.passmatch"); return; }
       // Aviso a Alquimia de que alguien empezó el registro (independiente del envío del código).
       try { fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ "form-name": "vendedora-nueva", evento: "Nueva cuenta de vendedora", email: em }).toString() }); } catch (e) {}
+      // Notificación push a Mónica (si tiene la app instalada y avisos activos).
+      if (A.pushEvent) A.pushEvent("new-seller", val("p-name") || em);
       // Muestra SIEMPRE el paso del código (él mismo envía el código y muestra su estado/errores).
       msg.textContent = "";
       renderCodeStep(em, pw, finishProfile);
@@ -1371,8 +1433,12 @@
     if (bForm) bForm.addEventListener("submit", () => {
       const el = bForm.querySelector('[name="nombre"]');
       const nm = (el ? el.value : "").trim();
+      const em = ((bForm.querySelector('[name="email"]') || {}).value || "").trim();
+      const intereses = [].slice.call(bForm.querySelectorAll('[name="interes[]"]:checked')).map(function (c) { return c.value; }).join(", ");
       const ini = nm.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
       A.saveBuyer({ name: nm, avatarImg: buyerAvatar, ini: ini });
+      // Correo de bienvenida a la suscriptora (Resend). keepalive: sobrevive la navegación a gracias.html.
+      if (em) { try { fetch("/.netlify/functions/resend-welcome", { method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true, body: JSON.stringify({ type: "suscriptora", email: em, name: nm, intereses: intereses }) }); } catch (e) {} }
     });
   }
 
@@ -1470,6 +1536,14 @@
             <div class="field"><label>${T("cp.lb.cat")}</label><div class="checks">${["Cuerpo","Mente","Alma","Planeta","Comunidad"].map(cv => `<label class="check"><input type="checkbox" class="ml-cat" value="${cv}"><span>${A.catLabel(cv)}</span></label>`).join("")}</div></div>
             <div class="field"><label>${T("cp.lb.desc")}</label><textarea id="ml-desc" placeholder="${T("cp.lb.desc.ph")}"></textarea>
               <div class="ai-row"><button type="button" class="btn-ai" id="ml-ai">✨ <span>${T("ai.improve")}</span></button><span class="ai-note" id="ml-aimsg"></span></div>
+            </div>
+            <div class="lb-details"><div class="lb-details-h">${T("cp.lb.details")}</div>
+              <div class="grid-2">
+                <div class="field"><label>${T("cp.lb.objetivo")}</label><input id="ml-objetivo" placeholder="${T("cp.lb.objetivo.ph")}"></div>
+                <div class="field"><label>${T("cp.lb.duracion")}</label><input id="ml-duracion" placeholder="${T("cp.lb.duracion.ph")}"></div>
+              </div>
+              <div class="field"><label>${T("cp.lb.paraquien")}</label><input id="ml-paraquien" placeholder="${T("cp.lb.paraquien.ph")}"></div>
+              <div class="field"><label>${T("cp.lb.incluye")}</label><textarea id="ml-incluye" placeholder="${T("cp.lb.incluye.ph")}"></textarea></div>
             </div>
             <div class="field"><label>${T("cp.lb.photo")}</label><label class="upload"><span id="ml-imglbl">${T("cp.lb.photo.add")}</span><input type="file" id="ml-img" accept="image/*"></label></div>
             <button type="button" class="btn btn-gold btn-sm" id="ml-save">${T("db.addListing.btn")}</button>
@@ -1642,7 +1716,13 @@
           title: title, kind: document.getElementById("ml-kind").value,
           price: Number(document.getElementById("ml-price").value) || 0,
           cat: [...document.querySelectorAll(".ml-cat:checked")].map(x => x.value).join(","),
-          desc: document.getElementById("ml-desc").value.trim() || T("cp.noDesc"),
+          desc: composeListingDesc({
+            desc: document.getElementById("ml-desc").value,
+            objetivo: (document.getElementById("ml-objetivo") || {}).value,
+            duracion: (document.getElementById("ml-duracion") || {}).value,
+            paraquien: (document.getElementById("ml-paraquien") || {}).value,
+            incluye: (document.getElementById("ml-incluye") || {}).value
+          }) || T("cp.noDesc"),
           img: imgIn ? imgIn.__data : null, g: "grad-" + (((s.listings || []).length % 6) + 1)
         });
         msg.style.color = "var(--emerald)"; msg.textContent = T("db.listingAdded");
@@ -1784,6 +1864,7 @@
       const cells = supported.map(l => `
         <a class="pf-cell ${gc(l.g)}" href="listing.html?id=${l.id}">
           <span class="kind">${A.kindLabel(l.kind)}</span>
+          ${pillarMarks(l.cat)}
           ${l.img ? `<img class="pf-img" src="${l.img}" alt="${esc(A.fld(l, "title"))}" loading="lazy" decoding="async">` : `<div class="glyphmark">${GLYPH}</div>`}
           <div class="over"><div class="ttl">${A.fld(l, "title")}</div><div class="price">${A.price(l.price, l.currency)}</div></div>
         </a>`).join("");
@@ -2044,7 +2125,33 @@
       main.innerHTML = `<h2 class="ad-h2">Marketing</h2>
         <p class="muted">Tu actividad de marketing y comunidad.</p>
         <div class="ad-grid">${adStat(st.news, "Suscriptores al boletín")}${adStat("—", "Posts publicados", "ghost")}${adStat("5", "Noticias en la web")}${adStat("—", "Alcance redes", "ghost")}</div>
-        <p class="note">Ya tienes tareas programadas (contenido, newsletter, tendencias) y la sección de Noticias bilingüe en la web. Próximo: conectar aquí las métricas de tu newsletter y redes. Ver Plan-de-Campana-Alquimia.</p>`;
+        <div class="ad-push">
+          <h3 class="ad-h">🔔 Enviar una notificación</h3>
+          <p class="muted">Manda un aviso al celular de quienes instalaron la app y activaron notificaciones.</p>
+          <label class="ad-lbl">Tu clave de avisos <span class="muted">(se guarda solo en este navegador)</span></label>
+          <div class="ad-row"><input id="apToken" type="password" class="inp" placeholder="Pega aquí tu ADMIN_PUSH_TOKEN"><button type="button" class="btn btn-ghost" id="apSaveToken">Guardar</button></div>
+          <label class="ad-lbl">¿A quién?</label>
+          <select id="apTopic" class="inp">
+            <option value="all">Todos</option>
+            <option value="news">Los que quieren noticias</option>
+            <option value="promo">Los que quieren promociones</option>
+            <option value="reto">Los del Reto</option>
+          </select>
+          <label class="ad-lbl">Título</label>
+          <input id="apTitle" class="inp" maxlength="80" placeholder="Nueva noticia en Alquimia ✨">
+          <label class="ad-lbl">Mensaje</label>
+          <textarea id="apBody" class="inp" rows="3" maxlength="280" placeholder="Escribe aquí el aviso…"></textarea>
+          <label class="ad-lbl">Enlace al tocar <span class="muted">(opcional)</span></label>
+          <input id="apUrl" class="inp" placeholder="noticias.html">
+          <div class="ad-row" style="margin-top:12px">
+            <button type="button" class="btn btn-gold" id="apSend">Enviar aviso</button>
+            <button type="button" class="btn btn-ghost" id="apTest">Probar (envíame a mí)</button>
+          </div>
+          <p class="note" id="apStatus"></p>
+          <p class="note">La prueba solo te llega a ti si instalaste la app y activaste notificaciones en este dispositivo.</p>
+        </div>
+        <p class="note">Ya tienes tareas programadas (contenido, newsletter, tendencias) y la sección de Noticias bilingüe en la web. El Reto de Autoconocimiento envía su reflexión diaria solo.</p>`;
+      wireAdminPush(main);
     }
   }
 
@@ -2198,12 +2305,150 @@
     btn.disabled = true; btn.textContent = "Guardando…";
     try {
       await A.setApproved(btn.dataset.id, value);
+      // Al APROBAR: correo de bienvenida "aliada" (Resend). _adminData aún tiene los datos de la vendedora.
+      if (value) {
+        try {
+          var _s = (_adminData || []).find(function (x) { return x.id === btn.dataset.id; }) || {};
+          if (_s.email) fetch("/.netlify/functions/resend-welcome", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: "aliada", email: _s.email, name: _s.name || "", producto: _s.role || _s.name || "", instagram: _s.instagram || "" }) }).catch(function () {});
+        } catch (e) {}
+      }
+      // Al APROBAR, avisamos a la vendedora por notificación (si el token del panel está guardado).
+      if (value && A.pushSellerApproved) {
+        let tk = ""; try { tk = localStorage.getItem("alq_push_token") || ""; } catch (e) {}
+        if (tk) { A.pushSellerApproved({ token: tk, sellerId: btn.dataset.id }).catch(function () {}); }
+      }
       _adminData = await A.adminSellers();
       adminRenderSellers(main, _adminData, adminStats(_adminData), user);
     } catch (e) {
       btn.disabled = false; btn.textContent = value ? "Aprobar ✓" : "Ocultar";
       alert("No se pudo guardar. Para aprobar desde aquí falta dar permiso al admin en Supabase (te paso el SQL). Mientras tanto puedes aprobar en Supabase.\n\nDetalle: " + (e.message || e));
     }
+  }
+
+  // Conecta los botones del bloque "Enviar una notificación" del panel de marketing.
+  function wireAdminPush(main) {
+    const q = sel => main.querySelector(sel);
+    const tokEl = q("#apToken");
+    if (tokEl) { try { tokEl.value = localStorage.getItem("alq_push_token") || ""; } catch (e) {} }
+    const status = m => { const s = q("#apStatus"); if (s) s.textContent = m; };
+    const save = q("#apSaveToken");
+    if (save) save.addEventListener("click", () => { try { localStorage.setItem("alq_push_token", (tokEl.value || "").trim()); } catch (e) {} status("Clave guardada en este navegador ✓"); });
+    async function send(topicOverride, titleOverride, bodyOverride) {
+      const token = (tokEl && tokEl.value.trim()) || "";
+      if (!token) { status("Primero pega tu clave de avisos y pulsa Guardar."); return; }
+      const topic = topicOverride || (q("#apTopic") && q("#apTopic").value) || "all";
+      const title = titleOverride || (q("#apTitle") && q("#apTitle").value.trim()) || "";
+      const body = bodyOverride || (q("#apBody") && q("#apBody").value.trim()) || "";
+      const url = (q("#apUrl") && q("#apUrl").value.trim()) || "index.html";
+      if (!title || !body) { status("Escribe un título y un mensaje."); return; }
+      status("Enviando…");
+      try {
+        const r = await A.pushBroadcast({ token, topic, title, body, url });
+        status("Enviado a " + r.sent + " dispositivo(s)." + (r.removed ? " (" + r.removed + " caducados eliminados)" : ""));
+      } catch (e) { status("Error: " + (e.message || e)); }
+    }
+    const sendBtn = q("#apSend"); if (sendBtn) sendBtn.addEventListener("click", () => send());
+    const testBtn = q("#apTest"); if (testBtn) testBtn.addEventListener("click", () => send("admin", "Prueba de Alquimia ✨", "Si ves esto en tu celular, ¡tus notificaciones funcionan!"));
+  }
+
+  // ---- Reto de Autoconocimiento (reto.html) ----
+  function retoState() { try { return JSON.parse(localStorage.getItem("alq_reto") || "null"); } catch (e) { return null; } }
+  function retoSave(s) { try { localStorage.setItem("alq_reto", JSON.stringify(s)); } catch (e) {} }
+  function retoTxt(o) { const L = LANG(); return (o && (o[L] || o.es)) || ""; }
+  function todayISO() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+
+  async function initReto() {
+    const root = document.getElementById("retoRoot");
+    if (!root || !window.ALQ_RETO) return;
+    const RETO = window.ALQ_RETO;
+    let state = retoState();
+
+    function pushChip() {
+      // Muestra el estado de las notificaciones y un botón para activarlas.
+      return '<div class="reto-notif" id="retoNotif"></div>';
+    }
+
+    async function refreshNotif(joinedStart) {
+      const el = document.getElementById("retoNotif");
+      if (!el || !window.ALQPUSH) return;
+      const st = await window.ALQPUSH.state();
+      if (st === "on") { el.innerHTML = '<span class="reto-onchip">🔔 ' + esc(T("reto.notif.on")) + '</span>'; return; }
+      if (st === "unsupported") { el.innerHTML = '<p class="muted reto-small">' + esc(T("reto.notif.unsupported")) + '</p>'; return; }
+      if (st === "need-install") { el.innerHTML = '<p class="muted reto-small">📲 ' + esc(T("reto.notif.ios")) + '</p>'; return; }
+      if (st === "denied") { el.innerHTML = '<p class="muted reto-small">' + esc(T("reto.notif.denied")) + '</p>'; return; }
+      el.innerHTML = '<button type="button" class="btn btn-ghost" id="retoEnable">🔔 ' + esc(T("reto.notif.enable")) + '</button>';
+      const b = document.getElementById("retoEnable");
+      if (b) b.addEventListener("click", async () => {
+        b.disabled = true; b.textContent = T("reto.notif.working");
+        const r = await window.ALQPUSH.enable({ topics: ["reto", "general"], retoStart: joinedStart || (state && state.start) || todayISO() });
+        if (r.status === "ok") refreshNotif(joinedStart);
+        else if (r.status === "need-install") { b.outerHTML = '<p class="muted reto-small">📲 ' + esc(T("reto.notif.ios")) + '</p>'; }
+        else if (r.status === "denied") { b.outerHTML = '<p class="muted reto-small">' + esc(T("reto.notif.denied")) + '</p>'; }
+        else { b.disabled = false; b.textContent = "🔔 " + T("reto.notif.enable"); }
+      });
+    }
+
+    function renderIntro() {
+      root.innerHTML =
+        '<span class="eyebrow" style="justify-content:center">☉ ' + esc(T("reto.eyebrow")) + '</span>' +
+        '<h1 style="font-size:clamp(30px,5vw,52px);font-weight:400;line-height:1.05;max-width:14em;margin:14px auto 10px">' + esc(T("reto.title")) + '</h1>' +
+        '<p class="lede" style="max-width:40ch;margin:0 auto 8px">' + esc(T("reto.lede")) + '</p>' +
+        '<div class="reto-steps">' +
+          '<div class="reto-step"><span class="rs-n">21</span><span>' + esc(T("reto.f1")) + '</span></div>' +
+          '<div class="reto-step"><span class="rs-n">1</span><span>' + esc(T("reto.f2")) + '</span></div>' +
+          '<div class="reto-step"><span class="rs-n">✎</span><span>' + esc(T("reto.f3")) + '</span></div>' +
+        '</div>' +
+        '<button type="button" class="btn btn-gold btn-lg" id="retoJoin" style="margin-top:8px">' + esc(T("reto.join")) + '</button>' +
+        '<p class="muted reto-small" style="margin-top:14px">' + esc(T("reto.joinNote")) + '</p>';
+      const j = document.getElementById("retoJoin");
+      if (j) j.addEventListener("click", async () => {
+        const start = todayISO();
+        state = { start: start, answers: {} };
+        retoSave(state);
+        // Intenta activar las notificaciones al unirse (pide permiso).
+        if (window.ALQPUSH) { try { await window.ALQPUSH.enable({ topics: ["reto", "general"], retoStart: start }); } catch (e) {} }
+        renderDay();
+      });
+    }
+
+    function renderDay() {
+      const day = RETO.dayFor(state.start);
+      const total = RETO.days.length;
+      const idx = day.d;
+      const finished = idx >= total && (RETO.dayFor(state.start).d === total);
+      const saved = (state.answers && state.answers[day.d]) || "";
+      const pct = Math.round((day.d / total) * 100);
+      root.innerHTML =
+        '<span class="eyebrow" style="justify-content:center">' + day.sym + ' ' + esc(T("cat." + day.pilar)) + ' · ' + esc(T("reto.dayLabel")) + ' ' + day.d + '/' + total + '</span>' +
+        '<div class="reto-progress"><span style="width:' + pct + '%"></span></div>' +
+        '<h1 class="reto-daytitle">' + esc(retoTxt(day.title)) + '</h1>' +
+        '<p class="reto-refl">' + esc(retoTxt(day.r)) + '</p>' +
+        '<div class="reto-qcard">' +
+          '<p class="reto-q"><strong>' + esc(T("reto.q")) + '</strong> ' + esc(retoTxt(day.q)) + '</p>' +
+          '<textarea id="retoAns" class="inp reto-ans" rows="4" placeholder="' + esc(T("reto.ansPh")) + '">' + esc(saved) + '</textarea>' +
+          '<div class="row" style="justify-content:space-between;align-items:center;gap:10px;margin-top:8px">' +
+            '<span class="muted reto-small" id="retoSaved">' + (saved ? esc(T("reto.answered")) : "") + '</span>' +
+            '<button type="button" class="btn btn-gold" id="retoSaveBtn">' + esc(T("reto.save")) + '</button>' +
+          '</div>' +
+        '</div>' +
+        pushChip() +
+        '<p class="muted reto-small" style="margin-top:18px">' + esc(T("reto.tomorrow")) + '</p>' +
+        '<button type="button" class="reto-reset" id="retoReset">' + esc(T("reto.restart")) + '</button>';
+      const sv = document.getElementById("retoSaveBtn");
+      if (sv) sv.addEventListener("click", () => {
+        const t = (document.getElementById("retoAns").value || "").trim();
+        state.answers = state.answers || {}; state.answers[day.d] = t; retoSave(state);
+        const m = document.getElementById("retoSaved"); if (m) m.textContent = T("reto.answered");
+        sv.textContent = T("reto.saved"); setTimeout(() => { sv.textContent = T("reto.save"); }, 1600);
+      });
+      const rs = document.getElementById("retoReset");
+      if (rs) rs.addEventListener("click", () => {
+        if (confirm(T("reto.restartConfirm"))) { state = null; retoSave(null); try { localStorage.removeItem("alq_reto"); } catch (e) {} renderIntro(); }
+      });
+      refreshNotif(state.start);
+    }
+
+    if (state && state.start) renderDay(); else renderIntro();
   }
 
   // ---- helpers ----
@@ -2228,6 +2473,12 @@
   document.addEventListener("DOMContentLoaded", async () => {
     const page = document.body.dataset.page;
     if (window.I18N) window.I18N.applyStatic();
+    // PWA + notificaciones (instalar la app, avisos). Se carga en todas las páginas.
+    if (!window.ALQPUSH && !document.getElementById("alq-pwa-js")) {
+      const ps = document.createElement("script");
+      ps.id = "alq-pwa-js"; ps.src = "assets/pwa.js"; ps.defer = true;
+      document.head.appendChild(ps);
+    }
     if (A.refreshRates) A.refreshRates();
     chrome(page);
     // carga vendedoras desde Supabase antes de pintar las páginas con datos
@@ -2237,7 +2488,7 @@
     ({ index: initIndex, marketplace: initMarketplace, listing: initListing, profile: initProfile,
        create: initCreate, connect: initConnect, checkout: initCheckout, dashboard: initDashboard,
        cart: initCart, registro: initRegistro, gracias: initGracias, pilar: initPilar,
-       reset: initReset, comprador: initComprador, admin: initAdmin }[page] || function(){})();
+       reset: initReset, comprador: initComprador, admin: initAdmin, reto: initReto }[page] || function(){})();
     // Latido contextual del logo: en una página de pilar, solo late ese elemento
     if (document.body.dataset.pillar) setMarkPulse([document.body.dataset.pillar]);
     // Botón "Me interesa": activa el listener global (modal de contacto por correo)

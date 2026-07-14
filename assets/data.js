@@ -444,6 +444,49 @@ window.ALQ = (function () {
 
   function param(name) { return new URLSearchParams(location.search).get(name); }
 
+  // ---- NOTIFICACIONES PUSH ----
+  // Guarda (o actualiza) la suscripción de un navegador en Supabase.
+  async function savePushSubscription(sub, meta) {
+    meta = meta || {};
+    const c = await ensureClient();
+    const endpoint = sub && sub.endpoint;
+    const p256dh = sub && sub.keys && sub.keys.p256dh;
+    const auth = sub && sub.keys && sub.keys.auth;
+    if (!endpoint || !p256dh || !auth) throw new Error("Suscripción incompleta");
+    let topics = Array.isArray(meta.topics) && meta.topics.length ? meta.topics.slice() : ["general"];
+    let retoStart = meta.retoStart || null;
+    // Fusiona con lo que ya haya guardado para este navegador (no perder temas anteriores).
+    try {
+      const { data } = await c.from("push_subscriptions").select("topics, reto_start").eq("endpoint", endpoint).maybeSingle();
+      if (data) {
+        if (Array.isArray(data.topics)) topics = Array.from(new Set(topics.concat(data.topics)));
+        if (!retoStart && data.reto_start) retoStart = data.reto_start;
+      }
+    } catch (e) {}
+    const row = { endpoint: endpoint, p256dh: p256dh, auth: auth, topics: topics,
+      lang: meta.lang || "es", seller_id: meta.sellerId || null, role: meta.role || null };
+    if (retoStart) row.reto_start = retoStart;
+    let { error } = await c.from("push_subscriptions").upsert(row, { onConflict: "endpoint" });
+    if (error && /reto_start|role|column|does not exist|schema/i.test(error.message || "")) {
+      delete row.reto_start; delete row.role;
+      ({ error } = await c.from("push_subscriptions").upsert(row, { onConflict: "endpoint" }));
+    }
+    if (error) throw error;
+    return true;
+  }
+  // Llama a la función de Netlify que envía las notificaciones.
+  async function callPushFn(payload) {
+    const res = await fetch("/.netlify/functions/push-send", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
+    });
+    let d = {}; try { d = await res.json(); } catch (e) {}
+    if (!res.ok) throw new Error((d && d.error) || "No se pudo enviar el aviso.");
+    return d;
+  }
+  function pushBroadcast(o) { return callPushFn(Object.assign({ action: "broadcast" }, o || {})); }
+  function pushSellerApproved(o) { return callPushFn(Object.assign({ action: "seller-approved" }, o || {})); }
+  function pushEvent(type, name) { return callPushFn({ action: "event", type: type, name: name || "" }).catch(function () {}); }
+
   // ---- perfil del comprador (localStorage, por navegador) ----
   function getBuyer() { try { return JSON.parse(localStorage.getItem("alq_buyer") || "null"); } catch (e) { return null; } }
   function saveBuyer(p) { localStorage.setItem("alq_buyer", JSON.stringify(p)); return p; }
@@ -474,6 +517,7 @@ window.ALQ = (function () {
     payoutConnected, setPayoutConnected,
     getCart, addToCart, setQty, removeFromCart, clearCart, cartCount, cartItems,
     getBuyer, saveBuyer, getSupported, addSupport,
+    savePushSubscription, pushBroadcast, pushSellerApproved, pushEvent,
     param
   };
 })();

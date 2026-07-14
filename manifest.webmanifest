@@ -1,0 +1,23 @@
+{
+  "name": "Alquimia — Emprendedores conscientes",
+  "short_name": "Alquimia",
+  "description": "El marketplace y la comunidad de emprendedores conscientes. Cuerpo, mente, alma y planeta. Donde el propósito se vuelve oro.",
+  "lang": "es",
+  "dir": "ltr",
+  "start_url": "index.html?src=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#2A152B",
+  "theme_color": "#2A152B",
+  "categories": ["lifestyle", "shopping", "education", "wellness"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Reto de autoconocimiento", "short_name": "El Reto", "url": "reto.html?src=pwa", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Marketplace", "short_name": "Marketplace", "url": "marketplace.html?src=pwa", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
