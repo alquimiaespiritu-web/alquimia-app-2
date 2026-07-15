@@ -52,26 +52,186 @@
   }
   // Embellece la descripción del producto: "Etiqueta: valor" → fila con título;
   // respeta viñetas (-, •, *) y saltos de línea. Sin campos nuevos ni base de datos.
+  // Convierte la descripción (texto libre O "Etiqueta: valor") en secciones legibles.
+  // Aguanta el caso difícil: un MURO de texto corrido, sin saltos de línea, con viñetas
+  // pegadas dentro (● ✦ • …). Lo separa en párrafos y listas para que se lea cómodo.
   function renderDesc(raw) {
-    const text = String(raw == null ? "" : raw).replace(/\r\n?/g, "\n").trim();
+    const text = String(raw == null ? "" : raw)
+      .replace(/\r\n?/g, "\n").replace(/ /g, " ").trim();
     if (!text) return "";
+    const BC = "•●○◦▪‣✦✧✨✔✓☑➤➔";              // caracteres que la gente usa como viñeta
+    const BULLET = new RegExp("[" + BC + "]");
+    const SPLIT = new RegExp("\\s*[" + BC + "]\\s*", "g");
+    const START = new RegExp("^[-" + BC + "*–—]\\s*(.*)$");
     const lines = text.split("\n");
     let html = "", bullets = [];
     const flush = () => { if (bullets.length) { html += `<ul class="ds-list">${bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>`; bullets = []; } };
+
+    // Parte un párrafo largo (sin saltos) en trozos legibles por frases.
+    function pushParagraph(str) {
+      str = String(str || "").trim(); if (!str) return;
+      if (str.length <= 300) { html += `<p>${esc(str)}</p>`; return; }
+      const sentences = str.match(/[^.!?…]+[.!?…]+["'”’)\]]?\s*|[^.!?…]+$/g) || [str];
+      let buf = "";
+      const emit = t => { t = String(t || "").trim(); if (t) html += `<p>${esc(t)}</p>`; };
+      for (let s of sentences) {
+        s = s.trim();
+        if (s.length > 340) {                 // frase larguísima sin puntuación: corta por palabras
+          if (buf) { emit(buf); buf = ""; }
+          let w = "";
+          s.split(/\s+/).forEach(word => { w += (w ? " " : "") + word; if (w.length >= 230) { emit(w); w = ""; } });
+          if (w) emit(w);
+          continue;
+        }
+        buf += (buf ? " " : "") + s;
+        if (buf.length >= 210) { emit(buf); buf = ""; }
+      }
+      emit(buf);
+    }
+
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
+      let line = lines[i].trim();
       if (!line) { flush(); continue; }
-      const b = line.match(/^[-•*–]\s+(.*)$/);
-      if (b) { bullets.push(b[1]); continue; }
+
+      // 1) La línea ya empieza por viñeta/guion -> elemento de lista
+      const b = line.match(START);
+      if (b) { const it = b[1].trim(); if (it) bullets.push(it); continue; }
+
+      // 2) Texto corrido con viñetas PEGADAS dentro ("… en el fondo: ● A. ● B. ● C.")
+      if (BULLET.test(line)) {
+        const idx = line.search(BULLET);
+        const intro = line.slice(0, idx).trim();
+        const rest = line.slice(idx);
+        flush();
+        if (intro) pushParagraph(intro);
+        rest.split(SPLIT).map(s => s.trim()).filter(Boolean).forEach(s => bullets.push(s));
+        flush();
+        continue;
+      }
+
       flush();
-      const hd = line.match(/^([A-Za-zÁÉÍÓÚÑÜáéíóúñü][^:\n]{1,38}):$/);
+      // 3) Encabezado corto en su propia línea ("Qué incluye:")
+      const hd = line.match(/^([A-Za-zÁÉÍÓÚÑÜáéíóúñü0-9][^:\n]{1,44}):$/);
       if (hd) { html += `<div class="ds-h">${esc(hd[1].trim())}</div>`; continue; }
-      const kv = line.match(/^([A-Za-zÁÉÍÓÚÑÜáéíóúñü][^:\n]{1,38}):\s+(\S.*)$/);
-      if (kv) { html += `<div class="ds-row"><span class="ds-k">${esc(kv[1].trim())}</span><span class="ds-v">${esc(kv[2].trim())}</span></div>`; }
-      else { html += `<p>${esc(line)}</p>`; }
+      // 4) Par "Clave: valor"
+      const kv = line.match(/^([A-Za-zÁÉÍÓÚÑÜáéíóúñü][^:\n]{1,32}):\s+(\S.*)$/);
+      if (kv) { html += `<div class="ds-row"><span class="ds-k">${esc(kv[1].trim())}</span><span class="ds-v">${esc(kv[2].trim())}</span></div>`; continue; }
+      // 5) Párrafo normal (si es muy largo se reparte en frases)
+      pushParagraph(line);
     }
     flush();
     return html;
+  }
+
+  // ---- Videos: miniatura + título + clic que abre el video (YouTube/Vimeo/…) ----
+  // Normaliza cada video guardado a { url, title }. (Acepta strings antiguos.)
+  function normVideos(arr) {
+    if (!Array.isArray(arr)) return [];
+    return arr.map(v => {
+      if (!v) return null;
+      if (typeof v === "string") return v.trim() ? { url: v.trim(), title: "" } : null;
+      const url = String(v.url || v.link || "").trim();
+      return url ? { url: url, title: String(v.title || v.t || "").trim() } : null;
+    }).filter(Boolean);
+  }
+  // Devuelve el ID de YouTube si la URL es de YouTube (para sacar la miniatura oficial).
+  function youtubeId(url) {
+    const m = String(url || "").match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : null;
+  }
+  function vimeoId(url) { const m = String(url || "").match(/vimeo\.com\/(?:video\/)?(\d+)/); return m ? m[1] : null; }
+  // Miniatura del video: la de YouTube sale sola; para el resto, un mosaico dorado.
+  function videoThumbStyle(url) {
+    const yt = youtubeId(url);
+    if (yt) return `background-image:url('https://i.ytimg.com/vi/${yt}/hqdefault.jpg')`;
+    return "";
+  }
+  // Tarjeta de video: miniatura + badge "▶ Video" + título llamativo. Al hacer clic abre el video.
+  function videoCard(v) {
+    const url = extUrl(v.url);
+    const st = videoThumbStyle(v.url);
+    const title = (v.title || "").trim() || T("ls.watchVideo");
+    return `<a class="vid-card${st ? "" : " vid-card-plain"}" href="${url}" target="_blank" rel="noopener" title="${esc(title)}">
+      <span class="vid-thumb"${st ? ` style="${st}"` : ""}><span class="vid-play">▶</span><span class="vid-badge">${T("ls.videoBadge")}</span></span>
+      <span class="vid-title">${esc(title)}</span>
+    </a>`;
+  }
+
+  // ---- Campos reutilizables: fotos adicionales + videos (título + enlace) ----
+  // Se usan en los 3 formularios (crear perfil, añadir publicación, editar publicación).
+  function mediaFieldsHTML() {
+    return `<div class="mf-block">
+      <div class="field">
+        <label>${T("cp.lb.photos")}</label>
+        <label class="upload"><span class="mf-ph-lbl">${T("cp.lb.photos.add")}</span><input type="file" class="mf-ph-input" accept="image/*" multiple></label>
+        <div class="mf-photos mf-ph-prev"></div>
+        <textarea class="mf-ph-url" rows="2" placeholder="${T("cp.lb.photos.url.ph")}"></textarea>
+      </div>
+      <div class="field">
+        <label>${T("cp.lb.videos")}</label>
+        <div class="mf-vid-list"></div>
+        <button type="button" class="mf-vid-add btn btn-ghost btn-sm">＋ ${T("cp.lb.videos.add")}</button>
+        <span class="note mf-vid-note" style="display:block;margin-top:6px">${T("cp.lb.videos.hint")}</span>
+      </div>
+    </div>`;
+  }
+  // Enlaza los campos de fotos/videos a un contenedor y expone getters __getPhotos/__getVideos.
+  function wireMediaFields(scope, opts) {
+    if (!scope || scope.__mfWired) return; scope.__mfWired = true;
+    opts = opts || {};
+    const photos = [];                               // dataURL de fotos NUEVAS subidas
+    const existing = (opts.photos || []).slice();    // URLs ya guardadas (modo edición)
+    const phInput = scope.querySelector(".mf-ph-input");
+    const phPrev = scope.querySelector(".mf-ph-prev");
+    const phUrl = scope.querySelector(".mf-ph-url");
+    const vidList = scope.querySelector(".mf-vid-list");
+    const vidAdd = scope.querySelector(".mf-vid-add");
+    function renderPhotos() {
+      if (!phPrev) return;
+      const all = existing.map((u, i) => ({ src: u, k: "e", i })).concat(photos.map((u, i) => ({ src: u, k: "n", i })));
+      phPrev.innerHTML = all.map(p => `<span class="mf-photo"><img src="${p.src}" alt=""><button type="button" class="mf-photo-rm" data-k="${p.k}" data-i="${p.i}" aria-label="Quitar">×</button></span>`).join("");
+      phPrev.querySelectorAll(".mf-photo-rm").forEach(b => b.addEventListener("click", () => {
+        const i = +b.dataset.i; if (b.dataset.k === "e") existing.splice(i, 1); else photos.splice(i, 1); renderPhotos();
+      }));
+    }
+    if (phInput) phInput.addEventListener("change", () => {
+      const files = [...phInput.files]; phInput.value = "";
+      files.forEach(f => { if (f && f.type.indexOf("image") === 0) downscale(f, 1000, d => { photos.push(d); renderPhotos(); }); });
+    });
+    function addVideoRow(v) {
+      v = v || { url: "", title: "" };
+      const row = document.createElement("div"); row.className = "mf-vid-row";
+      row.innerHTML = `<input class="mf-vid-title" placeholder="${T("cp.lb.videos.title.ph")}" value="${esc(v.title || "")}"><input class="mf-vid-url" placeholder="${T("cp.lb.videos.url.ph")}" value="${esc(v.url || "")}"><button type="button" class="mf-vid-rm" aria-label="Quitar">×</button>`;
+      row.querySelector(".mf-vid-rm").addEventListener("click", () => row.remove());
+      if (vidList) vidList.appendChild(row);
+    }
+    if (vidAdd) vidAdd.addEventListener("click", () => addVideoRow());
+    (opts.videos || []).forEach(addVideoRow);
+    renderPhotos();
+    scope.__getPhotos = function () {
+      const urls = (phUrl && phUrl.value ? phUrl.value.split("\n").map(x => x.trim()).filter(Boolean) : []);
+      return existing.concat(photos).concat(urls);
+    };
+    scope.__getVideos = function () {
+      if (!vidList) return [];
+      return [...vidList.querySelectorAll(".mf-vid-row")].map(r => ({
+        url: (r.querySelector(".mf-vid-url").value || "").trim(),
+        title: (r.querySelector(".mf-vid-title").value || "").trim()
+      })).filter(v => v.url);
+    };
+  }
+  // Sube al almacenamiento las fotos que vengan como dataURL y conserva las que ya son URL.
+  // (Se usa en el registro, donde saveProfile guarda las fotos ya como URL.)
+  async function resolveDataUrls(arr, pathBase) {
+    if (!Array.isArray(arr)) return [];
+    const out = [];
+    for (let i = 0; i < arr.length; i++) {
+      const p = arr[i]; if (!p) continue;
+      if (typeof p === "string" && p.indexOf("data:") === 0) {
+        try { const u = await A.uploadPhoto(p, pathBase + "-" + Date.now() + "-" + i + ".jpg"); if (u) out.push(u); } catch (e) {}
+      } else if (typeof p === "string" && p.trim()) { out.push(p.trim()); }
+    }
+    return out;
   }
   // Combina los campos guiados (Objetivo, Duración, Para quién, Qué incluye) + la
   // descripción libre en un texto "Etiqueta: valor" que renderDesc pinta como secciones.
@@ -108,6 +268,7 @@
         <g id="ps-sol" class="${cl('sol')}"><circle cx="340" cy="190" r="10" fill="none" stroke="#C6A15B" stroke-width="3"/><circle class="dot" cx="340" cy="190" r="3.8" fill="#C6A15B"/></g>
         <text class="lf-word" font-family="Georgia,'Times New Roman',serif" font-size="17" letter-spacing="5" fill="#C6A15B"><textPath href="#ladoIzqP" startOffset="50%" text-anchor="middle">ALQUIMIA</textPath></text>
         <text class="lf-word" font-family="Georgia,'Times New Roman',serif" font-size="16" letter-spacing="1.5" fill="#C6A15B"><textPath href="#ladoDerP" startOffset="50%" text-anchor="middle">TRANSMUTACIÓN</textPath></text>
+        <text class="lf-word" x="341" y="300" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="30" letter-spacing="11" fill="#C6A15B">SOY</text>
       </g></svg>`;
   }
   // Anima el sello del perfil como en la home: palpita un pilar a la vez (solo los del perfil)
@@ -147,7 +308,7 @@
   function chrome(active) {
     const h = document.getElementById("site-header");
     if (h) h.outerHTML = `<header class="site"><nav>
-        <div class="brand"><a class="brand-logo" id="brandLogo" href="index.html" aria-label="Alquimia">${GLYPH}</a><a class="brand-name" href="index.html"><span class="name">Alquimia</span></a></div>
+        <div class="brand"><a class="brand-logo" id="brandLogo" href="index.html" aria-label="Alquimia">${GLYPH}</a><a class="brand-name" href="index.html"><span class="name">Alquimia<span class="name-soy"> Soy</span></span></a></div>
         <div class="nav-right">
           <div class="nav-links" id="navLinks">
             <a href="marketplace.html" class="${active==='marketplace'?'active':''}">${T("nav.marketplace")}</a>
@@ -255,10 +416,9 @@
         try { const mp = await A.myProfile(); if (mp && mp.id) { pid = mp.id; try { localStorage.setItem("alq_last_profile", pid); } catch (e) {} } } catch (e) {}
       }
       const profHref = pid ? ("profile.html?id=" + pid) : "create-profile.html";
-      // Panel = icono de casa, Perfil = icono de persona
+      // El perfil y el panel son la misma cosa: un solo acceso "Mi perfil" (que incluye el panel).
       slot.innerHTML =
-        `<a href="dashboard.html" class="nav-ico ${active==='dashboard'?'active':''}" title="${T("nav.dashboard")}" aria-label="${T("nav.dashboard")}">${HOME_ICON}</a>` +
-        `<a href="${profHref}" class="nav-ico ${active==='profile'?'active':''}" title="${T("nav.profile")}" aria-label="${T("nav.profile")}">${USER_ICON}</a>`;
+        `<a href="${profHref}" class="nav-ico ${(active==='profile'||active==='dashboard')?'active':''}" title="${T("nav.profile")}" aria-label="${T("nav.profile")}">${USER_ICON}</a>`;
       // Salir va en su propio espacio (donde estaba el carrito)
       if (logoutSlot) {
         logoutSlot.innerHTML = `<a href="#" id="navLogout" class="nav-ico nav-logout" title="${T("nav.logout")}" aria-label="${T("nav.logout")}">${LOGOUT_ICON}</a>`;
@@ -755,15 +915,31 @@
     if (!l) { root.innerHTML = `<div class="empty">${T("ls.notFound")}</div>`; return; }
     const s = A.getSeller(l.sellerId);
     const avatar = s.avatarImg ? `<span class="avatar sm"><img src="${s.avatarImg}" alt=""></span>` : `<span class="avatar sm">${s.ini}</span>`;
+    // Galería: foto principal + fotos extra (miniaturas para cambiar la principal / ampliar)
+    const gallery = [l.img].concat(Array.isArray(l.photos) ? l.photos : []).filter(Boolean);
+    const mainImg = gallery[0] || null;
+    const heroInner = mainImg
+      ? `<img class="pf-img gal-main" id="galMain" src="${mainImg}" alt="${esc(A.fld(l, "title"))}" decoding="async">`
+      : `<div class="glyphmark">${GLYPH}</div>`;
+    const thumbs = gallery.length > 1
+      ? `<div class="gal-thumbs">${gallery.map((g, i) => `<button type="button" class="gal-thumb${i === 0 ? " active" : ""}" data-src="${g}" aria-label="${T("ls.photo")} ${i + 1}"><img src="${g}" alt="" loading="lazy" decoding="async"></button>`).join("")}</div>`
+      : "";
+    // Videos: tarjetas con miniatura + título que abren el video (YouTube/Vimeo/…)
+    const vids = normVideos(l.videos);
+    const videosBlock = vids.length
+      ? `<div class="ls-videos"><div class="ls-videos-h">${T("ls.videosH")}</div><div class="vid-grid">${vids.map(videoCard).join("")}</div></div>`
+      : "";
     root.innerHTML = `
       <div>
-        <div class="hero-img ${gc(l.g)}">${pillarMarks(l.cat)}${l.img ? `<img class="pf-img" src="${l.img}" alt="${esc(A.fld(l, "title"))}" decoding="async">` : `<div class="glyphmark">${GLYPH}</div>`}</div>
+        <div class="hero-img ${gc(l.g)}${mainImg ? " has-photo" : ""}">${pillarMarks(l.cat)}${heroInner}</div>
+        ${thumbs}
       </div>
       <div>
         <span class="kindtag">${A.kindLabel(l.kind)} · ${A.catsLabel(l.cat)}</span>
         <h1>${A.fld(l, "title")}</h1>
         <div class="price-lg">${A.price(l.price, l.currency)}</div>
         <div class="desc desc-rich">${renderDesc(A.fld(l, "desc"))}</div>
+        ${videosBlock}
         ${s.payUrl ? `<a class="btn btn-gold btn-lg btn-block" href="${extUrl(s.payUrl)}" target="_blank" rel="noopener">${T("ls.pay")}</a>` : ""}
         ${interestBtn(s, `btn ${s.payUrl ? "btn-ghost" : "btn-gold"} btn-lg btn-block mt8`, A.fld(l, "title"))}
         <a class="seller-row" href="profile.html?id=${s.id}">
@@ -773,6 +949,61 @@
         </a>
         <p class="note">${T("ls.protected")}</p>
       </div>`;
+    wireGallery(root);
+  }
+
+  // Galería del producto: las miniaturas cambian la foto principal; al hacer clic en la
+  // principal se abre en grande (lightbox). Sin librerías.
+  function wireGallery(root) {
+    const main = root.querySelector("#galMain");
+    const thumbs = [...root.querySelectorAll(".gal-thumb")];
+    thumbs.forEach(t => t.addEventListener("click", () => {
+      if (main) main.src = t.dataset.src;
+      thumbs.forEach(x => x.classList.toggle("active", x === t));
+    }));
+    if (main) { main.style.cursor = "zoom-in"; main.addEventListener("click", () => openLightbox(main.src)); }
+  }
+  function openLightbox(src) {
+    let ov = document.getElementById("alqLightbox");
+    if (!ov) {
+      ov = document.createElement("div"); ov.id = "alqLightbox"; ov.className = "lightbox";
+      ov.innerHTML = `<button type="button" class="lb-close" aria-label="Cerrar">×</button><img alt="">`;
+      document.body.appendChild(ov);
+      ov.addEventListener("click", e => { if (e.target === ov || e.target.classList.contains("lb-close")) ov.classList.remove("open"); });
+      document.addEventListener("keydown", e => { if (e.key === "Escape") ov.classList.remove("open"); });
+    }
+    ov.querySelector("img").src = src; ov.classList.add("open");
+  }
+
+  // ---- Reto del mes: espacio pequeño en cada perfil; la persona decide si participa ----
+  function retoCardHTML() {
+    return `<section class="pf-reto" data-reto>
+      <div class="pf-reto-body">
+        <span class="pf-reto-eyebrow">✦ ${T("reto.month.eyebrow")}</span>
+        <div class="pf-reto-title">${T("reto.title")}</div>
+        <p class="pf-reto-lede">${T("reto.month.lede")}</p>
+      </div>
+      <div class="pf-reto-actions">
+        <a class="btn btn-gold btn-sm pf-reto-join" href="reto.html">${T("reto.month.join")}</a>
+        <button type="button" class="btn btn-ghost btn-sm pf-reto-skip">${T("reto.month.skip")}</button>
+      </div>
+      <div class="pf-reto-done" style="display:none">✓ ${T("reto.month.in")} · <a href="reto.html">${T("reto.month.view")}</a></div>
+    </section>`;
+  }
+  function wireRetoCard(root) {
+    const card = root.querySelector(".pf-reto");
+    if (!card) return;
+    let choice = ""; try { choice = localStorage.getItem("alq_reto_choice") || ""; } catch (e) {}
+    // Si ya se unió al reto de verdad (reto.html guarda alq_reto), lo tratamos como "participando".
+    let joined = false; try { const st = JSON.parse(localStorage.getItem("alq_reto") || "null"); joined = !!(st && st.start); } catch (e) {}
+    const actions = card.querySelector(".pf-reto-actions");
+    const done = card.querySelector(".pf-reto-done");
+    if (choice === "out" && !joined) { card.style.display = "none"; return; }
+    if (joined || choice === "in") { if (actions) actions.style.display = "none"; if (done) done.style.display = ""; }
+    const join = card.querySelector(".pf-reto-join");
+    const skip = card.querySelector(".pf-reto-skip");
+    if (join) join.addEventListener("click", () => { try { localStorage.setItem("alq_reto_choice", "in"); } catch (e) {} });
+    if (skip) skip.addEventListener("click", () => { try { localStorage.setItem("alq_reto_choice", "out"); } catch (e) {} card.style.display = "none"; });
   }
 
   // ---------- PROFILE ----------
@@ -822,6 +1053,7 @@
         </div>
         ${A.catList(s.cat).length ? `<div class="pf-seal pf-seal-side">${sealSVG()}<div class="pf-seal-cap"></div></div>` : ""}
       </section>
+      ${retoCardHTML()}
       <div class="pf-tabbar">
         <button type="button" class="pf-tab active" data-tab="offer">${T("pf.tab.offer")}</button>
         ${highlights ? `<button type="button" class="pf-tab" data-tab="media">${T("pf.tab.media")}</button>` : ""}
@@ -829,13 +1061,15 @@
       <section class="pf-grid pf-panel" id="pf-listings" data-panel="offer">${cells || '<div class="empty">' + T("pf.noListings") + '</div>'}</section>
       ${highlights ? `<section class="pf-highlights pf-panel" data-panel="media" style="display:none">${highlights}</section>` : ""}`;
     initSeal(A.catList(s.cat));
+    wireRetoCard(root);
     const tabbar = root.querySelector(".pf-tabbar");
     if (tabbar) tabbar.addEventListener("click", (e) => {
       const b = e.target.closest(".pf-tab"); if (!b) return;
       tabbar.querySelectorAll(".pf-tab").forEach(t => t.classList.toggle("active", t === b));
       root.querySelectorAll(".pf-panel").forEach(p => { p.style.display = (p.dataset.panel === b.dataset.tab) ? "" : "none"; });
     });
-    // Si la dueña está viendo su propio perfil, mostramos "Editar perfil".
+    // Si la dueña está viendo su propio perfil: botón "Editar perfil" + el PANEL de gestión
+    // (el perfil y el panel son la misma cosa; el panel vive dentro del perfil).
     try {
       const mine = (A.myProfile ? await A.myProfile() : null);
       if (mine && mine.id === s.id) {
@@ -847,6 +1081,11 @@
           actions.insertBefore(eb, actions.firstChild);
           eb.addEventListener("click", () => openProfileEditor(s));
         }
+        const panel = document.createElement("section");
+        panel.className = "owner-panel";
+        panel.innerHTML = panelHTML(s);
+        root.appendChild(panel);
+        wireManage(s);
       }
     } catch (e) {}
   }
@@ -1048,8 +1287,10 @@
           <div class="field"><label>${T("cp.lb.paraquien")}</label><input class="l-paraquien" placeholder="${T("cp.lb.paraquien.ph")}"></div>
           <div class="field"><label>${T("cp.lb.incluye")}</label><textarea class="l-incluye" placeholder="${T("cp.lb.incluye.ph")}"></textarea></div>
         </div>
-        <div class="field"><label>${T("cp.lb.photo")}</label><label class="upload"><span class="l-img-label">${T("cp.lb.photo.add")}</span><input type="file" class="l-img" accept="image/*"></label></div>`;
+        <div class="field"><label>${T("cp.lb.photo")}</label><label class="upload"><span class="l-img-label">${T("cp.lb.photo.add")}</span><input type="file" class="l-img" accept="image/*"></label></div>
+        ${mediaFieldsHTML()}`;
       div.querySelector(".rm").addEventListener("click", () => div.remove());
+      wireMediaFields(div);
       const imgIn = div.querySelector(".l-img");
       imgIn.addEventListener("change", () => {
         const f = imgIn.files[0]; if (!f) return;
@@ -1151,9 +1392,13 @@
           const t = d.querySelector(".l-title").value.trim();
           if (!t) continue;
           const img = d.__img ? await A.uploadPhoto(d.__img, "listings/" + id + "-" + i + ".jpg") : null;
+          // fotos extra (sube las nuevas) + videos (título + enlace)
+          const extraPhotos = d.__getPhotos ? await resolveDataUrls(d.__getPhotos(), "listings/" + id + "-" + i + "-p") : [];
+          const extraVideos = d.__getVideos ? d.__getVideos() : [];
           listings.push({ id: id + "-" + i, title: t, kind: d.querySelector(".l-kind").value,
             price: Number(d.querySelector(".l-price").value) || 0, g: "grad-" + ((i % 6) + 1),
             cat: [...d.querySelectorAll(".l-cat:checked")].map(x => x.value).join(","),
+            photos: extraPhotos, videos: extraVideos,
             desc: composeListingDesc({
               desc: d.querySelector(".l-desc").value,
               objetivo: (d.querySelector(".l-objetivo") || {}).value,
@@ -1444,17 +1689,22 @@
 
   // ---------- DASHBOARD ----------
   async function initDashboard() {
-    const root = document.getElementById("dashRoot");
+    // El panel ahora vive DENTRO del perfil (Mónica: "el perfil y el panel son la misma cosa").
+    // "Mi panel" redirige al perfil de la dueña, donde se muestra el panel de gestión.
     let pid = A.lastProfileId();
     let s = pid ? A.getSeller(pid) : null;
     if (!s && pid && A.fetchSeller) s = await A.fetchSeller(pid);
-    // Respaldo: si entró con su cuenta pero este navegador no recuerda su perfil, lo buscamos por su sesión.
     if (!s && A.myProfile) {
       try { const mp = await A.myProfile(); if (mp && mp.id) { s = mp; try { localStorage.setItem("alq_last_profile", mp.id); } catch (e) {} } } catch (e) {}
     }
-    if (!s) { root.innerHTML = `<div class="demo-banner"><b>${T("db.demo.b")}</b><span>${T("db.demo.text")}</span></div>`; return; }
-    const isDemo = false;
-    // ventas simuladas a partir de sus publicaciones
+    if (s && s.id) { location.replace("profile.html?id=" + s.id); return; }
+    const root = document.getElementById("dashRoot");
+    if (root) root.innerHTML = `<div class="demo-banner"><b>${T("db.demo.b")}</b><span>${T("db.demo.text")}</span></div>`;
+  }
+
+  // Panel de gestión (estadísticas + publicaciones + media + ajustes) que se muestra DENTRO
+  // del perfil de la dueña. Se conecta con wireManage(s).
+  function panelHTML(s) {
     const sales = (s.listings || []).map((l, i) => {
       const units = [3, 1, 2, 4][i % 4];
       return { title: A.fld(l, "title"), units, gross: l.price * units };
@@ -1465,21 +1715,13 @@
     const payout = A.payoutConnected();
     const pct = Math.round(A.COMMISSION * 100);
     const cur = s.currency || "EUR";
-    root.innerHTML = `
-      ${isDemo ? `<div class="demo-banner"><b>${T("db.demo.b")}</b><span>${T("db.demo.text")}</span></div>` : ""}
-      <div class="profile-head" style="padding-top:10px">
-        <label class="av-edit" title="${T("db.changePhotoNow")}">
-          ${s.avatarImg ? `<span class="avatar lg"><img src="${s.avatarImg}"></span>` : `<span class="avatar lg">${s.ini}</span>`}
-          <span class="av-cam" aria-hidden="true">+</span>
-          <input type="file" id="av-quick" accept="image/*">
-        </label>
-        <div><b class="nm" style="font-size:28px">${s.name}</b><div class="role">${A.fld(s, "role")} · ${s.loc}</div>
-          <button type="button" class="av-link" id="av-quick-lbl">${T("db.changePhotoNow")}</button>
-          <span class="ai-note" id="av-quick-msg" style="display:block"></span>
-        </div>
-        <div style="margin-left:auto" class="row">
-          <button type="button" class="btn btn-ghost set-gear-btn" id="setGear" title="${T("db.settings.h")}" aria-label="${T("db.settings.h")}">⚙</button>
-        </div>
+    return `
+      <div class="panel-head">
+        <span class="section-label" style="margin:0">${T("nav.dashboard")}</span>
+        <label class="panel-photo"><input type="file" id="av-quick" accept="image/*" style="display:none"><button type="button" class="av-link" id="av-quick-lbl">${T("db.changePhotoNow")}</button></label>
+        <span class="ai-note" id="av-quick-msg" style="margin:0"></span>
+        <a href="#" class="btn btn-ghost btn-sm" id="panelViewPublic" style="margin-left:auto">${T("db.viewPublic")}</a>
+        <button type="button" class="btn btn-ghost set-gear-btn" id="setGear" title="${T("db.settings.h")}" aria-label="${T("db.settings.h")}">⚙</button>
       </div>
       <div class="dash-grid">
         <div class="stat"><div class="k">${T("db.stat.listings")}</div><div class="v">${(s.listings||[]).length}</div></div>
@@ -1521,6 +1763,7 @@
                 <div class="field"><label>${T("cp.lb.cat")}</label><div class="checks">${["Cuerpo","Mente","Alma","Planeta","Comunidad"].map(cv => `<label class="check"><input type="checkbox" class="me-cat" value="${cv}" ${(l.cat || "").split(",").map(x => x.trim()).indexOf(cv) >= 0 ? "checked" : ""}><span>${A.catLabel(cv)}</span></label>`).join("")}</div></div>
                 <div class="field"><label>${T("cp.lb.desc")}</label><textarea class="me-desc">${esc(l.desc)}</textarea></div>
                 <div class="field"><label>${T("db.changePhoto")}</label><label class="upload"><span class="me-imglbl">${T("cp.lb.photo.add")}</span><input type="file" class="me-img" accept="image/*"></label></div>
+                <div class="me-media">${mediaFieldsHTML()}</div>
                 <button type="button" class="btn btn-gold btn-sm me-save">${T("db.saveChanges")}</button>
                 <span class="ai-note me-msg" style="display:block;margin-top:8px"></span>
               </div>
@@ -1546,6 +1789,7 @@
               <div class="field"><label>${T("cp.lb.incluye")}</label><textarea id="ml-incluye" placeholder="${T("cp.lb.incluye.ph")}"></textarea></div>
             </div>
             <div class="field"><label>${T("cp.lb.photo")}</label><label class="upload"><span id="ml-imglbl">${T("cp.lb.photo.add")}</span><input type="file" id="ml-img" accept="image/*"></label></div>
+            <div id="ml-media">${mediaFieldsHTML()}</div>
             <button type="button" class="btn btn-gold btn-sm" id="ml-save">${T("db.addListing.btn")}</button>
             <span class="ai-note" id="ml-msg" style="display:block;margin-top:8px"></span>
           </div>
@@ -1623,10 +1867,12 @@
           </div>
         </div>
       </div>`;
-    wireManage(s);
   }
 
   function wireManage(s) {
+    // "Ver perfil público": sube al inicio de la página (el perfil público está arriba del panel)
+    const viewPub = document.getElementById("panelViewPublic");
+    if (viewPub) viewPub.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); });
     // Engranaje ⚙: abre la configuración como un cajón que entra desde la derecha
     const setGear = document.getElementById("setGear");
     const setCard = document.getElementById("setCard");
@@ -1693,6 +1939,8 @@
       const f = imgIn.files[0]; if (!f) return;
       downscale(f, 800, d => { imgIn.__data = d; document.getElementById("ml-imglbl").textContent = "✓ " + (f.name || "foto"); });
     });
+    const alMedia = document.getElementById("ml-media");
+    if (alMedia) wireMediaFields(alMedia);
     const aiBtn = document.getElementById("ml-ai"), aiMsg = document.getElementById("ml-aimsg");
     if (aiBtn) aiBtn.addEventListener("click", async () => {
       const tIn = document.getElementById("ml-title"), dIn = document.getElementById("ml-desc");
@@ -1723,7 +1971,9 @@
             paraquien: (document.getElementById("ml-paraquien") || {}).value,
             incluye: (document.getElementById("ml-incluye") || {}).value
           }) || T("cp.noDesc"),
-          img: imgIn ? imgIn.__data : null, g: "grad-" + (((s.listings || []).length % 6) + 1)
+          img: imgIn ? imgIn.__data : null, g: "grad-" + (((s.listings || []).length % 6) + 1),
+          photos: (alMedia && alMedia.__getPhotos) ? alMedia.__getPhotos() : [],
+          videos: (alMedia && alMedia.__getVideos) ? alMedia.__getVideos() : []
         });
         msg.style.color = "var(--emerald)"; msg.textContent = T("db.listingAdded");
         setTimeout(() => location.reload(), 1100);
@@ -1758,13 +2008,18 @@
         downscale(f, 800, d => { meImg.__data = d; item.querySelector(".me-imglbl").textContent = "✓ " + (f.name || "foto"); });
         meImg.value = "";
       });
+      const meMedia = item.querySelector(".me-media");
+      const lst = (s.listings || []).find(x => x.id === id) || {};
+      if (meMedia) wireMediaFields(meMedia, { photos: lst.photos || [], videos: lst.videos || [] });
       const saveBtn = item.querySelector(".me-save"), meMsg = item.querySelector(".me-msg");
       if (saveBtn) saveBtn.addEventListener("click", async () => {
         const title = item.querySelector(".me-title").value.trim();
         if (!title) { meMsg.style.color = "var(--gold-2)"; meMsg.textContent = T("cp.err.listing"); return; }
         saveBtn.disabled = true; meMsg.style.color = "var(--parchment-dim)"; meMsg.textContent = T("cp.saving");
         try {
-          await A.updateListing(id, { title: title, kind: item.querySelector(".me-kind").value, price: Number(item.querySelector(".me-price").value) || 0, cat: [...item.querySelectorAll(".me-cat:checked")].map(x => x.value).join(","), desc: item.querySelector(".me-desc").value.trim(), img: meImg ? meImg.__data : null });
+          await A.updateListing(id, { title: title, kind: item.querySelector(".me-kind").value, price: Number(item.querySelector(".me-price").value) || 0, cat: [...item.querySelectorAll(".me-cat:checked")].map(x => x.value).join(","), desc: item.querySelector(".me-desc").value.trim(), img: meImg ? meImg.__data : null,
+            photos: (meMedia && meMedia.__getPhotos) ? meMedia.__getPhotos() : undefined,
+            videos: (meMedia && meMedia.__getVideos) ? meMedia.__getVideos() : undefined });
           meMsg.style.color = "var(--emerald)"; meMsg.textContent = T("db.saved");
           setTimeout(() => location.reload(), 1000);
         } catch (e) { saveBtn.disabled = false; meMsg.style.color = "var(--gold-2)"; meMsg.textContent = T("cp.err.save") + " " + ((e && e.message) || ""); }

@@ -140,7 +140,9 @@ window.ALQ = (function () {
       listings: (s.listings || []).map(l => ({
         id: l.id, title: l.title, kind: l.kind, price: Number(l.price) || 0,
         desc: l.descr, g: l.g || "grad-1", img: l.img_url || null, currency: s.currency || "EUR",
-        cat: l.cat || null
+        cat: l.cat || null,
+        photos: Array.isArray(l.photos) ? l.photos.filter(Boolean) : [],   // fotos extra (URLs)
+        videos: Array.isArray(l.videos) ? l.videos.filter(Boolean) : []    // videos: [{url,title}]
       }))
     };
   }
@@ -242,12 +244,15 @@ window.ALQ = (function () {
     if (e1) throw e1;
     const rows = (profile.listings || []).map(l => ({
       id: l.id, seller_id: profile.id, title: l.title, kind: l.kind,
-      price: l.price, descr: l.desc, img_url: l.img || null, g: l.g, cat: l.cat || null
+      price: l.price, descr: l.desc, img_url: l.img || null, g: l.g, cat: l.cat || null,
+      photos: Array.isArray(l.photos) ? l.photos.filter(Boolean) : [],
+      videos: Array.isArray(l.videos) ? l.videos.filter(Boolean) : []
     }));
     if (rows.length) {
       let { error: e2 } = await c.from("listings").insert(rows);
-      if (e2 && /cat|column|does not exist|schema/i.test(e2.message || "")) {
-        ({ error: e2 } = await c.from("listings").insert(rows.map(r => { const x = Object.assign({}, r); delete x.cat; return x; })));
+      // Si faltan columnas nuevas (cat/photos/videos), reintenta sin ellas (el registro nunca se rompe).
+      if (e2 && /cat|photos|videos|column|does not exist|schema/i.test(e2.message || "")) {
+        ({ error: e2 } = await c.from("listings").insert(rows.map(r => { const x = Object.assign({}, r); delete x.cat; delete x.photos; delete x.videos; return x; })));
       }
       if (e2) throw e2;
     }
@@ -264,14 +269,43 @@ window.ALQ = (function () {
     const id = sellerId + "-" + Date.now();
     let imgUrl = null;
     if (listing.img) imgUrl = await uploadPhoto(listing.img, "listings/" + id + ".jpg");
+    const photos = await resolveListingPhotos(listing.photos, "listings/" + id + "-p");
+    const videos = normalizeVideos(listing.videos);
     const row = { id: id, seller_id: sellerId, title: listing.title, kind: listing.kind,
-      price: Number(listing.price) || 0, descr: listing.desc || null, img_url: imgUrl, g: listing.g || "grad-1", cat: listing.cat || null };
+      price: Number(listing.price) || 0, descr: listing.desc || null, img_url: imgUrl, g: listing.g || "grad-1", cat: listing.cat || null,
+      photos: photos, videos: videos };
     let { error } = await c.from("listings").insert(row);
-    if (error && /cat|column|does not exist|schema/i.test(error.message || "")) {
-      delete row.cat; ({ error } = await c.from("listings").insert(row));
+    if (error && /cat|photos|videos|column|does not exist|schema/i.test(error.message || "")) {
+      delete row.cat; delete row.photos; delete row.videos; ({ error } = await c.from("listings").insert(row));
     }
     if (error) throw error;
     return id;
+  }
+
+  // Sube las fotos extra que vengan como dataURL y conserva las que ya sean URL.
+  async function resolveListingPhotos(photos, pathBase) {
+    if (!Array.isArray(photos)) return [];
+    const out = [];
+    for (let i = 0; i < photos.length; i++) {
+      const p = photos[i];
+      if (!p) continue;
+      if (typeof p === "string" && p.indexOf("data:") === 0) {
+        try { const u = await uploadPhoto(p, pathBase + "-" + Date.now() + "-" + i + ".jpg"); if (u) out.push(u); } catch (e) {}
+      } else if (typeof p === "string" && p.trim()) {
+        out.push(p.trim());
+      }
+    }
+    return out;
+  }
+  // Deja los videos como [{url,title}] limpios (acepta strings sueltos o {url,title}).
+  function normalizeVideos(videos) {
+    if (!Array.isArray(videos)) return [];
+    return videos.map(v => {
+      if (!v) return null;
+      if (typeof v === "string") return v.trim() ? { url: v.trim(), title: "" } : null;
+      const url = String(v.url || v.link || "").trim();
+      return url ? { url: url, title: String(v.title || "").trim() } : null;
+    }).filter(Boolean);
   }
 
   // Edita el perfil de la vendedora (nombre, rol, categorías, ubicación, moneda, etc.).
@@ -334,9 +368,11 @@ window.ALQ = (function () {
     const row = { title: fields.title, kind: fields.kind, price: Number(fields.price) || 0, descr: fields.desc || null };
     if (fields.cat !== undefined) row.cat = fields.cat;
     if (fields.img) row.img_url = await uploadPhoto(fields.img, "listings/" + listingId + "-" + Date.now() + ".jpg");
+    if (fields.photos !== undefined) row.photos = await resolveListingPhotos(fields.photos, "listings/" + listingId + "-p");
+    if (fields.videos !== undefined) row.videos = normalizeVideos(fields.videos);
     let { error } = await c.from("listings").update(row).eq("id", listingId);
-    if (error && /cat|column|does not exist|schema/i.test(error.message || "")) {
-      delete row.cat; ({ error } = await c.from("listings").update(row).eq("id", listingId));
+    if (error && /cat|photos|videos|column|does not exist|schema/i.test(error.message || "")) {
+      delete row.cat; delete row.photos; delete row.videos; ({ error } = await c.from("listings").update(row).eq("id", listingId));
     }
     if (error) throw error;
     return listingId;

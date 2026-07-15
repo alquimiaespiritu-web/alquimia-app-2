@@ -843,3 +843,73 @@ textarea.inp{resize:vertical;min-height:80px}
 .ad-push .ad-lbl{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2);margin:14px 0 6px}
 .ad-push .ad-row{display:flex;gap:10px;align-items:center}
 .ad-push .ad-row .inp{margin-bottom:0}
+
+/* ===== Producto: galería de fotos + lightbox ===== */
+.detail .hero-img.has-photo{cursor:zoom-in;overflow:hidden}
+.detail .hero-img .gal-main{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
+.gal-thumbs{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.gal-thumb{width:74px;height:60px;border-radius:8px;border:1px solid var(--line);cursor:pointer;overflow:hidden;padding:0;background:var(--purple-soft);transition:border-color .18s,transform .18s}
+.gal-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.gal-thumb:hover{transform:translateY(-2px)}
+.gal-thumb.active{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.lightbox{position:fixed;inset:0;z-index:9999;background:rgba(15,7,18,.92);display:none;align-items:center;justify-content:center;padding:24px}
+.lightbox.open{display:flex}
+.lightbox img{max-width:94vw;max-height:88vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lightbox .lb-close{position:absolute;top:18px;right:22px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line-strong);background:rgba(0,0,0,.4);color:var(--parchment);font-size:24px;line-height:1;cursor:pointer}
+.lightbox .lb-close:hover{border-color:var(--gold);color:var(--gold-2)}
+
+/* ===== Producto: sección de videos (tarjetas) ===== */
+.ls-videos{margin:8px 0 24px}
+.ls-videos-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.vid-card{display:block;text-decoration:none;color:var(--parchment);border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--ink-2);transition:transform .18s,border-color .18s,box-shadow .2s}
+.vid-card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.28)}
+.vid-thumb{position:relative;display:block;aspect-ratio:16/9;background:linear-gradient(135deg,var(--purple),var(--purple-soft));background-size:cover;background-position:center}
+.vid-card-plain .vid-thumb{background:linear-gradient(135deg,var(--purple),var(--ink-2))}
+.vid-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.45))}
+.vid-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:46px;height:46px;border-radius:50%;background:rgba(198,161,91,.92);color:var(--ink);display:grid;place-items:center;font-size:16px;padding-left:3px;box-shadow:0 4px 16px rgba(0,0,0,.35);transition:transform .18s}
+.vid-card:hover .vid-play{transform:translate(-50%,-50%) scale(1.08)}
+.vid-badge{position:absolute;top:9px;left:9px;z-index:2;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;background:rgba(0,0,0,.55);color:#fff;padding:3px 8px;border-radius:30px}
+.vid-title{display:block;padding:10px 12px;font-size:13.5px;line-height:1.3;font-weight:600}
+
+/* ===== Formularios: fotos extra + filas de video ===== */
+.mf-block{display:flex;flex-direction:column;gap:2px}
+.mf-photos{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.mf-photo{position:relative;width:74px;height:74px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--purple-soft)}
+.mf-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.mf-photo-rm{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.mf-photo-rm:hover{background:rgba(0,0,0,.85)}
+.mf-ph-url{margin-top:10px;min-height:44px;font-size:13px}
+.mf-vid-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.mf-vid-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center}
+.mf-vid-row input{width:100%}
+.mf-vid-rm{width:34px;height:34px;flex:none;border-radius:8px;border:1px solid var(--line-strong);background:transparent;color:var(--parchment-dim);font-size:18px;line-height:1;cursor:pointer}
+.mf-vid-rm:hover{border-color:var(--gold);color:var(--gold-2)}
+@media(max-width:560px){.mf-vid-row{grid-template-columns:1fr auto}.mf-vid-row .mf-vid-title{grid-column:1/-1}}
+
+/* Viñetas de la descripción: marcador dorado + más aire */
+.detail .desc-rich .ds-list{list-style:none;padding-left:0;gap:9px}
+.detail .desc-rich .ds-list li{position:relative;padding-left:1.5em;color:var(--parchment-dim);line-height:1.45}
+.detail .desc-rich .ds-list li::before{content:"◆";position:absolute;left:0;top:0;color:var(--gold);font-size:.7em;line-height:1.7}
+.detail .desc-rich p{line-height:1.55}
+
+/* ===== Panel de gestión dentro del perfil ===== */
+.owner-panel{margin-top:46px;padding-top:28px;border-top:1px solid var(--line-strong)}
+.panel-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 20px}
+.panel-head .section-label{margin:0}
+.panel-photo{cursor:pointer;display:inline-flex}
+.panel-photo .av-link{background:none;border:none;color:var(--gold-2);cursor:pointer;font-size:13px;text-decoration:underline;padding:0;font-family:inherit}
+
+/* ===== Reto del mes (tarjeta pequeña en cada perfil) ===== */
+.pf-reto{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:20px 0 8px;padding:16px 20px;border:1px solid var(--line-strong);border-radius:14px;background:linear-gradient(135deg,rgba(75,36,74,.35),rgba(58,27,59,.25))}
+.pf-reto-body{flex:1;min-width:220px}
+.pf-reto-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.pf-reto-title{font-family:var(--serif);font-size:18px;color:var(--gold-2);margin:3px 0 4px;line-height:1.2}
+.pf-reto-lede{margin:0;font-size:13.5px;line-height:1.45;color:var(--parchment-dim)}
+.pf-reto-actions{display:flex;gap:10px;flex-wrap:wrap;flex:none}
+.pf-reto-done{flex-basis:100%;font-size:13.5px;color:var(--emerald)}
+.pf-reto-done a{color:var(--gold-2)}
+@media(max-width:560px){.pf-reto{flex-direction:column;align-items:flex-start}.pf-reto-actions{width:100%}.pf-reto-actions .btn{flex:1}}
+
+/* "Soy" en el nombre de marca del encabezado */
+.brand .name-soy{color:var(--gold-2);font-weight:500}
