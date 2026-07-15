@@ -312,10 +312,7 @@
         <div class="nav-right">
           <div class="nav-links" id="navLinks">
             <a href="marketplace.html" class="${active==='marketplace'?'active':''}">${T("nav.marketplace")}</a>
-            <a href="reto.html" class="${active==='reto'?'active':''}">${T("nav.reto")}</a>
-            <a href="como-funciona.html" class="${active==='como'?'active':''}">${T("nav.how")}</a>
             <a href="noticias.html" class="${active==='noticias'?'active':''}">${T("nav.news")}</a>
-            <a href="sobre.html" class="${active==='sobre'?'active':''}">${T("nav.about")}</a>
             <a href="contacto.html" class="${active==='contacto'?'active':''}">${T("nav.contact")}</a>
             <span id="nav-account" class="nav-account" style="display:contents"><a href="create-profile.html?login=1" class="cta">${T("nav.login")}</a></span>
           </div>
@@ -938,8 +935,6 @@
         <span class="kindtag">${A.kindLabel(l.kind)} · ${A.catsLabel(l.cat)}</span>
         <h1>${A.fld(l, "title")}</h1>
         <div class="price-lg">${A.price(l.price, l.currency)}</div>
-        <div class="desc desc-rich">${renderDesc(A.fld(l, "desc"))}</div>
-        ${videosBlock}
         ${s.payUrl ? `<a class="btn btn-gold btn-lg btn-block" href="${extUrl(s.payUrl)}" target="_blank" rel="noopener">${T("ls.pay")}</a>` : ""}
         ${interestBtn(s, `btn ${s.payUrl ? "btn-ghost" : "btn-gold"} btn-lg btn-block mt8`, A.fld(l, "title"))}
         <a class="seller-row" href="profile.html?id=${s.id}">
@@ -948,6 +943,10 @@
           <span style="margin-left:auto;color:var(--gold-2);font-size:14px">${T("ls.viewProfile")}</span>
         </a>
         <p class="note">${T("ls.protected")}</p>
+      </div>
+      <div class="ls-full">
+        <div class="desc desc-rich">${renderDesc(A.fld(l, "desc"))}</div>
+        ${videosBlock}
       </div>`;
     wireGallery(root);
   }

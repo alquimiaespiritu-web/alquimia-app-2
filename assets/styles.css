@@ -913,3 +913,8 @@ textarea.inp{resize:vertical;min-height:80px}
 
 /* "Soy" en el nombre de marca del encabezado */
 .brand .name-soy{color:var(--gold-2);font-weight:500}
+
+/* Producto: descripción a todo lo ancho, debajo de la imagen */
+.detail .ls-full{grid-column:1/-1;margin-top:12px;padding-top:24px;border-top:1px solid var(--line)}
+.detail .ls-full .desc-rich{margin-bottom:0}
+.detail .ls-full .ls-videos{margin-top:22px}
