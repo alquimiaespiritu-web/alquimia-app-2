@@ -104,8 +104,8 @@ header.site nav{display:flex;align-items:center;justify-content:space-between;pa
 .pf-cell .glyphmark{position:absolute;inset:0;display:grid;place-items:center;opacity:.16;z-index:1}
 .pf-cell .glyphmark svg{width:42%}
 .pf-cell .kind{position:absolute;top:10px;left:10px;z-index:2;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,0,0,.45);color:#fff;padding:3px 8px;border-radius:30px}
-.pf-cell .over{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;padding:14px;opacity:0;transition:opacity .3s;background:linear-gradient(180deg,transparent 40%,rgba(27,16,41,.78))}
-.pf-cell:hover .over{opacity:1}
+.pf-cell .over{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;padding:14px;opacity:1;transition:opacity .3s,background .3s;background:linear-gradient(180deg,transparent 30%,rgba(27,16,41,.82))}
+.pf-cell:hover .over{background:linear-gradient(180deg,transparent 18%,rgba(27,16,41,.9))}
 .pf-cell .over .ttl{font-family:var(--serif);font-size:15px;line-height:1.2;color:#fff}
 .pf-cell .over .price{font-family:var(--serif);font-size:16px;color:var(--gold-2)}
 @media(max-width:680px){.pf-head{gap:18px;padding:22px 0 14px}.pf-avatar-ring{width:92px;height:92px}.pf-avatar-ring .inner{font-size:28px}.pf-handle{font-size:22px}.pf-stats{gap:20px}}

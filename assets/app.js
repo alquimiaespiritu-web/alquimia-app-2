@@ -157,6 +157,37 @@
     </a>`;
   }
 
+  // ---- Campos SOLO de videos (para el perfil del vendedor: comparte videos de valor) ----
+  function videoFieldsHTML() {
+    return `<div class="field mf-vid-block">
+      <label>${T("cp.lb.videos")}</label>
+      <div class="mf-vid-list"></div>
+      <button type="button" class="mf-vid-add btn btn-ghost btn-sm">＋ ${T("cp.lb.videos.add")}</button>
+      <span class="note" style="display:block;margin-top:6px">${T("cp.lb.videos.hint")}</span>
+    </div>`;
+  }
+  // Enlaza los campos de video de un contenedor y expone scope.__getVideos().
+  function wireVideoFields(scope, videos) {
+    const vidList = scope.querySelector(".mf-vid-list");
+    const vidAdd = scope.querySelector(".mf-vid-add");
+    function addVideoRow(v) {
+      v = v || { url: "", title: "" };
+      const row = document.createElement("div"); row.className = "mf-vid-row";
+      row.innerHTML = `<input class="mf-vid-title" placeholder="${T("cp.lb.videos.title.ph")}" value="${esc(v.title || "")}"><input class="mf-vid-url" placeholder="${T("cp.lb.videos.url.ph")}" value="${esc(v.url || "")}"><button type="button" class="mf-vid-rm" aria-label="Quitar">×</button>`;
+      row.querySelector(".mf-vid-rm").addEventListener("click", () => row.remove());
+      if (vidList) vidList.appendChild(row);
+    }
+    if (vidAdd) vidAdd.addEventListener("click", () => addVideoRow());
+    normVideos(videos).forEach(addVideoRow);
+    scope.__getVideos = function () {
+      if (!vidList) return [];
+      return [...vidList.querySelectorAll(".mf-vid-row")].map(r => ({
+        url: (r.querySelector(".mf-vid-url").value || "").trim(),
+        title: (r.querySelector(".mf-vid-title").value || "").trim()
+      })).filter(v => v.url);
+    };
+  }
+
   // ---- Campos reutilizables: fotos adicionales + videos (título + enlace) ----
   // Se usan en los 3 formularios (crear perfil, añadir publicación, editar publicación).
   function mediaFieldsHTML() {
@@ -493,6 +524,7 @@
       <div class="field"><label>${T("cp.f.pay")}</label><input id="pe2-pay" value="${esc(s.payUrl || "")}"></div>
       <div class="field"><label>${T("cp.f.story")}</label><textarea id="pe2-bio">${esc(s.bio || "")}</textarea></div>
       <div class="field"><label class="upload"><span id="pe2-photo-lbl">${T("pf.ed.photo")}</span><input type="file" id="pe2-photo" accept="image/*"></label></div>
+      ${videoFieldsHTML()}
       <button class="btn btn-gold btn-lg btn-block" id="pe2-save">${T("pf.ed.save")}</button>
       <p id="pe2-msg" class="note center mt8"></p>
     </div>`;
@@ -502,6 +534,7 @@
     ov.addEventListener("click", e => { if (e.target === ov) close(); });
     const ph = document.getElementById("pe2-photo");
     ph.addEventListener("change", () => { const f = ph.files[0]; if (!f) return; downscale(f, 256, d => { newPhoto = d; document.getElementById("pe2-photo-lbl").textContent = "✓ " + (f.name || "foto"); }); ph.value = ""; });
+    wireVideoFields(ov, s.videos);
     document.getElementById("pe2-save").addEventListener("click", async function () {
       const name = val("pe2-name"), role = val("pe2-role");
       const out = document.getElementById("pe2-msg");
@@ -513,6 +546,7 @@
         await A.updateProfile(s.id, { name: name, role: role, cat: cat, ini: ini, loc: val("pe2-loc") || "—",
           currency: document.getElementById("pe2-currency").value, instagram: val("pe2-ig"), whatsapp: val("pe2-wa"),
           notifyChannel: document.getElementById("pe2-notify").value, payUrl: val("pe2-pay"), bio: val("pe2-bio"),
+          videos: ov.__getVideos ? ov.__getVideos() : undefined,
           avatarImg: newPhoto || undefined });
         out.style.color = "var(--emerald)"; out.textContent = T("pf.ed.saved");
         setTimeout(() => location.reload(), 1100);
@@ -1024,6 +1058,10 @@
       if (m.g) return `<div class="pf-hl"><div class="circle"><div class="ph ${'grad-'+m.g}"></div></div><span>${A.fld(m, "l")}</span></div>`;
       return "";
     }).join("");
+    const pfVids = normVideos(s.videos);
+    const pfVideosBlock = pfVids.length
+      ? `<section class="pf-videos ls-videos"><div class="ls-videos-h">${T("ls.videosH")}</div><div class="vid-grid">${pfVids.map(videoCard).join("")}</div></section>`
+      : "";
     const cells = (s.listings || []).map(l => `
       <a class="pf-cell ${gc(l.g)}" href="listing.html?id=${l.id}">
         <span class="kind">${A.kindLabel(l.kind)}</span>
@@ -1053,6 +1091,7 @@
         ${A.catList(s.cat).length ? `<div class="pf-seal pf-seal-side">${sealSVG()}<div class="pf-seal-cap"></div></div>` : ""}
       </section>
       ${retoCardHTML()}
+      ${pfVideosBlock}
       <div class="pf-tabbar">
         <button type="button" class="pf-tab active" data-tab="offer">${T("pf.tab.offer")}</button>
         ${highlights ? `<button type="button" class="pf-tab" data-tab="media">${T("pf.tab.media")}</button>` : ""}

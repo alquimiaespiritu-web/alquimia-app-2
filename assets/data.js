@@ -81,6 +81,7 @@ window.ALQ = (function () {
       bio: "Acompaño a fundadoras conscientes a alinear su negocio con lo que de verdad quieren construir. Programas de 8 semanas, sesiones 1:1 y círculos de propósito.",
       bioEn: "I help conscious founders align their business with what they truly want to build. 8-week programs, 1:1 sessions and purpose circles.",
       media: [{t:"photo",g:1,l:"Círculo de propósito",lEn:"Purpose circle"},{t:"photo",g:3,l:"Sesión 1:1",lEn:"1:1 session"},{t:"video",g:5,l:"Vivir de tu propósito",lEn:"Living from your purpose",d:"4:12"}],
+      videos: [{ url:"https://www.youtube.com/watch?v=qp0HIF3SfI4", title:"Cómo los grandes líderes inspiran (demo)" }],
       listings: [
         { id:"l-lina-1", title:"Sesión de propósito 1:1", titleEn:"1:1 purpose session", kind:"Servicio", price:70, g:5, desc:"Una sesión individual de 75 minutos para ganar claridad sobre tu próximo paso.", descEn:"A 75-minute one-on-one session to gain clarity on your next step." },
         { id:"l-lina-2", title:"Programa Propósito · 8 semanas", titleEn:"Purpose Program · 8 weeks", kind:"Servicio", price:480, g:1, desc:"Acompañamiento de dos meses para estructurar tu negocio alrededor de lo que te mueve.", descEn:"Two months of guidance to build your business around what moves you." }
@@ -137,6 +138,7 @@ window.ALQ = (function () {
       commissionFree: !!s.commission_free, featured: !!s.featured, ambassador: !!s.ambassador,
       currency: s.currency || "EUR", languages: s.languages || "",
       media: (s.media || []).map(m => ({ t: m.type, url: m.url })),
+      videos: Array.isArray(s.videos) ? s.videos.filter(Boolean) : [],   // videos del perfil: [{url,title}]
       listings: (s.listings || []).map(l => ({
         id: l.id, title: l.title, kind: l.kind, price: Number(l.price) || 0,
         desc: l.descr, g: l.g || "grad-1", img: l.img_url || null, currency: s.currency || "EUR",
@@ -236,9 +238,10 @@ window.ALQ = (function () {
     };
     // newsletter + términos + idiomas + canal de avisos (si las columnas aún no existen, se reintenta sin ellas)
     const extra = { newsletter: !!profile.newsletter, terms_accepted: !!profile.terms, languages: profile.languages || null,
-      notify_channel: profile.notifyChannel || "email", whatsapp: profile.whatsapp || null };
+      notify_channel: profile.notifyChannel || "email", whatsapp: profile.whatsapp || null,
+      videos: normalizeVideos(profile.videos) };
     let { error: e1 } = await c.from("sellers").insert(Object.assign({}, base, extra));
-    if (e1 && /column|newsletter|terms_accepted|languages|notify_channel|whatsapp|schema|does not exist/i.test(e1.message || "")) {
+    if (e1 && /column|newsletter|terms_accepted|languages|notify_channel|whatsapp|videos|schema|does not exist/i.test(e1.message || "")) {
       ({ error: e1 } = await c.from("sellers").insert(base));
     }
     if (e1) throw e1;
@@ -319,10 +322,11 @@ window.ALQ = (function () {
     if (fields.newsletter !== undefined) row.newsletter = !!fields.newsletter;
     if (fields.notifyChannel !== undefined) row.notify_channel = fields.notifyChannel;
     if (fields.whatsapp !== undefined) row.whatsapp = fields.whatsapp;
+    if (fields.videos !== undefined) row.videos = normalizeVideos(fields.videos);
     if (fields.avatarImg) row.avatar_url = await uploadPhoto(fields.avatarImg, "avatars/" + sellerId + "-" + Date.now() + ".jpg");
     let { error } = await c.from("sellers").update(row).eq("id", sellerId);
-    if (error && /newsletter|languages|notify_channel|whatsapp|column|does not exist|schema/i.test(error.message || "")) {
-      delete row.newsletter; delete row.languages; delete row.notify_channel; delete row.whatsapp;
+    if (error && /newsletter|languages|notify_channel|whatsapp|videos|column|does not exist|schema/i.test(error.message || "")) {
+      delete row.newsletter; delete row.languages; delete row.notify_channel; delete row.whatsapp; delete row.videos;
       ({ error } = await c.from("sellers").update(row).eq("id", sellerId));
     }
     if (error) throw error;
