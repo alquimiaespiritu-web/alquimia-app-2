@@ -1134,6 +1134,9 @@
     if (user) {
       const mine = (A.myProfile ? await A.myProfile() : null);
       if (mine && mine.id) { location.replace("profile.html?id=" + mine.id); return; }
+      // Un comprador SÍ puede postularse como vendedor (registro aparte). Su perfil queda
+      // pendiente de aprobación con su mismo user_id; al aprobarlo, la cuenta pasa a tener
+      // ambos roles (comprador + vendedor) → quedan "sincronizadas".
       wireProfileForm(user); return;
     }
     // Si llega desde "Entrar", mostramos directamente el login
@@ -2143,12 +2146,16 @@
         const f = input.files[0]; if (!f) return;
         downscale(f, 256, d => { avatarData = d; document.getElementById("cbAvatarPrev").innerHTML = `<img src="${d}" alt="">`; });
       });
-      document.getElementById("cbSave").addEventListener("click", () => {
+      document.getElementById("cbSave").addEventListener("click", async () => {
         const name = val("cb-name"), impact = val("cb-impact");
-        if (!name) { const m = document.getElementById("cbMsg"); m.textContent = T("cb.err.name"); m.style.color = "var(--gold-2)"; return; }
+        const m = document.getElementById("cbMsg");
+        if (!name) { m.textContent = T("cb.err.name"); m.style.color = "var(--gold-2)"; return; }
         const ini = name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
-        A.saveBuyer({ name, impact, avatarImg: avatarData, ini });
-        showProfile(A.getBuyer());
+        m.style.color = "var(--parchment-dim)"; m.textContent = T("cp.saving");
+        try {
+          await A.saveBuyerAccount({ name: name, impact: impact, avatarImg: avatarData, ini: ini });
+          showProfile(await A.myBuyer());
+        } catch (e) { m.style.color = "var(--gold-2)"; m.textContent = (e && e.message) || T("au.err.generic"); }
       });
     }
 
@@ -2169,7 +2176,7 @@
             <div class="pf-toprow">
               <span class="pf-handle">${b.name}</span>
               <span class="pf-live"><span class="dot"></span>${T("cb.role")}</span>
-              <div class="pf-actions"><button type="button" class="btn btn-ghost btn-sm" id="cbEdit">${T("cb.edit")}</button></div>
+              <div class="pf-actions"><button type="button" class="btn btn-ghost btn-sm" id="cbEdit">${T("cb.edit")}</button><button type="button" class="btn btn-ghost btn-sm" id="cbLogout">${T("cb.logout")}</button></div>
             </div>
             ${b.impact ? `<div class="pf-bio"><b class="serif">${T("cb.impact.title")}</b><br>${b.impact}</div>` : ""}
           </div>
@@ -2177,10 +2184,116 @@
         <div class="pf-tabbar"><span class="t">${T("cb.supported")}</span></div>
         <section class="pf-grid">${cells || '<div class="empty">' + T("cb.empty") + '</div>'}</section>`;
       document.getElementById("cbEdit").addEventListener("click", () => showForm(b));
+      const lo = document.getElementById("cbLogout");
+      if (lo) lo.addEventListener("click", async () => { try { await A.signOut(); } catch (e) {} location.reload(); });
     }
 
-    const buyer = A.getBuyer();
-    if (buyer) showProfile(buyer); else showForm(null);
+    // Dispara el correo de bienvenida (Resend, tipo suscriptora) sin bloquear.
+    function fireWelcome(email, name, intereses) {
+      if (!email) return;
+      try { fetch("/.netlify/functions/resend-welcome", { method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true, body: JSON.stringify({ type: "suscriptora", email: email, name: name || "", intereses: intereses || "" }) }); } catch (e) {}
+    }
+
+    // ENTRAR (correo + clave).
+    function showSignIn() {
+      root.innerHTML = `
+        <div class="form-card" style="max-width:440px;margin:0 auto">
+          <div class="page-head" style="padding-top:0"><span class="eyebrow">${T("cb.eyebrow")}</span><h1 style="font-size:clamp(24px,4vw,32px);margin:8px 0 6px">${T("cb.signin.h")}</h1></div>
+          <div class="field"><label>${T("au.email")}</label><input id="cb-email" type="email" placeholder="tucorreo@ejemplo.com"></div>
+          <div class="field"><label>${T("au.password")}</label><input id="cb-pass" type="password" placeholder="••••••••"></div>
+          <button class="btn btn-gold btn-lg btn-block" id="cbGo">${T("au.signin")}</button>
+          <p class="note center mt8"><a href="#" id="cbToSignup" style="color:var(--gold-2)">${T("cb.toSignup")}</a></p>
+          <p class="note center mt4"><a href="#" id="cbForgot" style="color:var(--gold-2)">${T("au.forgot")}</a></p>
+          <p id="cbAuthMsg" class="note center mt8"></p>
+        </div>`;
+      document.getElementById("cbToSignup").addEventListener("click", (e) => { e.preventDefault(); showSignUp(); });
+      document.getElementById("cbForgot").addEventListener("click", async (e) => {
+        e.preventDefault(); const msg = document.getElementById("cbAuthMsg");
+        let email = val("cb-email"); if (!email) { email = (window.prompt(T("au.forgot.ask")) || "").trim(); }
+        if (!email) { msg.textContent = T("au.err.empty"); msg.style.color = "var(--gold-2)"; return; }
+        msg.style.color = "var(--parchment-dim)"; msg.textContent = T("au.loading");
+        try { await A.resetPassword(email); msg.style.color = "var(--parchment-dim)"; msg.textContent = T("au.forgot.sent"); }
+        catch (err) { msg.style.color = "var(--gold-2)"; msg.textContent = (err && err.message) || T("au.forgot.err"); }
+      });
+      document.getElementById("cbGo").addEventListener("click", async () => {
+        const email = val("cb-email"), pass = val("cb-pass"); const msg = document.getElementById("cbAuthMsg");
+        if (!email || !pass) { msg.textContent = T("au.err.empty"); msg.style.color = "var(--gold-2)"; return; }
+        const btn = document.getElementById("cbGo"); btn.disabled = true; msg.style.color = "var(--parchment-dim)"; msg.textContent = T("au.loading");
+        try { await A.signIn(email, pass); const u = await A.authUser(); if (!u) { btn.disabled = false; msg.style.color = "var(--gold-2)"; msg.textContent = T("au.confirm"); return; } boot(); }
+        catch (e) { btn.disabled = false; msg.style.color = "var(--gold-2)"; msg.textContent = (e && e.message) || T("au.err.generic"); }
+      });
+    }
+
+    // CREAR CUENTA de comprador (correo + clave, con código de activación como las vendedoras).
+    function showSignUp() {
+      let avatarData = null;
+      root.innerHTML = `
+        <div class="page-head"><span class="eyebrow">${T("cb.eyebrow")}</span><h1>${T("cb.acc.h")}</h1><p class="sub">${T("cb.acc.sub")}</p></div>
+        <div class="form-card">
+          <div class="avatar-pick"><span class="avatar lg" id="cbAvatarPrev">+</span><label class="upload" style="flex:1"><span>${T("cb.photo")}</span><input type="file" id="cbAvatarInput" accept="image/*"></label></div>
+          <div class="divider"></div>
+          <div class="field"><label>${T("cb.f.name")}</label><input id="cb-name" placeholder="${T("cb.f.name.ph")}"></div>
+          <div class="field"><label>${T("au.email")}</label><input id="cb-email" type="email" placeholder="tucorreo@ejemplo.com"></div>
+          <div class="field"><label>${T("cb.f.pass")}</label><input id="cb-pass" type="password" placeholder="${T("cb.f.pass.ph")}"></div>
+          <div class="field"><label>${T("cb.f.impact")}</label><textarea id="cb-impact" placeholder="${T("cb.f.impact.ph")}"></textarea></div>
+          <button class="btn btn-gold btn-lg btn-block" id="cbCreate">${T("cb.acc.create")}</button>
+          <p class="note center mt8"><a href="#" id="cbToSignin" style="color:var(--gold-2)">${T("cb.toSignin")}</a></p>
+          <p id="cbAuthMsg" class="note center mt8"></p>
+        </div>`;
+      document.getElementById("cbToSignin").addEventListener("click", (e) => { e.preventDefault(); showSignIn(); });
+      const input = document.getElementById("cbAvatarInput");
+      input.addEventListener("change", () => { const f = input.files[0]; if (!f) return; downscale(f, 256, d => { avatarData = d; document.getElementById("cbAvatarPrev").innerHTML = `<img src="${d}" alt="">`; }); });
+      document.getElementById("cbCreate").addEventListener("click", async () => {
+        const name = val("cb-name"), email = val("cb-email"), pass = val("cb-pass"), impact = val("cb-impact");
+        const msg = document.getElementById("cbAuthMsg");
+        if (!name || !email || !pass) { msg.textContent = T("au.err.empty"); msg.style.color = "var(--gold-2)"; return; }
+        if (pass.length < 6) { msg.textContent = T("cb.err.pass"); msg.style.color = "var(--gold-2)"; return; }
+        const ini = name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
+        const btn = document.getElementById("cbCreate"); btn.disabled = true; msg.style.color = "var(--parchment-dim)"; msg.textContent = T("cp.code.sending");
+        try { await A.sendSignupCode(email); showCodeStep({ name: name, email: email, pass: pass, impact: impact, ini: ini, avatarImg: avatarData }); }
+        catch (e) { btn.disabled = false; msg.style.color = "var(--gold-2)"; msg.textContent = (e && e.message) || T("cp.code.senderr"); }
+      });
+    }
+
+    // Paso del CÓDIGO → activa cuenta, pone la clave y guarda el perfil de comprador.
+    function showCodeStep(info) {
+      root.innerHTML = `
+        <div class="form-card" style="max-width:440px;margin:0 auto">
+          <h3 style="font-size:19px;margin-bottom:4px">${T("cp.code.h")}</h3>
+          <p class="muted" style="margin-bottom:12px">${T("cp.code.p").replace("{email}", esc(info.email))}</p>
+          <div class="field"><label>${T("cp.code.label")}</label><input id="cb-code" inputmode="numeric" autocomplete="one-time-code" placeholder="••••••" maxlength="8"></div>
+          <button type="button" class="btn btn-gold btn-lg btn-block" id="cbCodeGo">${T("cp.code.verify")}</button>
+          <p class="note center mt8"><a href="#" id="cbCodeResend" style="color:var(--gold-2)">${T("cp.code.resend")}</a></p>
+          <p id="cbCodeMsg" class="note center mt8"></p>
+        </div>`;
+      const cmsg = document.getElementById("cbCodeMsg");
+      document.getElementById("cbCodeResend").addEventListener("click", async (e) => { e.preventDefault(); cmsg.style.color = "var(--parchment-dim)"; cmsg.textContent = T("cp.code.sending"); try { await A.sendSignupCode(info.email); cmsg.style.color = "var(--emerald)"; cmsg.textContent = T("cp.code.sent").replace("{email}", esc(info.email)); } catch (err) { cmsg.style.color = "var(--gold-2)"; cmsg.textContent = T("cp.code.senderr"); } });
+      document.getElementById("cbCodeGo").addEventListener("click", async function () {
+        const code = (val("cb-code") || "").trim();
+        if (!code) { cmsg.style.color = "var(--gold-2)"; cmsg.textContent = T("cp.code.err.empty"); return; }
+        this.disabled = true; cmsg.style.color = "var(--parchment-dim)"; cmsg.textContent = T("cp.saving");
+        try {
+          await A.verifyCode(info.email, code);
+          try { await A.changePassword(info.pass); } catch (e) {}
+          await A.saveBuyerAccount({ name: info.name, email: info.email, impact: info.impact, ini: info.ini, avatarImg: info.avatarImg });
+          fireWelcome(info.email, info.name, "");
+          showProfile(await A.myBuyer());
+        } catch (e) { this.disabled = false; cmsg.style.color = "var(--gold-2)"; cmsg.textContent = (e && e.message) || T("cp.code.err.bad"); }
+      });
+    }
+
+    async function boot() {
+      const user = await A.authUser();
+      if (!user) { showSignUp(); return; }
+      let b = await A.myBuyer();
+      if (!b) {
+        // Si es vendedora, también puede comprar: le creamos su ficha de compradora.
+        let seller = null; try { seller = A.myProfile ? await A.myProfile() : null; } catch (e) {}
+        if (seller && seller.id) { try { await A.saveBuyerAccount({ name: seller.name, ini: seller.ini, avatarImg: seller.avatarImg }); b = await A.myBuyer(); } catch (e) {} }
+      }
+      if (b) showProfile(b); else showForm({});
+    }
+    boot();
   }
 
   // ---------- GRACIAS ----------
@@ -2650,6 +2763,41 @@
   function retoTxt(o) { const L = LANG(); return (o && (o[L] || o.es)) || ""; }
   function todayISO() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 
+  // Imagen ORIGINAL por día del Reto, hecha con la identidad de Alquimia (sin stock).
+  // Símbolo alquímico del pilar + degradado de marca + órbitas + partículas, único por día.
+  function retoDayImage(day, opts) {
+    opts = opts || {};
+    const PAL = {
+      "Cuerpo":    ["#2ECC71", "#14603d", "#C6A15B"],
+      "Mente":     ["#7d4a86", "#3a1c40", "#C6A15B"],
+      "Alma":      ["#C6A15B", "#7a5a24", "#4B244A"],
+      "Planeta":   ["#2ECC71", "#1c5a3c", "#0f3d2a"],
+      "Comunidad": ["#9a4d78", "#4B244A", "#C6A15B"]
+    };
+    const c = PAL[day.pilar] || ["#7d4a86", "#3a1c40", "#C6A15B"];
+    let seed = (day.d || 1) * 90197 + 1234567;
+    const rnd = (n) => { seed = (seed * 16807) % 2147483647; return (seed / 2147483647) * n; };
+    let dots = "";
+    for (let i = 0; i < 11; i++) {
+      const cx = 6 + rnd(88), cy = 6 + rnd(48), r = 0.5 + rnd(2.1), op = (0.12 + rnd(0.45)).toFixed(2);
+      dots += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="#F5EEDD" opacity="' + op + '"/>';
+    }
+    const gid = "rdg" + (day.d || 0) + (opts.hero ? "h" : "");
+    const sym = opts.sym || day.sym || "☉";
+    const label = esc((retoTxt(day.title) || "").toUpperCase());
+    return '<svg viewBox="0 0 100 60" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" class="reto-daysvg" role="img" aria-label="' + label + '">' +
+      '<defs><radialGradient id="' + gid + '" cx="50%" cy="34%" r="82%">' +
+        '<stop offset="0%" stop-color="' + c[0] + '"/><stop offset="62%" stop-color="' + c[1] + '"/><stop offset="100%" stop-color="#160e20"/>' +
+      '</radialGradient></defs>' +
+      '<rect width="100" height="60" fill="url(#' + gid + ')"/>' +
+      dots +
+      '<circle cx="50" cy="28" r="16" fill="none" stroke="' + c[2] + '" stroke-width="0.5" opacity="0.6"/>' +
+      '<circle cx="50" cy="28" r="21" fill="none" stroke="' + c[2] + '" stroke-width="0.3" opacity="0.35"/>' +
+      '<text x="50" y="28" text-anchor="middle" dominant-baseline="central" font-size="19" fill="#F7F1E2" opacity="0.95">' + sym + '</text>' +
+      '<text x="50" y="50" text-anchor="middle" font-size="3.1" letter-spacing="2" fill="#F5EEDD" opacity="0.72" font-family="monospace">ALQUIMIA</text>' +
+      '</svg>';
+  }
+
   async function initReto() {
     const root = document.getElementById("retoRoot");
     if (!root || !window.ALQ_RETO) return;
@@ -2685,7 +2833,9 @@
       root.innerHTML =
         '<span class="eyebrow" style="justify-content:center">☉ ' + esc(T("reto.eyebrow")) + '</span>' +
         '<h1 style="font-size:clamp(30px,5vw,52px);font-weight:400;line-height:1.05;max-width:14em;margin:14px auto 10px">' + esc(T("reto.title")) + '</h1>' +
+        '<div class="reto-heroimg">' + retoDayImage({ d: 11, pilar: "Alma", title: { es: "", en: "" } }, { sym: "⚗", hero: true }) + '</div>' +
         '<p class="lede" style="max-width:40ch;margin:0 auto 8px">' + esc(T("reto.lede")) + '</p>' +
+        '<p class="reto-about" style="max-width:52ch;margin:0 auto 14px">' + esc(T("reto.about")) + '</p>' +
         '<div class="reto-steps">' +
           '<div class="reto-step"><span class="rs-n">21</span><span>' + esc(T("reto.f1")) + '</span></div>' +
           '<div class="reto-step"><span class="rs-n">1</span><span>' + esc(T("reto.f2")) + '</span></div>' +
@@ -2714,6 +2864,7 @@
       root.innerHTML =
         '<span class="eyebrow" style="justify-content:center">' + day.sym + ' ' + esc(T("cat." + day.pilar)) + ' · ' + esc(T("reto.dayLabel")) + ' ' + day.d + '/' + total + '</span>' +
         '<div class="reto-progress"><span style="width:' + pct + '%"></span></div>' +
+        '<div class="reto-dayimg">' + retoDayImage(day) + '</div>' +
         '<h1 class="reto-daytitle">' + esc(retoTxt(day.title)) + '</h1>' +
         '<p class="reto-refl">' + esc(retoTxt(day.r)) + '</p>' +
         '<div class="reto-qcard">' +

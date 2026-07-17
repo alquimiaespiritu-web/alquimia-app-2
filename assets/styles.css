@@ -828,7 +828,10 @@ textarea.inp{resize:vertical;min-height:80px}
 .reto-step span:last-child{font-size:13.5px;color:var(--parchment-dim);line-height:1.35}
 .reto-progress{max-width:420px;height:7px;border-radius:99px;background:rgba(244,236,221,.1);margin:14px auto 6px;overflow:hidden}
 .reto-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--gold-2,#8a6d3b),var(--gold,#C6A15B));border-radius:99px;transition:width .6s ease}
-.reto-daytitle{font-size:clamp(26px,4.2vw,40px);font-weight:400;margin:12px auto 10px;max-width:16em}
+.reto-dayimg{max-width:460px;margin:16px auto 4px;border-radius:16px;overflow:hidden;border:1px solid rgba(198,161,91,.35);box-shadow:0 14px 40px rgba(0,0,0,.35)}
+.reto-heroimg{max-width:520px;margin:18px auto 16px;border-radius:18px;overflow:hidden;border:1px solid rgba(198,161,91,.3);box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.reto-daysvg{display:block;width:100%;height:auto;aspect-ratio:100/60}
+.reto-about{color:var(--parchment-dim,#c9bfa8);font-size:15.5px;line-height:1.6}
 .reto-refl{font-family:var(--serif,Georgia,serif);font-style:italic;font-size:clamp(19px,2.6vw,26px);line-height:1.35;color:var(--parchment);max-width:22em;margin:0 auto 22px}
 .reto-qcard{max-width:560px;margin:0 auto;background:radial-gradient(circle at 50% 0%,rgba(75,36,74,.35),rgba(244,236,221,.03));border:1px solid var(--gold);border-radius:18px;padding:22px 20px;text-align:left}
 .reto-q{margin:0 0 12px;font-size:16.5px;color:var(--parchment)}

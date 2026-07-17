@@ -442,6 +442,46 @@ window.ALQ = (function () {
     } catch (e) { return null; }
   }
 
+  // ---- CUENTA DE COMPRADOR (Supabase Auth + tabla buyers, con clave) ----
+  // Trae el perfil de comprador de la sesión activa (o null si no hay/aún no lo completó).
+  async function myBuyer() {
+    const u = await authUser(); if (!u) return null;
+    try {
+      const c = await ensureClient();
+      const { data } = await c.from("buyers").select("*").eq("user_id", u.id).maybeSingle();
+      if (!data) return null;
+      return { id: u.id, name: data.name, email: data.email || u.email || null,
+        intereses: data.intereses || "", impact: data.impact || "",
+        avatarImg: data.avatar_url || null, ini: data.ini || "",
+        supported: Array.isArray(data.supported) ? data.supported : [] };
+    } catch (e) { return null; }
+  }
+  // Crea/actualiza la fila de comprador de la sesión activa. Requiere sesión (clave ya puesta).
+  async function saveBuyerAccount(info) {
+    const c = await ensureClient();
+    const u = await authUser(); if (!u) throw new Error("Sin sesión activa.");
+    info = info || {};
+    const avatar_url = (info.avatarImg && /^data:/.test(info.avatarImg))
+      ? await uploadPhoto(info.avatarImg, "buyers/" + u.id + "-" + Date.now() + ".jpg")
+      : (info.avatarImg || null);
+    const row = { user_id: u.id, name: info.name || null, email: info.email || u.email || null,
+      intereses: info.intereses || null, impact: info.impact || null, avatar_url: avatar_url,
+      ini: info.ini || null };
+    if (info.supported !== undefined) row.supported = info.supported;
+    let { error } = await c.from("buyers").upsert(row, { onConflict: "user_id" });
+    if (error && /supported|column|does not exist|schema/i.test(error.message || "")) {
+      delete row.supported; ({ error } = await c.from("buyers").upsert(row, { onConflict: "user_id" }));
+    }
+    if (error) throw error;
+    try { localStorage.setItem("alq_buyer", JSON.stringify({ name: row.name, avatarImg: avatar_url, ini: row.ini, impact: row.impact })); } catch (e) {}
+    return row;
+  }
+  // Actualiza campos del comprador (fusiona con lo actual).
+  async function updateBuyer(fields) {
+    const cur = (await myBuyer()) || {};
+    return saveBuyerAccount(Object.assign({}, cur, fields || {}));
+  }
+
   function getSellers() { return _remote.slice(); } // solo vendedoras reales aprobadas (sin ejemplos)
   function getSeller(id) { return getSellers().find(s => s.id === id); }
   function getListings() {
@@ -557,6 +597,7 @@ window.ALQ = (function () {
     payoutConnected, setPayoutConnected,
     getCart, addToCart, setQty, removeFromCart, clearCart, cartCount, cartItems,
     getBuyer, saveBuyer, getSupported, addSupport,
+    myBuyer, saveBuyerAccount, updateBuyer,
     savePushSubscription, pushBroadcast, pushSellerApproved, pushEvent,
     param
   };
