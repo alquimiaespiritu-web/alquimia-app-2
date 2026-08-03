@@ -1,0 +1,278 @@
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500\&family=Nunito:wght@400;600;700\&display=swap" rel="stylesheet">
+{FONTS}
+<style>
+  :root{
+    --beige:#F1E7D4; --beige-deep:#E9DBC1; --crema:#FBF5EA; --lav:#ECE4F1; --linea:#E4D7BF;
+    --oro:#C6A15B; --oro-osc:#A9803F; --oro-claro:#E0C385;
+    --amatista:#7A4E9B; --amatista-soft:#8E5BB0;
+    --plum:#4B244A; --tinta:#41313F; --muted:#8C7B86; --esmeralda:#2E9E63;
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Nunito',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--beige);color:var(--tinta);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .aq{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.16;margin:0;color:var(--plum);text-wrap:balance}
+  p{margin:0}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--oro-osc);font-weight:700}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;font-family:var(--sans);font-weight:700;font-size:1rem;border:none;
+    border-radius:999px;padding:14px 26px;cursor:pointer;transition:transform .15s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-amatista{background:var(--amatista);color:#fff;box-shadow:0 10px 24px rgba(122,78,155,.26)}
+  .btn-ghost{background:transparent;border:1.5px solid var(--amatista);color:var(--amatista)}
+  .btn-ghost:hover{background:var(--lav)}
+  .sello{display:block}
+
+  header.bar{position:sticky;top:0;z-index:20;background:#4B244A;border-bottom:1px solid rgba(224,195,133,.28)}
+  .bar-in{display:flex;align-items:center;gap:24px;height:70px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .sello{width:38px;height:38px}
+  .brand b{font-family:var(--serif);color:var(--oro-claro);font-size:1.15rem;letter-spacing:.14em;font-weight:500}
+  nav.main{display:flex;gap:26px;margin-left:14px}
+  nav.main a{color:#EEDFEB;font-size:.98rem;font-weight:600}
+  nav.main a:hover{color:var(--oro-claro)}
+  .bar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .selector{display:inline-flex;align-items:center;gap:6px;color:#EEDFEB;font-size:.9rem;font-weight:600;border:1px solid rgba(224,195,133,.34);border-radius:999px;padding:7px 13px}
+  .avatar-sm{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--oro);display:grid;place-items:center;color:var(--oro-claro);flex:none}
+
+  /* perfil hero */
+  main{padding-bottom:70px}
+  .cover{height:150px;background:linear-gradient(120deg,#e7d9ec,#efe4d0);border-radius:0 0 24px 24px}
+  .prof-head{display:flex;align-items:flex-end;gap:24px;margin-top:-64px;flex-wrap:wrap}
+  .avatar-lg{width:132px;height:132px;border-radius:50%;border:4px solid var(--beige);background:linear-gradient(160deg,#e9d7bb,#d8bd90);
+    display:grid;place-items:center;font-family:var(--serif);font-size:2.6rem;color:#5b3a12;flex:none;box-shadow:0 10px 30px rgba(75,36,74,.15)}
+  .prof-id{flex:1;min-width:260px;padding-bottom:6px}
+  .prof-id .verif{display:inline-flex;align-items:center;gap:5px;color:var(--esmeralda);font-size:.82rem;font-weight:700;margin-bottom:4px}
+  .prof-id h1{font-size:clamp(1.8rem,3.4vw,2.5rem)}
+  .prof-id .tipo{color:var(--amatista);font-weight:700;letter-spacing:.04em;margin-top:4px}
+  .prof-id .meta{color:var(--muted);font-size:.95rem;margin-top:6px}
+  .prof-id .tag{color:var(--tinta);font-size:1.05rem;margin-top:12px;max-width:60ch}
+  .prof-cta{display:flex;gap:10px;padding-bottom:8px;flex-wrap:wrap}
+
+  .prof-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:26px;margin-top:38px;align-items:start}
+  .block{background:var(--crema);border:1px solid var(--linea);border-radius:18px;padding:26px 28px;margin-bottom:22px}
+  .block h2{font-size:1.5rem;margin-bottom:12px}
+  .block p{color:var(--tinta)}
+  .block p + p{margin-top:12px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{border:1px solid #dcc9e2;background:#fff;border-radius:999px;padding:8px 15px;font-weight:600;font-size:.9rem;color:var(--amatista)}
+
+  .session{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--linea);flex-wrap:wrap}
+  .session:first-of-type{border-top:none}
+  .session .s-info{flex:1;min-width:200px}
+  .session .s-info b{font-family:var(--serif);font-size:1.12rem;color:var(--plum);font-weight:500}
+  .session .s-info span{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+  .session .s-price{font-family:var(--serif);font-size:1.2rem;color:var(--oro-osc);white-space:nowrap}
+  .proj{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--linea)}
+  .proj:first-of-type{border-top:none}
+  .proj .p-ico{width:44px;height:44px;border-radius:12px;background:var(--lav);display:grid;place-items:center;color:var(--amatista);flex:none}
+  .proj b{font-family:var(--serif);color:var(--plum);font-size:1.08rem;font-weight:500}
+  .proj p{color:var(--muted);font-size:.94rem;margin-top:2px}
+  .edu{display:flex;gap:13px;padding:14px 0;border-top:1px solid var(--linea)}
+  .edu:first-of-type{border-top:none}
+  .edu .e-ico{width:40px;height:40px;border-radius:10px;background:#fff;border:1px solid var(--linea);display:grid;place-items:center;color:var(--oro-osc);flex:none}
+  .edu b{color:var(--plum);font-family:var(--serif);font-weight:500}
+  .edu .e-sub{color:var(--muted);font-size:.9rem}
+  .edu .e-ver{display:inline-flex;align-items:center;gap:4px;color:var(--esmeralda);font-size:.78rem;font-weight:700;margin-top:3px}
+  .testi{border-left:3px solid var(--oro);padding:4px 0 4px 16px;margin-bottom:18px}
+  .testi p{font-family:var(--serif);font-style:italic;font-size:1.08rem;color:var(--tinta)}
+  .testi cite{display:block;font-style:normal;color:var(--muted);font-size:.9rem;margin-top:6px;font-weight:600}
+
+  aside .panel{background:var(--crema);border:1px solid var(--linea);border-radius:18px;padding:22px;margin-bottom:20px}
+  aside .panel.verif-panel{background:#fff;border-color:#cdeede}
+  aside h3{font-size:1.1rem;margin-bottom:12px}
+  .kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--linea);font-size:.92rem}
+  .kv:first-of-type{border-top:none}
+  .kv span:first-child{color:var(--muted)}
+  .kv span:last-child{color:var(--tinta);font-weight:600;text-align:right}
+  .vrow{display:flex;align-items:center;gap:9px;padding:7px 0;font-size:.92rem;color:var(--tinta);font-weight:600}
+  .vrow svg{color:var(--esmeralda);flex:none}
+  .reto{background:linear-gradient(160deg,#f3e7d0,#efe0f0);border:1px solid var(--linea)}
+  .reto .eyebrow{color:var(--amatista)}
+  .reto b{display:block;font-family:var(--serif);font-size:1.25rem;color:var(--plum);margin:6px 0 4px}
+  .reto p{color:var(--muted);font-size:.92rem;margin-bottom:14px}
+
+  @media (max-width:820px){
+    nav.main,.selector.pais{display:none}
+    .prof-grid{grid-template-columns:1fr}
+    .prof-cta{width:100%}
+  }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sello" viewBox="0 0 200 200">
+    <g fill="none" stroke="#C6A15B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="100" cy="100" r="86"/>
+      <polygon points="100,14 174.5,143 25.5,143" fill="rgba(142,91,176,0.22)"/>
+      <line x1="82.7" y1="44" x2="117.3" y2="44"/>
+      <polygon points="43.4,118 72.3,118 57.85,143"/>
+      <polygon points="127.7,118 156.6,118 142.15,143"/>
+      <line x1="136.4" y1="133" x2="147.9" y2="133"/>
+      <circle cx="100" cy="100" r="33"/>
+      <line x1="67" y1="100" x2="92" y2="100"/>
+      <line x1="108" y1="100" x2="133" y2="100"/>
+      <circle cx="100" cy="100" r="8"/>
+      <circle cx="100" cy="100" r="3" fill="#C6A15B" stroke="none"/>
+    </g>
+  </symbol>
+</svg>
+
+<header class="bar">
+  <div class="aq bar-in">
+    <a class="brand" href="#"><svg class="sello"><use href="#sello"/></svg><b>ALQUIMIA&nbsp;SOY</b></a>
+    <nav class="main">
+      <a href="#">Alquimistas</a>
+      <a href="#">Blog</a>
+      <a href="#">Comunidad</a>
+    </nav>
+    <div class="bar-right">
+      <span class="selector pais"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>CO</span>
+      <span class="selector">ES</span>
+      <span class="avatar-sm"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="aq">
+    <div class="cover"></div>
+    <div class="prof-head">
+      <div class="avatar-lg">VR</div>
+      <div class="prof-id">
+        <span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Alquimista verificada</span>
+        <h1>Valentina Ríos</h1>
+        <div class="tipo">Terapeuta · Pilar Alma</div>
+        <div class="meta">Medellín, Colombia · Online y presencial · Español, Inglés</div>
+        <p class="tag">Te acompaño a volver a tu centro a través del sonido, la respiración y la presencia.</p>
+      </div>
+      <div class="prof-cta">
+        <button class="btn btn-amatista">Reservar sesión</button>
+        <button class="btn btn-ghost">Enviar mensaje</button>
+      </div>
+    </div>
+
+    <div class="prof-grid">
+      <div class="prof-main">
+        <div class="block">
+          <span class="eyebrow">Conexión primero</span>
+          <h2>Mi camino</h2>
+          <p>Hace ocho años, un burnout me obligó a parar. En ese silencio descubrí el poder del sonido y la respiración para volver a habitarme.</p>
+          <p>Hoy acompaño a otras personas a hacer ese mismo viaje: del ruido a la calma, del hacer al ser. No llegué aquí por un título, llegué por necesidad —y me quedé por vocación.</p>
+        </div>
+
+        <div class="block">
+          <h2>Mi enfoque</h2>
+          <p>Trabajo desde la escucha y sin prisa. Combino baños de sonido, respiración consciente (breathwork) y meditación guiada, adaptándome a lo que tú necesitas ese día.</p>
+          <p>No busco arreglarte —no estás rota—. Te acompaño a recordar lo que ya sabes y a crear el espacio para sentirlo.</p>
+        </div>
+
+        <div class="block">
+          <h2>Especialidades</h2>
+          <div class="chips">
+            <span class="chip">Baños de sonido</span>
+            <span class="chip">Breathwork</span>
+            <span class="chip">Meditación guiada</span>
+            <span class="chip">Manejo de ansiedad</span>
+            <span class="chip">Duelo</span>
+            <span class="chip">Autoconocimiento</span>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Sesiones y experiencias</h2>
+          <div class="session">
+            <div class="s-info"><b>Sesión individual de sonido</b><span>60 min · Online o presencial</span></div>
+            <div class="s-price">€45</div>
+            <button class="btn btn-amatista">Reservar</button>
+          </div>
+          <div class="session">
+            <div class="s-info"><b>Breathwork 1:1</b><span>75 min · Online</span></div>
+            <div class="s-price">€55</div>
+            <button class="btn btn-amatista">Reservar</button>
+          </div>
+          <div class="session">
+            <div class="s-info"><b>Círculo de sonido grupal</b><span>Mensual · Presencial, Medellín</span></div>
+            <div class="s-price">€20</div>
+            <button class="btn btn-amatista">Reservar</button>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Proyectos</h2>
+          <div class="proj">
+            <span class="p-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 8c3 0 5 1.5 5 4M19 8c-3 0-5 1.5-5 4"/></svg></span>
+            <div><b>Raíz Sonora</b><p>Círculos de sonido comunitarios y gratuitos una vez al mes en Medellín.</p></div>
+          </div>
+          <div class="proj">
+            <span class="p-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21c-4-3-7-5.4-7-9a3.6 3.6 0 0 1 7-1.2A3.6 3.6 0 0 1 19 12c0 3.6-3 6-7 9z"/></svg></span>
+            <div><b>Calma en 7 días</b><p>Reto gratuito de respiración, en alianza con la comunidad de Alquimia.</p></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Formación y certificados</h2>
+          <div class="edu">
+            <span class="e-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"/></svg></span>
+            <div><b>Psicología</b><div class="e-sub">Universidad de Antioquia · 2015</div><span class="e-ver"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg>Verificado por Alquimia</span></div>
+          </div>
+          <div class="edu">
+            <span class="e-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"/></svg></span>
+            <div><b>Terapia de sonido — Nivel avanzado</b><div class="e-sub">Instituto Sonido y Consciencia · 2019</div><span class="e-ver"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg>Verificado por Alquimia</span></div>
+          </div>
+          <div class="edu">
+            <span class="e-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"/></svg></span>
+            <div><b>Facilitadora de Breathwork</b><div class="e-sub">Breath Collective · 2021</div><span class="e-ver"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg>Verificado por Alquimia</span></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Testimonios</h2>
+          <div class="testi">
+            <p>"Salí de la sesión como si hubiera dormido tres días. Valentina sostiene un espacio segurísimo."</p>
+            <cite>— María P., Medellín</cite>
+          </div>
+          <div class="testi">
+            <p>"El breathwork me destrabó algo que llevaba años cargando. Sin juicios, con muchísima calidez."</p>
+            <cite>— Andrés G., Utrecht</cite>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel verif-panel">
+          <h3>Verificación</h3>
+          <div class="vrow"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Identidad verificada</div>
+          <div class="vrow"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>3 certificados confirmados</div>
+          <div class="vrow"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Curada por el equipo de Alquimia</div>
+          <p style="color:var(--muted);font-size:.82rem;margin-top:8px">Sin cifras infladas: mostramos solo lo real.</p>
+        </div>
+
+        <div class="panel">
+          <h3>Datos</h3>
+          <div class="kv"><span>Pilar</span><span>Alma</span></div>
+          <div class="kv"><span>Modalidad</span><span>Online y presencial</span></div>
+          <div class="kv"><span>Idiomas</span><span>Español · Inglés</span></div>
+          <div class="kv"><span>Responde en</span><span>~24 h</span></div>
+          <div class="kv"><span>Desde</span><span>Medellín, CO</span></div>
+        </div>
+
+        <div class="panel reto">
+          <span class="eyebrow">Reto del mes</span>
+          <b>Respira 5 minutos al día</b>
+          <p>Un reto de 7 días para volver a tu centro, guiado por Valentina.</p>
+          <button class="btn btn-amatista" style="width:100%">Unirme al reto</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer style="background:var(--beige-deep);border-top:1px solid var(--linea);padding:40px 0">
+  <div class="aq" style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;color:var(--muted);font-size:.9rem">
+    <span style="display:flex;align-items:center;gap:10px"><svg class="sello" style="width:34px;height:34px"><use href="#sello"/></svg><b style="font-family:var(--serif);color:var(--plum);letter-spacing:.12em">ALQUIMIA SOY</b></span>
+    <span>Transformar propósito en impacto</span>
+  </div>
+</footer>

@@ -1,0 +1,435 @@
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500\&family=Nunito:wght@400;600;700\&display=swap" rel="stylesheet">
+{FONTS}
+<style>
+  :root{
+    --beige:#F1E7D4; --beige-deep:#E9DBC1; --crema:#FBF5EA; --lav:#ECE4F1; --linea:#E4D7BF;
+    --oro:#C6A15B; --oro-osc:#A9803F; --oro-claro:#E0C385;
+    --amatista:#7A4E9B; --amatista-soft:#8E5BB0;
+    --plum:#4B244A; --tinta:#41313F; --muted:#8C7B86;
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Nunito',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--beige);color:var(--tinta);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .aq{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.14;text-wrap:balance;margin:0;color:var(--plum)}
+  p{margin:0}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--oro-osc);font-weight:700}
+  .btn{display:inline-flex;align-items:center;gap:.5em;font-family:var(--sans);font-weight:700;font-size:1rem;border:none;
+    border-radius:999px;padding:15px 30px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+  .btn-amatista{background:var(--amatista);color:#fff;box-shadow:0 10px 26px rgba(122,78,155,.26)}
+  .btn-oro{background:linear-gradient(180deg,var(--oro-claro),var(--oro));color:#4a300f;box-shadow:0 10px 26px rgba(198,161,91,.30)}
+  .btn:hover{transform:translateY(-2px)}
+  .sello{display:block}
+
+  /* barra */
+  header.bar{position:sticky;top:0;z-index:20;background:#4B244A;border-bottom:1px solid rgba(224,195,133,.28)}
+  .bar-in{display:flex;align-items:center;gap:24px;height:70px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .sello{width:38px;height:38px}
+  .brand b{font-family:var(--serif);color:var(--oro-claro);font-size:1.15rem;letter-spacing:.14em;font-weight:500}
+  nav.main{display:flex;gap:26px;margin-left:14px}
+  nav.main a{color:#EEDFEB;font-size:.98rem;font-weight:600}
+  nav.main a:hover{color:var(--oro-claro)}
+  .bar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .selector{display:inline-flex;align-items:center;gap:6px;color:#EEDFEB;font-size:.9rem;font-weight:600;
+    border:1px solid rgba(224,195,133,.34);border-radius:999px;padding:7px 13px;cursor:pointer}
+  .selector:hover{border-color:var(--oro-claro)}
+  .avatar{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--oro);display:grid;place-items:center;color:var(--oro-claro);flex:none}
+  .bar-note{max-width:var(--maxw);margin:0 auto;padding:6px 24px 0;font-size:.72rem;color:rgba(238,223,235,.6)}
+  .dd{position:relative}
+  .dd-trig{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+  .chev{transition:transform .2s ease}
+  .dd.open .chev{transform:rotate(180deg)}
+  .dd-menu{position:absolute;top:calc(100% + 12px);left:0;min-width:200px;background:#fff;border:1px solid var(--linea);
+    border-radius:14px;box-shadow:0 18px 44px rgba(42,21,43,.24);padding:8px;display:none;z-index:40}
+  .dd-menu.dd-right{left:auto;right:0}
+  .dd.open .dd-menu,.dd:hover .dd-menu{display:block}
+  .dd:hover .chev{transform:rotate(180deg)}
+  .dd-menu a{display:block;padding:9px 13px;border-radius:9px;color:var(--tinta);font-size:.93rem;font-weight:600}
+  .dd-menu a:hover{background:var(--lav);color:var(--amatista)}
+  .dd-menu .mut{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:6px 13px 4px}
+  .dd-sep{height:1px;background:var(--linea);margin:6px 6px}
+
+  /* hero */
+  .hero{background:linear-gradient(180deg,#F5EEE0 0%,var(--beige) 100%)}
+  .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:40px;align-items:center;padding:66px 24px 78px}
+  .hero-copy{max-width:540px}
+  .hero h1{font-size:clamp(2.3rem,4.8vw,3.9rem);margin:16px 0 0}
+  .hero h1 em{font-style:italic;color:var(--oro-osc)}
+  .hero .lede{font-size:clamp(1.05rem,1.7vw,1.22rem);color:var(--muted);max-width:44ch;margin:20px 0 0}
+  .primer-paso{margin-top:30px;background:#fff;border:1px solid var(--linea);border-radius:20px;padding:20px;max-width:520px;box-shadow:0 16px 42px rgba(75,36,74,.08)}
+  .primer-paso label{display:block;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--oro-osc);font-weight:700;margin-bottom:10px}
+  .primer-paso textarea{width:100%;min-height:60px;resize:none;background:var(--crema);border:1px solid var(--linea);border-radius:14px;
+    color:var(--tinta);font-family:var(--sans);font-size:1.02rem;padding:13px 15px}
+  .primer-paso textarea::placeholder{color:#b3a597}
+  .primer-paso textarea:focus{outline:none;border-color:var(--oro)}
+  .pp-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;flex-wrap:wrap}
+  .pp-note{font-size:.85rem;color:var(--muted)}
+  .hero-art{display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .hero-logo{width:100%;max-width:400px;height:auto}
+  .seal-g *{transition:stroke .4s ease,stroke-width .4s ease}
+  .sym-active{stroke:#F4DC93;stroke-width:6.5;filter:drop-shadow(0 0 5px rgba(244,220,147,.9))}
+  .hero-logo .wm{fill:var(--oro-osc);font-family:var(--serif)}
+  .hero-logo .soy-in{fill:var(--oro-osc);font-family:var(--serif)}
+  .pilar-caption{text-align:center;margin-top:6px;min-height:44px}
+  .pilar-caption b{display:block;font-family:var(--serif);font-size:1.35rem;color:var(--plum);letter-spacing:.14em;font-weight:500}
+  .pilar-caption span{font-size:.82rem;color:var(--muted);letter-spacing:.04em}
+
+  /* secciones */
+  section{padding:80px 0}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto 46px}
+  .sec-head h2{font-size:clamp(1.85rem,3.3vw,2.6rem);margin:12px 0 0}
+  .sec-head p{color:var(--muted);margin-top:14px;font-size:1.08rem}
+
+  .pasos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .paso{background:var(--crema);border:1px solid var(--linea);border-radius:20px;padding:30px 26px}
+  .paso .num{font-family:var(--serif);font-size:1rem;color:var(--oro-osc);border:1.5px solid var(--oro);border-radius:50%;width:38px;height:38px;display:grid;place-items:center;font-weight:600}
+  .paso .ico{margin:18px 0 14px;color:var(--amatista)}
+  .paso h3{font-size:1.3rem}
+  .paso p{color:var(--muted);margin-top:10px}
+
+  .alq{background:var(--lav)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
+  .chip{border:1px solid #d8c7e0;background:#fff;border-radius:999px;padding:9px 18px;font-weight:600;font-size:.95rem;color:var(--amatista)}
+  .pilares{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;margin-top:40px}
+  .pilar{display:flex;flex-direction:column;align-items:center;gap:9px;color:var(--plum);font-size:.9rem;font-weight:700;width:88px}
+  .pilar .ico{color:var(--amatista)}
+
+  .grid-alq{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .card{background:var(--crema);border:1px solid var(--linea);border-radius:20px;padding:24px;display:flex;flex-direction:column;transition:transform .15s ease,box-shadow .15s ease}
+  .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(75,36,74,.10)}
+  .card .top{display:flex;align-items:center;gap:13px;margin-bottom:8px}
+  .card .ava{width:52px;height:52px;border-radius:50%;background:linear-gradient(160deg,#efe6d3,#e6d3b6);display:grid;place-items:center;color:var(--plum);flex:none}
+  .verif{display:inline-flex;align-items:center;gap:5px;color:#2E9E63;font-size:.8rem;font-weight:700}
+  .card h3{font-size:1.18rem}
+  .tipo{font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amatista)}
+  .card .desc{color:var(--muted);font-size:.96rem;margin-top:4px}
+  .card .meta{color:var(--muted);font-size:.85rem;margin-top:6px}
+  .card .ver{margin-top:14px;color:var(--amatista);font-weight:700;font-size:.92rem}
+
+  .honestidad{background:var(--beige-deep);text-align:center}
+  .honestidad .lede{max-width:56ch;margin:16px auto 0;color:var(--muted);font-size:1.1rem}
+  .valores{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:40px}
+  .valor{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--linea);border-radius:999px;padding:12px 22px;font-weight:600;color:var(--plum)}
+  .valor svg{color:#2E9E63}
+
+  .cierre{background:linear-gradient(180deg,var(--lav),#F5EEE0);text-align:center;padding:92px 0}
+  .cierre .sello{width:70px;height:70px;margin:0 auto 22px}
+  .cierre h2{font-size:clamp(2.1rem,4.3vw,3.2rem)}
+  .cierre h2 em{font-style:italic;color:var(--oro-osc)}
+  .cierre p{color:var(--muted);margin:16px auto 30px;max-width:40ch}
+
+  footer{background:var(--beige-deep);color:var(--tinta);padding:52px 0 38px;border-top:1px solid var(--linea)}
+  .foot-top{display:flex;flex-wrap:wrap;gap:30px;justify-content:space-between;align-items:flex-start}
+  .foot-brand{display:flex;align-items:center;gap:12px}
+  .foot-brand .sello{width:44px;height:44px}
+  .foot-brand b{font-family:var(--serif);color:var(--plum);font-size:1.1rem;letter-spacing:.14em;display:block}
+  .foot-brand span{font-size:.9rem;color:var(--muted);font-style:italic}
+  .foot-links{display:flex;flex-wrap:wrap;gap:22px;font-size:.95rem;font-weight:600}
+  .foot-links a:hover{color:var(--amatista)}
+  .foot-bottom{margin-top:32px;padding-top:22px;border-top:1px solid var(--linea);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-size:.82rem;color:var(--muted)}
+
+  @media (prefers-reduced-motion:no-preference){
+    .breathe{animation:breathe 4.2s ease-in-out infinite;transform-origin:center}
+    @keyframes breathe{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(198,161,91,0))}50%{transform:scale(1.055);filter:drop-shadow(0 8px 22px rgba(198,161,91,.30))}}
+  }
+  @media (max-width:900px){
+    .pasos{grid-template-columns:1fr} .grid-alq{grid-template-columns:repeat(2,1fr)}
+    .hero-logo{max-width:330px}
+  }
+  @media (max-width:680px){
+    .hero-grid{grid-template-columns:1fr;text-align:center}
+    .hero-copy{max-width:none} .hero .lede{margin-left:auto;margin-right:auto} .primer-paso{margin-left:auto;margin-right:auto}
+    .hero-art{order:-1} .hero-logo{max-width:260px}
+    nav.main,.selector.pais{display:none}
+  }
+  @media (max-width:560px){ .grid-alq{grid-template-columns:1fr} .foot-bottom{flex-direction:column} }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sello" viewBox="0 0 200 200">
+    <g fill="none" stroke="#C6A15B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="100" cy="100" r="86"/>
+      <polygon points="100,14 174.5,143 25.5,143" fill="rgba(142,91,176,0.22)"/>
+      <line x1="82.7" y1="44" x2="117.3" y2="44"/>
+      <polygon points="43.4,118 72.3,118 57.85,143"/>
+      <polygon points="127.7,118 156.6,118 142.15,143"/>
+      <line x1="136.4" y1="133" x2="147.9" y2="133"/>
+      <circle cx="100" cy="100" r="33"/>
+      <line x1="67" y1="100" x2="92" y2="100"/>
+      <line x1="108" y1="100" x2="133" y2="100"/>
+      <circle cx="100" cy="100" r="8"/>
+      <circle cx="100" cy="100" r="3" fill="#C6A15B" stroke="none"/>
+    </g>
+  </symbol>
+</svg>
+
+<header class="bar">
+  <div class="aq bar-in">
+    <a class="brand" href="#"><svg class="sello"><use href="#sello"/></svg><b>ALQUIMIA&nbsp;SOY</b></a>
+    <nav class="main">
+      <div class="dd">
+        <a href="#" class="dd-trig" data-dd>Alquimistas<svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="dd-menu">
+          <div class="mut">Por tipo</div>
+          <a href="#">Terapeutas</a>
+          <a href="#">Coaches</a>
+          <a href="#">Marcas conscientes</a>
+          <a href="#">Proyectos de Planeta</a>
+          <div class="dd-sep"></div>
+          <a href="#">Ver todos los alquimistas</a>
+        </div>
+      </div>
+      <a href="#">Blog</a>
+      <a href="#">Comunidad</a>
+    </nav>
+    <div class="bar-right">
+      <div class="dd">
+        <span class="selector pais dd-trig" data-dd><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg><span>CO</span><svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 9l6 6 6-6"/></svg></span>
+        <div class="dd-menu dd-right">
+          <div class="mut">Latinoamérica</div>
+          <a href="#">Colombia</a>
+          <a href="#">México</a>
+          <a href="#">Argentina</a>
+          <a href="#">Chile</a>
+          <div class="mut">Europa</div>
+          <a href="#">España</a>
+          <a href="#">Países Bajos</a>
+          <div class="dd-sep"></div>
+          <a href="#">Todos los países</a>
+        </div>
+      </div>
+      <div class="dd">
+        <span class="selector dd-trig" data-dd>ES<svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" style="margin-left:4px"><path d="M6 9l6 6 6-6"/></svg></span>
+        <div class="dd-menu dd-right">
+          <a href="#">Español</a>
+          <a href="#">English</a>
+          <a href="#">Nederlands</a>
+        </div>
+      </div>
+      <span class="avatar" title="Tu perfil"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></span>
+    </div>
+  </div>
+  <div class="bar-note">Mockup de la home · el ícono del carrito solo aparece cuando hay una compra</div>
+</header>
+
+<section class="hero">
+  <div class="aq hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">El Primer Paso</span>
+      <h1>¿No sabes por dónde empezar?<br><em>Empieza por ti.</em></h1>
+      <p class="lede">Cuéntame cómo te sientes hoy. Una lectura íntima —hecha con IA y con alma— te conecta con el alquimista ideal para tu momento.</p>
+      <div class="primer-paso">
+        <label>Tu primer paso</label>
+        <textarea placeholder="Hoy me siento…"></textarea>
+        <div class="pp-row">
+          <span class="pp-note">Gratis · privado · sin juicios</span>
+          <button class="btn btn-amatista">Iniciar mi lectura
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg class="hero-logo breathe" viewBox="130 30 420 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sello de Alquimia Soy">
+        <defs>
+          <path id="ladoIzq" d="M 217.0 249 L 329.6 54"/>
+          <path id="ladoDer" d="M 350.4 54 L 463.0 249"/>
+        </defs>
+        <polygon points="340,60 452.6,255 227.4,255" fill="rgba(142,91,176,0.14)" stroke="none"/>
+        <g fill="none" stroke="#C6A15B" class="seal-g">
+          <circle cx="340" cy="190" r="130" stroke-width="3.5"/>
+          <polygon id="sym-tri" points="340,60 452.6,255 227.4,255" stroke-width="3"/>
+          <line x1="310.6" y1="110" x2="369.4" y2="110" stroke-width="3"/>
+          <polygon id="sym-left" points="255.9,218 298.6,218 277.25,255" stroke-width="3"/>
+          <polygon id="sym-right" points="381.4,218 424.1,218 402.75,255" stroke-width="3"/>
+          <line x1="395.9" y1="243" x2="409.6" y2="243" stroke-width="3"/>
+          <circle id="sym-eye" cx="340" cy="190" r="50" stroke-width="3"/>
+          <line x1="290" y1="190" x2="330" y2="190" stroke-width="3"/>
+          <line x1="350" y1="190" x2="390" y2="190" stroke-width="3"/>
+          <circle id="sym-soul" cx="340" cy="190" r="10" stroke-width="3"/>
+        </g>
+        <circle cx="340" cy="190" r="3.8" fill="#C6A15B"/>
+        <g fill="#A9803F" font-family="Georgia, 'Times New Roman', serif">
+          <text font-size="17" letter-spacing="5"><textPath href="#ladoIzq" text-anchor="middle" startOffset="50%">ALQUIMIA</textPath></text>
+          <text font-size="16" letter-spacing="1.5"><textPath href="#ladoDer" text-anchor="middle" startOffset="50%">TRANSMUTACIÓN</textPath></text>
+          <text x="341" y="300" font-size="30" letter-spacing="11" text-anchor="middle">SOY</text>
+        </g>
+      </svg>
+      <div class="pilar-caption">
+        <b id="pilarName">Cuerpo</b>
+        <span id="pilarSub">cuidado del cuerpo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="aq">
+    <div class="sec-head">
+      <span class="eyebrow">Tu recorrido</span>
+      <h2>De cómo te sientes, a cómo quieres estar</h2>
+      <p>Tres pasos simples. Sin laberintos, sin diagnósticos fríos.</p>
+    </div>
+    <div class="pasos">
+      <div class="paso">
+        <div class="num">1</div>
+        <div class="ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8L18 15z"/></svg></div>
+        <h3>El Primer Paso</h3>
+        <p>Escribe cómo te sientes. Recibes una lectura personalizada que te devuelve claridad, no etiquetas.</p>
+      </div>
+      <div class="paso">
+        <div class="num">2</div>
+        <div class="ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="9" r="3.2"/><circle cx="16" cy="9" r="3.2"/><path d="M2.5 20c0-3 2.5-4.6 5.5-4.6M21.5 20c0-3-2.5-4.6-5.5-4.6"/></svg></div>
+        <h3>Conecta con tu alquimista</h3>
+        <p>Te presentamos a la persona o proyecto ideal para ti: terapeutas, coaches, marcas y proyectos de planeta.</p>
+      </div>
+      <div class="paso">
+        <div class="num">3</div>
+        <div class="ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21c0-5 0-8 0-11"/><path d="M12 10c-2.5 0-5-1.8-5-5 3 0 5 1.8 5 5z"/><path d="M12 13c2.5 0 5-1.8 5-5-3 0-5 1.8-5 5z"/></svg></div>
+        <h3>Transforma</h3>
+        <p>Reserva sesiones, entra a la Escuela y camina acompañada por la Comunidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alq">
+  <div class="aq">
+    <div class="sec-head">
+      <span class="eyebrow">Alquimistas</span>
+      <h2>Encuentra tu alquimista</h2>
+      <p>No es solo terapia. Un alquimista puede ser una terapeuta, una coach, una marca consciente o un proyecto que cuida el planeta. Todos, verificados de verdad.</p>
+    </div>
+    <div class="chips">
+      <span class="chip">Terapeutas</span>
+      <span class="chip">Coaches</span>
+      <span class="chip">Marcas conscientes</span>
+      <span class="chip">Proyectos de Planeta</span>
+    </div>
+    <div class="pilares">
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="5" r="2.4"/><path d="M12 8v7M12 15l-4 5M12 15l4 5M6 11h12"/></svg></span>Cuerpo</div>
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M12 6a2.6 2.6 0 0 0-4.8-1.4A2.5 2.5 0 0 0 4 7.2a2.7 2.7 0 0 0-.6 4.9A2.5 2.5 0 0 0 4.6 16 2.4 2.4 0 0 0 8 18.6 2.3 2.3 0 0 0 12 17.2z"/><path d="M12 6a2.6 2.6 0 0 1 4.8-1.4A2.5 2.5 0 0 1 20 7.2a2.7 2.7 0 0 1 .6 4.9A2.5 2.5 0 0 1 19.4 16 2.4 2.4 0 0 1 16 18.6 2.3 2.3 0 0 1 12 17.2z"/><path d="M12 6v11.2"/></svg></span>Mente</div>
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20c4-3 7-5.4 7-9a3.6 3.6 0 0 0-7-1.2A3.6 3.6 0 0 0 5 11c0 3.6 3 6 7 9z"/></svg></span>Alma</div>
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 2.5 14.1 0 17M12 3.5c-2.5 2.4-2.5 14.1 0 17"/></svg></span>Planeta</div>
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="8" r="2.6"/><circle cx="17" cy="8" r="2.6"/><path d="M2 18c0-2.7 2.2-4.2 5-4.2M22 18c0-2.7-2.2-4.2-5-4.2M12 20c-2.2 0-3.6-1.4-3.6-3.2a3.6 3.6 0 0 1 7.2 0C15.6 18.6 14.2 20 12 20z"/></svg></span>Comunidad</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="aq">
+    <div class="sec-head">
+      <span class="eyebrow">Verificadas de verdad</span>
+      <h2>Alquimistas destacados</h2>
+      <p>Personas y proyectos reales. Cada perfil pasa por una curaduría de confianza.</p>
+    </div>
+    <div class="grid-alq">
+      <div class="card">
+        <div class="top"><span class="ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></span><span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Verificada</span></div>
+        <span class="tipo">Terapeuta · Alma</span>
+        <h3>Valentina Ríos</h3>
+        <p class="desc">Sanación con sonido y respiración consciente.</p>
+        <p class="meta">Medellín · Online</p>
+        <span class="ver">Ver perfil →</span>
+      </div>
+      <div class="card">
+        <div class="top"><span class="ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></span><span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Verificado</span></div>
+        <span class="tipo">Coach · Mente</span>
+        <h3>Daniel Ocampo</h3>
+        <p class="desc">Propósito y claridad para emprender sin quemarte.</p>
+        <p class="meta">Utrecht · Online</p>
+        <span class="ver">Ver perfil →</span>
+      </div>
+      <div class="card">
+        <div class="top"><span class="ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8l8-4 8 4-8 4-8-4z"/><path d="M4 8v8l8 4 8-4V8"/></svg></span><span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Verificada</span></div>
+        <span class="tipo">Marca · Planeta</span>
+        <h3>Raíz Consciente</h3>
+        <p class="desc">Cosmética natural, sin residuos y sin crueldad.</p>
+        <p class="meta">Colombia · Envíos a la UE</p>
+        <span class="ver">Ver perfil →</span>
+      </div>
+      <div class="card">
+        <div class="top"><span class="ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21c-4-3-7-5.4-7-9a3.6 3.6 0 0 1 7-1.2A3.6 3.6 0 0 1 19 12c0 3.6-3 6-7 9z"/></svg></span><span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Verificado</span></div>
+        <span class="tipo">Proyecto · Comunidad</span>
+        <h3>Colectivo Semilla</h3>
+        <p class="desc">Reforestación y educación ambiental en comunidad.</p>
+        <p class="meta">Latinoamérica</p>
+        <span class="ver">Ver perfil →</span>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px"><a class="btn btn-amatista" href="#">Ver todos los alquimistas</a></div>
+  </div>
+</section>
+
+<section class="honestidad">
+  <div class="aq">
+    <span class="eyebrow">Nuestro sello</span>
+    <h2>La honestidad es el diferencial</h2>
+    <p class="lede">Preferimos mostrar unos pocos alquimistas reales que presumir de cientos que no existen. Aquí cada perfil se verifica de verdad.</p>
+    <div class="valores">
+      <span class="valor"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Certificados verificados</span>
+      <span class="valor"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Perfiles reales, no inventados</span>
+      <span class="valor"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Sin cifras infladas</span>
+    </div>
+  </div>
+</section>
+
+<section class="cierre">
+  <div class="aq">
+    <div class="breathe"><svg class="sello"><use href="#sello"/></svg></div>
+    <h2>Todo empieza <em>por ti.</em></h2>
+    <p>Un minuto contigo misma puede cambiar el rumbo. Da el primer paso.</p>
+    <a class="btn btn-amatista" href="#">Dar el primer paso
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="aq">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <svg class="sello"><use href="#sello"/></svg>
+        <div><b>ALQUIMIA&nbsp;SOY</b><span>Transformar propósito en impacto</span></div>
+      </div>
+      <div class="foot-links">
+        <a href="#">Alquimistas</a>
+        <a href="#">Escuela</a>
+        <a href="#">Comunidad</a>
+        <a href="#">Eventos</a>
+        <a href="#">Blog</a>
+        <a href="#">Contacto</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>Puente entre Latinoamérica y Europa</span>
+      <span>Cuerpo · Mente · Alma · Planeta · Comunidad</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var pilares=[["Cuerpo","cuidado del cuerpo","sym-left"],["Mente","cuidado de la mente","sym-eye"],["Alma","cuidado del alma","sym-soul"],["Planeta","cuidado del planeta","sym-right"],["Comunidad","creando comunidad","sym-tri"]];
+    var i=0,n=document.getElementById('pilarName'),s=document.getElementById('pilarSub');
+    function hl(id){document.querySelectorAll('.sym-active').forEach(function(e){e.classList.remove('sym-active');});var el=document.getElementById(id);if(el)el.classList.add('sym-active');}
+    if(n){n.style.transition=s.style.transition='opacity .26s ease';hl(pilares[0][2]);
+      setInterval(function(){i=(i+1)%pilares.length;n.style.opacity=0;s.style.opacity=0;setTimeout(function(){n.textContent=pilares[i][0];s.textContent=pilares[i][1];hl(pilares[i][2]);n.style.opacity=1;s.style.opacity=1;},260);},2600);}
+  })();
+  (function(){
+    document.querySelectorAll('[data-dd]').forEach(function(t){
+      t.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();
+        var dd=t.closest('.dd');var open=dd.classList.contains('open');
+        document.querySelectorAll('.dd.open').forEach(function(o){o.classList.remove('open');});
+        if(!open)dd.classList.add('open');
+      });
+    });
+    document.addEventListener('click',function(){document.querySelectorAll('.dd.open').forEach(function(o){o.classList.remove('open');});});
+  })();
+</script>
