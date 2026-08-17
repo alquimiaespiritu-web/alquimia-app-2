@@ -1,0 +1,183 @@
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Experiencias — Alquimia Soy</title>
+<style>
+  :root{
+    --beige:#F1E7D4; --beige-deep:#E9DBC1; --crema:#FBF5EA; --lav:#ECE4F1; --linea:#E4D7BF;
+    --oro:#C6A15B; --oro-osc:#A9803F; --oro-claro:#E0C385;
+    --amatista:#7A4E9B; --plum:#4B244A; --tinta:#41313F; --muted:#8C7B86; --esmeralda:#2E9E63;
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Nunito',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--beige);color:var(--tinta);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .aq{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.16;margin:0;color:var(--plum);text-wrap:balance}
+  p{margin:0}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;color:var(--oro-osc);font-weight:700}
+  .btn{display:inline-flex;align-items:center;gap:.5em;font-family:var(--sans);font-weight:700;font-size:.92rem;border:none;border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .15s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-amatista{background:var(--amatista);color:#fff}
+  .sello{display:block}
+
+  header.bar{position:sticky;top:0;z-index:20;background:#4B244A;border-bottom:1px solid rgba(224,195,133,.28)}
+  .bar-in{display:flex;align-items:center;gap:24px;height:70px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .sello{width:38px;height:38px}
+  .brand b{font-family:var(--serif);color:var(--oro-claro);font-size:1.15rem;letter-spacing:.14em;font-weight:500}
+  nav.main{display:flex;gap:26px;margin-left:14px}
+  nav.main a{color:#EEDFEB;font-size:.98rem;font-weight:600}
+  nav.main a:hover,nav.main a.active{color:var(--oro-claro)}
+  .bar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .selector{display:inline-flex;align-items:center;gap:6px;color:#EEDFEB;font-size:.9rem;font-weight:600;border:1px solid rgba(224,195,133,.34);border-radius:999px;padding:7px 13px}
+  .avatar{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--oro);display:grid;place-items:center;color:var(--oro-claro);flex:none}
+
+  .head{background:linear-gradient(180deg,#F5EEE0,var(--beige));padding:54px 0 30px;text-align:center}
+  .head h1{font-size:clamp(2.1rem,4vw,3rem);margin:10px 0 0}
+  .head .sub{color:var(--muted);font-size:1.1rem;margin:14px auto 0;max-width:54ch}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:34px 0 80px}
+  .exp{background:var(--crema);border:1px solid var(--linea);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s ease,box-shadow .15s ease}
+  .exp:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(75,36,74,.12)}
+  .exp .ph{height:180px;overflow:hidden;position:relative}
+  .exp .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+  .exp:hover .ph img{transform:scale(1.05)}
+  .exp .badge{position:absolute;top:12px;left:12px;background:rgba(75,36,74,.86);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:999px}
+  .exp .body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+  .etag{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--amatista);font-weight:700}
+  .exp h3{font-size:1.2rem;margin:8px 0 0}
+  .exp .desc{color:var(--muted);font-size:.94rem;margin-top:8px;flex:1}
+  .exp .meta{color:var(--muted);font-size:.85rem;margin-top:12px}
+  .exp .foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+  .exp .price{font-family:var(--serif);font-size:1.15rem;color:var(--oro-osc)}
+
+  footer{background:var(--beige-deep);border-top:1px solid var(--linea);padding:40px 0}
+  .foot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;color:var(--muted);font-size:.9rem}
+  .foot b{font-family:var(--serif);color:var(--plum);letter-spacing:.12em}
+  @media (max-width:900px){ .grid{grid-template-columns:repeat(2,1fr)} nav.main,.selector.pais{display:none} }
+  @media (max-width:600px){ .grid{grid-template-columns:1fr} }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sello" viewBox="0 0 200 200">
+    <g fill="none" stroke="#C6A15B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="100" cy="100" r="86"/>
+      <polygon points="100,14 174.5,143 25.5,143" fill="rgba(142,91,176,0.22)"/>
+      <line x1="82.7" y1="44" x2="117.3" y2="44"/>
+      <polygon points="43.4,118 72.3,118 57.85,143"/>
+      <polygon points="127.7,118 156.6,118 142.15,143"/>
+      <line x1="136.4" y1="133" x2="147.9" y2="133"/>
+      <circle cx="100" cy="100" r="33"/>
+      <line x1="67" y1="100" x2="92" y2="100"/>
+      <line x1="108" y1="100" x2="133" y2="100"/>
+      <circle cx="100" cy="100" r="8"/>
+      <circle cx="100" cy="100" r="3" fill="#C6A15B" stroke="none"/>
+    </g>
+  </symbol>
+</svg>
+
+<header class="bar">
+  <div class="aq bar-in">
+    <a class="brand" href="index.html"><svg class="sello"><use href="#sello"/></svg><b>ALQUIMIA&nbsp;SOY</b></a>
+    <nav class="main">
+      <a href="marketplace.html">Alquimistas</a>
+      <a href="experiencias.html" class="active">Experiencias</a>
+      <a href="#">Comunidad</a>
+      <a href="noticias.html">Blog</a>
+    </nav>
+    <div class="bar-right">
+      <span class="selector pais"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>CO</span>
+      <span class="selector">ES</span>
+      <a class="avatar" href="registro.html" title="Tu perfil"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<section class="head">
+  <div class="aq">
+    <span class="eyebrow">Experiencias</span>
+    <h1>Vive la transformación</h1>
+    <p class="sub">Talleres, retiros, círculos y rituales para reconectar contigo. Guiados por nuestros alquimistas.</p>
+  </div>
+</section>
+
+<div class="aq">
+  <div class="grid">
+
+    <div class="exp">
+      <div class="ph"><span class="badge">Taller</span><img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80" alt="Baño de sonido"></div>
+      <div class="body">
+        <span class="etag">Alma · Online y presencial</span>
+        <h3>Baño de sonido</h3>
+        <p class="desc">Una hora para soltar el ruido y volver a tu centro con cuencos y respiración.</p>
+        <div class="meta">Con Valentina Ríos · 60 min</div>
+        <div class="foot"><span class="price">€25</span><a class="btn btn-amatista" href="registro.html">Reservar</a></div>
+      </div>
+    </div>
+
+    <div class="exp">
+      <div class="ph"><span class="badge">Clase</span><img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80" alt="Yoga terapéutico"></div>
+      <div class="body">
+        <span class="etag">Cuerpo · Online</span>
+        <h3>Yoga terapéutico</h3>
+        <p class="desc">Movimiento suave y consciente para liberar tensión y habitar el cuerpo.</p>
+        <div class="meta">Con Lucía Fernández · 75 min</div>
+        <div class="foot"><span class="price">€18</span><a class="btn btn-amatista" href="registro.html">Reservar</a></div>
+      </div>
+    </div>
+
+    <div class="exp">
+      <div class="ph"><span class="badge">Retiro</span><img src="https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&q=80" alt="Retiro en la naturaleza"></div>
+      <div class="body">
+        <span class="etag">Alma · Presencial</span>
+        <h3>Retiro de fin de semana</h3>
+        <p class="desc">Dos días en la naturaleza para desconectar, meditar y reencontrarte.</p>
+        <div class="meta">Antioquia, Colombia · 2 días</div>
+        <div class="foot"><span class="price">€180</span><a class="btn btn-amatista" href="registro.html">Reservar</a></div>
+      </div>
+    </div>
+
+    <div class="exp">
+      <div class="ph"><span class="badge">Círculo</span><img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&q=80" alt="Círculo de conexión"></div>
+      <div class="body">
+        <span class="etag">Comunidad · Presencial</span>
+        <h3>Círculo de conexión</h3>
+        <p class="desc">Un espacio mensual para compartir, escuchar y sostenernos, sin juicios.</p>
+        <div class="meta">Medellín · Mensual</div>
+        <div class="foot"><span class="price">Aporte voluntario</span><a class="btn btn-amatista" href="registro.html">Unirme</a></div>
+      </div>
+    </div>
+
+    <div class="exp">
+      <div class="ph"><span class="badge">Taller</span><img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80" alt="Cocina consciente"></div>
+      <div class="body">
+        <span class="etag">Cuerpo · Online</span>
+        <h3>Cocina consciente</h3>
+        <p class="desc">Nutrir el cuerpo con simpleza: recetas reales para el día a día.</p>
+        <div class="meta">Con Amara Wellness · 90 min</div>
+        <div class="foot"><span class="price">€22</span><a class="btn btn-amatista" href="registro.html">Reservar</a></div>
+      </div>
+    </div>
+
+    <div class="exp">
+      <div class="ph"><span class="badge">Sesión</span><img src="https://images.unsplash.com/photo-1552693673-1bf958298935?w=800&q=80" alt="Ritual de bienestar"></div>
+      <div class="body">
+        <span class="etag">Cuerpo · Presencial</span>
+        <h3>Ritual de bienestar</h3>
+        <p class="desc">Un momento solo para ti: cuidado, pausa y presencia.</p>
+        <div class="meta">Utrecht · 60 min</div>
+        <div class="foot"><span class="price">€40</span><a class="btn btn-amatista" href="registro.html">Reservar</a></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="aq foot">
+    <span style="display:flex;align-items:center;gap:10px"><svg class="sello" style="width:34px;height:34px"><use href="#sello"/></svg><b>ALQUIMIA SOY</b></span>
+    <span>Fotos de ejemplo · reemplazables por las reales</span>
+  </div>
+</footer>
