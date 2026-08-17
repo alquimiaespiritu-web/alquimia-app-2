@@ -1,222 +1,517 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alquimia — El marketplace de emprendedores conscientes</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#2A152B">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Alquimia">
-<meta name="description" content="Alquimia es una comunidad y directorio curado para emprendedores conscientes de Europa y Latinoamérica, en torno al cuidado del cuerpo, la mente, el alma y el planeta. Donde el propósito se vuelve oro.">
-<meta property="og:title" content="Alquimia — Donde el propósito se vuelve oro">
-<meta property="og:description" content="Comunidad y directorio curado para emprendedores conscientes de Europa y Latinoamérica: cuerpo, mente, alma y planeta.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://alquimiasoy.com">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Alquimia",
-  "alternateName": "Alquimia Soy",
-  "url": "https://alquimiasoy.com",
-  "slogan": "Donde el propósito se vuelve oro",
-  "description": "Comunidad y directorio curado para emprendedores conscientes de Europa y Latinoamérica, en torno al cuidado del cuerpo, la mente, el alma y el planeta.",
-  "founder": { "@type": "Person", "name": "Mónica Varela" },
-  "areaServed": ["Europe", "Latin America"],
-  "knowsAbout": ["emprendimiento consciente", "bienestar integral", "sostenibilidad", "propósito", "marca personal"],
-  "sameAs": [
-    "https://www.tiktok.com/@alquimiasoy",
-    "https://www.instagram.com/alquimiasoy369"
-  ]
-}
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --beige:#F1E7D4; --beige-deep:#E9DBC1; --crema:#FBF5EA; --lav:#ECE4F1; --linea:#E4D7BF;
+    --oro:#C6A15B; --oro-osc:#A9803F; --oro-claro:#E0C385;
+    --amatista:#7A4E9B; --amatista-soft:#8E5BB0;
+    --plum:#4B244A; --tinta:#41313F; --muted:#8C7B86;
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Nunito',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--beige);color:var(--tinta);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .aq{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.14;text-wrap:balance;margin:0;color:var(--plum)}
+  p{margin:0}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--oro-osc);font-weight:700}
+  .btn{display:inline-flex;align-items:center;gap:.5em;font-family:var(--sans);font-weight:700;font-size:1rem;border:none;
+    border-radius:999px;padding:15px 30px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+  .btn-amatista{background:var(--amatista);color:#fff;box-shadow:0 10px 26px rgba(122,78,155,.26)}
+  .btn-oro{background:linear-gradient(180deg,var(--oro-claro),var(--oro));color:#4a300f;box-shadow:0 10px 26px rgba(198,161,91,.30)}
+  .btn:hover{transform:translateY(-2px)}
+  .sello{display:block}
+
+  /* barra */
+  header.bar{position:sticky;top:0;z-index:20;background:#4B244A;border-bottom:1px solid rgba(224,195,133,.28)}
+  .bar-in{display:flex;align-items:center;gap:24px;height:70px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .sello{width:38px;height:38px}
+  .brand b{font-family:var(--serif);color:var(--oro-claro);font-size:1.15rem;letter-spacing:.14em;font-weight:500}
+  nav.main{display:flex;gap:26px;margin-left:14px}
+  nav.main a{color:#EEDFEB;font-size:.98rem;font-weight:600}
+  nav.main a:hover{color:var(--oro-claro)}
+  .bar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .selector{display:inline-flex;align-items:center;gap:6px;color:#EEDFEB;font-size:.9rem;font-weight:600;
+    border:1px solid rgba(224,195,133,.34);border-radius:999px;padding:7px 13px;cursor:pointer}
+  .selector:hover{border-color:var(--oro-claro)}
+  .avatar{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--oro);display:grid;place-items:center;color:var(--oro-claro);flex:none}
+  .bar-note{max-width:var(--maxw);margin:0 auto;padding:6px 24px 0;font-size:.72rem;color:rgba(238,223,235,.6)}
+  .dd{position:relative}
+  .dd-trig{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+  .chev{transition:transform .2s ease}
+  .dd.open .chev{transform:rotate(180deg)}
+  .dd-menu{position:absolute;top:calc(100% + 12px);left:0;min-width:200px;background:#fff;border:1px solid var(--linea);
+    border-radius:14px;box-shadow:0 18px 44px rgba(42,21,43,.24);padding:8px;display:none;z-index:40}
+  .dd-menu.dd-right{left:auto;right:0}
+  .dd.open .dd-menu,.dd:hover .dd-menu{display:block}
+  .dd:hover .chev{transform:rotate(180deg)}
+  .dd-menu a{display:block;padding:9px 13px;border-radius:9px;color:var(--tinta);font-size:.93rem;font-weight:600}
+  .dd-menu a:hover{background:var(--lav);color:var(--amatista)}
+  .dd-menu .mut{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:6px 13px 4px}
+  .dd-sep{height:1px;background:var(--linea);margin:6px 6px}
+
+  /* hero */
+  .hero{background:linear-gradient(180deg,#F5EEE0 0%,var(--beige) 100%)}
+  .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:40px;align-items:center;padding:66px 24px 78px}
+  .hero-copy{max-width:540px}
+  .hero h1{font-size:clamp(2.3rem,4.8vw,3.9rem);margin:16px 0 0}
+  .hero h1 em{font-style:italic;color:var(--oro-osc)}
+  .hero .lede{font-size:clamp(1.05rem,1.7vw,1.22rem);color:var(--muted);max-width:44ch;margin:20px 0 0}
+  .primer-paso{margin-top:30px;background:#fff;border:1px solid var(--linea);border-radius:20px;padding:20px;max-width:520px;box-shadow:0 16px 42px rgba(75,36,74,.08)}
+  .primer-paso label{display:block;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--oro-osc);font-weight:700;margin-bottom:10px}
+  .primer-paso textarea{width:100%;min-height:60px;resize:none;background:var(--crema);border:1px solid var(--linea);border-radius:14px;
+    color:var(--tinta);font-family:var(--sans);font-size:1.02rem;padding:13px 15px}
+  .primer-paso textarea::placeholder{color:#b3a597}
+  .primer-paso textarea:focus{outline:none;border-color:var(--oro)}
+  .pp-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;flex-wrap:wrap}
+  .pp-note{font-size:.85rem;color:var(--muted)}
+  .hero-art{display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .hero-logo{width:100%;max-width:400px;height:auto}
+  .seal-g *{transition:stroke .4s ease,stroke-width .4s ease}
+  .sym-active{stroke:#F4DC93;stroke-width:6.5;filter:drop-shadow(0 0 5px rgba(244,220,147,.9))}
+  .hero-logo .wm{fill:var(--oro-osc);font-family:var(--serif)}
+  .hero-logo .soy-in{fill:var(--oro-osc);font-family:var(--serif)}
+  .pilar-caption{text-align:center;margin-top:6px;min-height:44px}
+  .pilar-caption b{display:block;font-family:var(--serif);font-size:1.35rem;color:var(--plum);letter-spacing:.14em;font-weight:500}
+  .pilar-caption span{font-size:.82rem;color:var(--muted);letter-spacing:.04em}
+
+  /* secciones */
+  section{padding:80px 0}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto 46px}
+  .sec-head h2{font-size:clamp(1.85rem,3.3vw,2.6rem);margin:12px 0 0}
+  .sec-head p{color:var(--muted);margin-top:14px;font-size:1.08rem}
+
+  .pasos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .paso{background:var(--crema);border:1px solid var(--linea);border-radius:20px;padding:30px 26px}
+  .paso .num{font-family:var(--serif);font-size:1rem;color:var(--oro-osc);border:1.5px solid var(--oro);border-radius:50%;width:38px;height:38px;display:grid;place-items:center;font-weight:600}
+  .paso .ico{margin:18px 0 14px;color:var(--amatista)}
+  .paso h3{font-size:1.3rem}
+  .paso p{color:var(--muted);margin-top:10px}
+
+  .alq{background:var(--lav)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
+  .chip{border:1px solid #d8c7e0;background:#fff;border-radius:999px;padding:9px 18px;font-weight:600;font-size:.95rem;color:var(--amatista)}
+  .pilares{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;margin-top:40px}
+  .pilar{display:flex;flex-direction:column;align-items:center;gap:9px;color:var(--plum);font-size:.9rem;font-weight:700;width:88px}
+  .pilar .ico{color:var(--amatista)}
+
+  .grid-alq{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .card{background:var(--crema);border:1px solid var(--linea);border-radius:20px;padding:24px;display:flex;flex-direction:column;transition:transform .15s ease,box-shadow .15s ease}
+  .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(75,36,74,.10)}
+  .card .top{display:flex;align-items:center;gap:13px;margin-bottom:8px}
+  .card .ava{width:52px;height:52px;border-radius:50%;background:linear-gradient(160deg,#efe6d3,#e6d3b6);display:grid;place-items:center;color:var(--plum);flex:none}
+  .verif{display:inline-flex;align-items:center;gap:5px;color:#2E9E63;font-size:.8rem;font-weight:700}
+  .card h3{font-size:1.18rem}
+  .tipo{font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amatista)}
+  .card .desc{color:var(--muted);font-size:.96rem;margin-top:4px}
+  .card .meta{color:var(--muted);font-size:.85rem;margin-top:6px}
+  .card .ver{margin-top:14px;color:var(--amatista);font-weight:700;font-size:.92rem}
+
+  .honestidad{background:var(--beige-deep);text-align:center}
+  .honestidad .lede{max-width:56ch;margin:16px auto 0;color:var(--muted);font-size:1.1rem}
+  .valores{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:40px}
+  .valor{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--linea);border-radius:999px;padding:12px 22px;font-weight:600;color:var(--plum)}
+  .valor svg{color:#2E9E63}
+
+  .cierre{background:linear-gradient(180deg,var(--lav),#F5EEE0);text-align:center;padding:92px 0}
+  .cierre .sello{width:70px;height:70px;margin:0 auto 22px}
+  .cierre h2{font-size:clamp(2.1rem,4.3vw,3.2rem)}
+  .cierre h2 em{font-style:italic;color:var(--oro-osc)}
+  .cierre p{color:var(--muted);margin:16px auto 30px;max-width:40ch}
+
+  footer{background:var(--beige-deep);color:var(--tinta);padding:52px 0 38px;border-top:1px solid var(--linea)}
+  .foot-top{display:flex;flex-wrap:wrap;gap:30px;justify-content:space-between;align-items:flex-start}
+  .foot-brand{display:flex;align-items:center;gap:12px}
+  .foot-brand .sello{width:44px;height:44px}
+  .foot-brand b{font-family:var(--serif);color:var(--plum);font-size:1.1rem;letter-spacing:.14em;display:block}
+  .foot-brand span{font-size:.9rem;color:var(--muted);font-style:italic}
+  .foot-links{display:flex;flex-wrap:wrap;gap:22px;font-size:.95rem;font-weight:600}
+  .foot-links a:hover{color:var(--amatista)}
+  .foot-bottom{margin-top:32px;padding-top:22px;border-top:1px solid var(--linea);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-size:.82rem;color:var(--muted)}
+
+  @media (prefers-reduced-motion:no-preference){
+    .breathe{animation:breathe 4.2s ease-in-out infinite;transform-origin:center}
+    @keyframes breathe{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(198,161,91,0))}50%{transform:scale(1.055);filter:drop-shadow(0 8px 22px rgba(198,161,91,.30))}}
+  }
+  @media (max-width:900px){
+    .pasos{grid-template-columns:1fr} .grid-alq{grid-template-columns:repeat(2,1fr)}
+    .hero-logo{max-width:330px}
+  }
+  @media (max-width:680px){
+    .hero-grid{grid-template-columns:1fr;text-align:center}
+    .hero-copy{max-width:none} .hero .lede{margin-left:auto;margin-right:auto} .primer-paso{margin-left:auto;margin-right:auto}
+    .hero-art{order:-1} .hero-logo{max-width:260px}
+    nav.main,.selector.pais{display:none}
+  }
+  @media (max-width:560px){ .grid-alq{grid-template-columns:1fr} .foot-bottom{flex-direction:column} }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sello" viewBox="0 0 200 200">
+    <g fill="none" stroke="#C6A15B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="100" cy="100" r="86"/>
+      <polygon points="100,14 174.5,143 25.5,143" fill="rgba(142,91,176,0.22)"/>
+      <line x1="82.7" y1="44" x2="117.3" y2="44"/>
+      <polygon points="43.4,118 72.3,118 57.85,143"/>
+      <polygon points="127.7,118 156.6,118 142.15,143"/>
+      <line x1="136.4" y1="133" x2="147.9" y2="133"/>
+      <circle cx="100" cy="100" r="33"/>
+      <line x1="67" y1="100" x2="92" y2="100"/>
+      <line x1="108" y1="100" x2="133" y2="100"/>
+      <circle cx="100" cy="100" r="8"/>
+      <circle cx="100" cy="100" r="3" fill="#C6A15B" stroke="none"/>
+    </g>
+  </symbol>
+</svg>
+
+<header class="bar">
+  <div class="aq bar-in">
+    <a class="brand" href="#"><svg class="sello"><use href="#sello"/></svg><b>ALQUIMIA&nbsp;SOY</b></a>
+    <nav class="main">
+      <div class="dd">
+        <a href="#" class="dd-trig" data-dd><span data-i18n="nav.alquimistas">Alquimistas</span><svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="dd-menu">
+          <div class="mut" data-i18n="dd.portipo">Por tipo</div>
+          <a href="marketplace.html" data-i18n="tipo.terapeutas">Terapeutas</a>
+          <a href="marketplace.html" data-i18n="tipo.coaches">Coaches</a>
+          <a href="marketplace.html" data-i18n="tipo.marcas">Marcas conscientes</a>
+          <a href="marketplace.html" data-i18n="tipo.proyectos">Proyectos de Planeta</a>
+          <div class="dd-sep"></div>
+          <a href="marketplace.html" data-i18n="alq.vertodos">Ver todos los alquimistas</a>
+        </div>
+      </div>
+      <a href="noticias.html" data-i18n="nav.blog">Blog</a>
+      <a href="#" data-i18n="nav.comunidad">Comunidad</a>
+    </nav>
+    <div class="bar-right">
+      <div class="dd">
+        <span class="selector pais dd-trig" data-dd><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg><span>CO</span><svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 9l6 6 6-6"/></svg></span>
+        <div class="dd-menu dd-right">
+          <div class="mut" data-i18n="dd.latam">Latinoamérica</div>
+          <a href="#">Colombia</a>
+          <a href="#">México</a>
+          <a href="#">Argentina</a>
+          <a href="#">Chile</a>
+          <div class="mut" data-i18n="dd.europa">Europa</div>
+          <a href="#">España</a>
+          <a href="#" data-i18n="pais.nl">Países Bajos</a>
+          <div class="dd-sep"></div>
+          <a href="#" data-i18n="dd.todospaises">Todos los países</a>
+        </div>
+      </div>
+      <div class="dd">
+        <span class="selector dd-trig" data-dd><span id="langLabel">ES</span><svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" style="margin-left:4px"><path d="M6 9l6 6 6-6"/></svg></span>
+        <div class="dd-menu dd-right">
+          <a href="#" data-lang="es">Español</a>
+          <a href="#" data-lang="en">English</a>
+          <a href="#" data-lang="nl">Nederlands</a>
+        </div>
+      </div>
+      <a class="avatar" href="registro.html" title="Tu perfil"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></a>
+    </div>
+  </div>
+  <div class="bar-note" data-i18n="barnote">Mockup de la home · el ícono del carrito solo aparece cuando hay una compra</div>
+</header>
+
+<section class="hero">
+  <div class="aq hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">El Primer Paso</span>
+      <h1 data-i18n-html="hero.h1">¿No sabes por dónde empezar?<br><em>Empieza por ti.</em></h1>
+      <p class="lede" data-i18n="hero.lede">Cuéntame cómo te sientes hoy. Una lectura íntima —hecha con IA y con alma— te conecta con el alquimista ideal para tu momento.</p>
+      <div class="primer-paso">
+        <label data-i18n="pp.label">Tu primer paso</label>
+        <textarea placeholder="Hoy me siento…" data-i18n-ph="pp.ph"></textarea>
+        <div class="pp-row">
+          <span class="pp-note" data-i18n="pp.note">Gratis · privado · sin juicios</span>
+          <a class="btn btn-amatista" href="evaluacion-ux.html"><span data-i18n="pp.btn">Iniciar mi lectura</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg class="hero-logo breathe" viewBox="130 30 420 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sello de Alquimia Soy">
+        <defs>
+          <path id="ladoIzq" d="M 217.0 249 L 329.6 54"/>
+          <path id="ladoDer" d="M 350.4 54 L 463.0 249"/>
+        </defs>
+        <polygon points="340,60 452.6,255 227.4,255" fill="rgba(142,91,176,0.14)" stroke="none"/>
+        <g fill="none" stroke="#C6A15B" class="seal-g">
+          <circle cx="340" cy="190" r="130" stroke-width="3.5"/>
+          <polygon id="sym-tri" points="340,60 452.6,255 227.4,255" stroke-width="3"/>
+          <line x1="310.6" y1="110" x2="369.4" y2="110" stroke-width="3"/>
+          <polygon id="sym-left" points="255.9,218 298.6,218 277.25,255" stroke-width="3"/>
+          <polygon id="sym-right" points="381.4,218 424.1,218 402.75,255" stroke-width="3"/>
+          <line x1="395.9" y1="243" x2="409.6" y2="243" stroke-width="3"/>
+          <circle id="sym-eye" cx="340" cy="190" r="50" stroke-width="3"/>
+          <line x1="290" y1="190" x2="330" y2="190" stroke-width="3"/>
+          <line x1="350" y1="190" x2="390" y2="190" stroke-width="3"/>
+          <circle id="sym-soul" cx="340" cy="190" r="10" stroke-width="3"/>
+        </g>
+        <circle cx="340" cy="190" r="3.8" fill="#C6A15B"/>
+        <g fill="#A9803F" font-family="Georgia, 'Times New Roman', serif">
+          <text font-size="17" letter-spacing="5"><textPath href="#ladoIzq" text-anchor="middle" startOffset="50%">ALQUIMIA</textPath></text>
+          <text font-size="16" letter-spacing="1.5"><textPath href="#ladoDer" text-anchor="middle" startOffset="50%">TRANSMUTACIÓN</textPath></text>
+          <text x="341" y="300" font-size="30" letter-spacing="11" text-anchor="middle">SOY</text>
+        </g>
+      </svg>
+      <div class="pilar-caption">
+        <b id="pilarName">Cuerpo</b>
+        <span id="pilarSub">cuidado del cuerpo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="aq">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="rec.eyebrow">Tu recorrido</span>
+      <h2 data-i18n="rec.title">De cómo te sientes, a cómo quieres estar</h2>
+      <p data-i18n="rec.sub">Tres pasos simples. Sin laberintos, sin diagnósticos fríos.</p>
+    </div>
+    <div class="pasos">
+      <div class="paso">
+        <div class="num">1</div>
+        <div class="ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8L18 15z"/></svg></div>
+        <h3>El Primer Paso</h3>
+        <p data-i18n="paso1.p">Escribe cómo te sientes. Recibes una lectura personalizada que te devuelve claridad, no etiquetas.</p>
+      </div>
+      <div class="paso">
+        <div class="num">2</div>
+        <div class="ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="9" r="3.2"/><circle cx="16" cy="9" r="3.2"/><path d="M2.5 20c0-3 2.5-4.6 5.5-4.6M21.5 20c0-3-2.5-4.6-5.5-4.6"/></svg></div>
+        <h3 data-i18n="paso2.h">Conecta con tu alquimista</h3>
+        <p data-i18n="paso2.p">Te presentamos a la persona o proyecto ideal para ti: terapeutas, coaches, marcas y proyectos de planeta.</p>
+      </div>
+      <div class="paso">
+        <div class="num">3</div>
+        <div class="ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21c0-5 0-8 0-11"/><path d="M12 10c-2.5 0-5-1.8-5-5 3 0 5 1.8 5 5z"/><path d="M12 13c2.5 0 5-1.8 5-5-3 0-5 1.8-5 5z"/></svg></div>
+        <h3 data-i18n="paso3.h">Transforma</h3>
+        <p data-i18n="paso3.p">Reserva sesiones, entra a la Escuela y camina acompañada por la Comunidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alq">
+  <div class="aq">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="nav.alquimistas">Alquimistas</span>
+      <h2 data-i18n="alq.title">Encuentra tu alquimista</h2>
+      <p data-i18n="alq.p">No es solo terapia. Un alquimista puede ser una terapeuta, una coach, una marca consciente o un proyecto que cuida el planeta. Todos, verificados de verdad.</p>
+    </div>
+    <div class="chips">
+      <span class="chip" data-i18n="tipo.terapeutas">Terapeutas</span>
+      <span class="chip" data-i18n="tipo.coaches">Coaches</span>
+      <span class="chip" data-i18n="tipo.marcas">Marcas conscientes</span>
+      <span class="chip" data-i18n="tipo.proyectos">Proyectos de Planeta</span>
+    </div>
+    <div class="pilares">
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="5" r="2.4"/><path d="M12 8v7M12 15l-4 5M12 15l4 5M6 11h12"/></svg></span><span data-i18n="pilar.cuerpo">Cuerpo</span></div>
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M12 6a2.6 2.6 0 0 0-4.8-1.4A2.5 2.5 0 0 0 4 7.2a2.7 2.7 0 0 0-.6 4.9A2.5 2.5 0 0 0 4.6 16 2.4 2.4 0 0 0 8 18.6 2.3 2.3 0 0 0 12 17.2z"/><path d="M12 6a2.6 2.6 0 0 1 4.8-1.4A2.5 2.5 0 0 1 20 7.2a2.7 2.7 0 0 1 .6 4.9A2.5 2.5 0 0 1 19.4 16 2.4 2.4 0 0 1 16 18.6 2.3 2.3 0 0 1 12 17.2z"/><path d="M12 6v11.2"/></svg></span><span data-i18n="pilar.mente">Mente</span></div>
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20c4-3 7-5.4 7-9a3.6 3.6 0 0 0-7-1.2A3.6 3.6 0 0 0 5 11c0 3.6 3 6 7 9z"/></svg></span><span data-i18n="pilar.alma">Alma</span></div>
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 2.5 14.1 0 17M12 3.5c-2.5 2.4-2.5 14.1 0 17"/></svg></span><span data-i18n="pilar.planeta">Planeta</span></div>
+      <div class="pilar"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="8" r="2.6"/><circle cx="17" cy="8" r="2.6"/><path d="M2 18c0-2.7 2.2-4.2 5-4.2M22 18c0-2.7-2.2-4.2-5-4.2M12 20c-2.2 0-3.6-1.4-3.6-3.2a3.6 3.6 0 0 1 7.2 0C15.6 18.6 14.2 20 12 20z"/></svg></span><span data-i18n="pilar.comunidad">Comunidad</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="aq">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="dest.eyebrow">Verificadas de verdad</span>
+      <h2 data-i18n="dest.title">Alquimistas destacados</h2>
+      <p data-i18n="dest.p">Personas y proyectos reales. Cada perfil pasa por una curaduría de confianza.</p>
+    </div>
+    <div class="grid-alq">
+      <div class="card">
+        <div class="top"><span class="ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></span><span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="verif.f">Verificada</span></span></div>
+        <span class="tipo" data-i18n="card1.tipo">Terapeuta · Alma</span>
+        <h3>Valentina Ríos</h3>
+        <p class="desc" data-i18n="card1.desc">Sanación con sonido y respiración consciente.</p>
+        <p class="meta">Medellín · Online</p>
+        <a class="ver" href="perfil-alquimista.html" data-i18n="card.ver">Ver perfil →</a>
+      </div>
+      <div class="card">
+        <div class="top"><span class="ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></span><span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="verif.m">Verificado</span></span></div>
+        <span class="tipo" data-i18n="card2.tipo">Coach · Mente</span>
+        <h3>Daniel Ocampo</h3>
+        <p class="desc" data-i18n="card2.desc">Propósito y claridad para emprender sin quemarte.</p>
+        <p class="meta">Utrecht · Online</p>
+        <a class="ver" href="perfil-alquimista.html" data-i18n="card.ver">Ver perfil →</a>
+      </div>
+      <div class="card">
+        <div class="top"><span class="ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8l8-4 8 4-8 4-8-4z"/><path d="M4 8v8l8 4 8-4V8"/></svg></span><span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="verif.f">Verificada</span></span></div>
+        <span class="tipo" data-i18n="card3.tipo">Marca · Planeta</span>
+        <h3>Raíz Consciente</h3>
+        <p class="desc" data-i18n="card3.desc">Cosmética natural, sin residuos y sin crueldad.</p>
+        <p class="meta" data-i18n="card3.meta">Colombia · Envíos a la UE</p>
+        <a class="ver" href="perfil-alquimista.html" data-i18n="card.ver">Ver perfil →</a>
+      </div>
+      <div class="card">
+        <div class="top"><span class="ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21c-4-3-7-5.4-7-9a3.6 3.6 0 0 1 7-1.2A3.6 3.6 0 0 1 19 12c0 3.6-3 6-7 9z"/></svg></span><span class="verif"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="verif.m">Verificado</span></span></div>
+        <span class="tipo" data-i18n="card4.tipo">Proyecto · Comunidad</span>
+        <h3>Colectivo Semilla</h3>
+        <p class="desc" data-i18n="card4.desc">Reforestación y educación ambiental en comunidad.</p>
+        <p class="meta" data-i18n="card4.meta">Latinoamérica</p>
+        <a class="ver" href="perfil-alquimista.html" data-i18n="card.ver">Ver perfil →</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px"><a class="btn btn-amatista" href="marketplace.html" data-i18n="alq.vertodos">Ver todos los alquimistas</a></div>
+  </div>
+</section>
+
+<section class="honestidad">
+  <div class="aq">
+    <span class="eyebrow" data-i18n="hon.eyebrow">Nuestro sello</span>
+    <h2 data-i18n="hon.title">La honestidad es el diferencial</h2>
+    <p class="lede" data-i18n="hon.p">Preferimos mostrar unos pocos alquimistas reales que presumir de cientos que no existen. Aquí cada perfil se verifica de verdad.</p>
+    <div class="valores">
+      <span class="valor"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="val1">Certificados verificados</span></span>
+      <span class="valor"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="val2">Perfiles reales, no inventados</span></span>
+      <span class="valor"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="val3">Sin cifras infladas</span></span>
+    </div>
+  </div>
+</section>
+
+<section class="cierre">
+  <div class="aq">
+    <div class="breathe"><svg class="sello"><use href="#sello"/></svg></div>
+    <h2 data-i18n-html="cierre.title">Todo empieza <em>por ti.</em></h2>
+    <p data-i18n="cierre.p">Un minuto contigo misma puede cambiar el rumbo. Da el primer paso.</p>
+    <a class="btn btn-amatista" href="evaluacion-ux.html"><span data-i18n="cierre.btn">Dar el primer paso</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="aq">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <svg class="sello"><use href="#sello"/></svg>
+        <div><b>ALQUIMIA&nbsp;SOY</b><span data-i18n="foot.lema">Transformar propósito en impacto</span></div>
+      </div>
+      <div class="foot-links">
+        <a href="marketplace.html" data-i18n="nav.alquimistas">Alquimistas</a>
+        <a href="#" data-i18n="foot.escuela">Escuela</a>
+        <a href="#" data-i18n="nav.comunidad">Comunidad</a>
+        <a href="#" data-i18n="foot.eventos">Eventos</a>
+        <a href="noticias.html" data-i18n="nav.blog">Blog</a>
+        <a href="contacto.html" data-i18n="foot.contacto">Contacto</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span data-i18n="foot.puente">Puente entre Latinoamérica y Europa</span>
+      <span data-i18n="foot.pilares">Cuerpo · Mente · Alma · Planeta · Comunidad</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var DICT = {
+    es:{
+      "nav.alquimistas":"Alquimistas","nav.blog":"Blog","nav.comunidad":"Comunidad",
+      "dd.portipo":"Por tipo","tipo.terapeutas":"Terapeutas","tipo.coaches":"Coaches","tipo.marcas":"Marcas conscientes","tipo.proyectos":"Proyectos de Planeta",
+      "alq.vertodos":"Ver todos los alquimistas","dd.latam":"Latinoamérica","dd.europa":"Europa","pais.nl":"Países Bajos","dd.todospaises":"Todos los países",
+      "barnote":"Mockup de la home · el ícono del carrito solo aparece cuando hay una compra",
+      "hero.h1":"¿No sabes por dónde empezar?<br><em>Empieza por ti.</em>",
+      "hero.lede":"Cuéntame cómo te sientes hoy. Una lectura íntima —hecha con IA y con alma— te conecta con el alquimista ideal para tu momento.",
+      "pp.label":"Tu primer paso","pp.ph":"Hoy me siento…","pp.note":"Gratis · privado · sin juicios","pp.btn":"Iniciar mi lectura",
+      "rec.eyebrow":"Tu recorrido","rec.title":"De cómo te sientes, a cómo quieres estar","rec.sub":"Tres pasos simples. Sin laberintos, sin diagnósticos fríos.",
+      "paso1.p":"Escribe cómo te sientes. Recibes una lectura personalizada que te devuelve claridad, no etiquetas.",
+      "paso2.h":"Conecta con tu alquimista","paso2.p":"Te presentamos a la persona o proyecto ideal para ti: terapeutas, coaches, marcas y proyectos de planeta.",
+      "paso3.h":"Transforma","paso3.p":"Reserva sesiones, entra a la Escuela y camina acompañada por la Comunidad.",
+      "alq.title":"Encuentra tu alquimista","alq.p":"No es solo terapia. Un alquimista puede ser una terapeuta, una coach, una marca consciente o un proyecto que cuida el planeta. Todos, verificados de verdad.",
+      "pilar.cuerpo":"Cuerpo","pilar.mente":"Mente","pilar.alma":"Alma","pilar.planeta":"Planeta","pilar.comunidad":"Comunidad",
+      "dest.eyebrow":"Verificadas de verdad","dest.title":"Alquimistas destacados","dest.p":"Personas y proyectos reales. Cada perfil pasa por una curaduría de confianza.",
+      "verif.f":"Verificada","verif.m":"Verificado","card.ver":"Ver perfil →",
+      "card1.tipo":"Terapeuta · Alma","card1.desc":"Sanación con sonido y respiración consciente.",
+      "card2.tipo":"Coach · Mente","card2.desc":"Propósito y claridad para emprender sin quemarte.",
+      "card3.tipo":"Marca · Planeta","card3.desc":"Cosmética natural, sin residuos y sin crueldad.","card3.meta":"Colombia · Envíos a la UE",
+      "card4.tipo":"Proyecto · Comunidad","card4.desc":"Reforestación y educación ambiental en comunidad.","card4.meta":"Latinoamérica",
+      "hon.eyebrow":"Nuestro sello","hon.title":"La honestidad es el diferencial","hon.p":"Preferimos mostrar unos pocos alquimistas reales que presumir de cientos que no existen. Aquí cada perfil se verifica de verdad.",
+      "val1":"Certificados verificados","val2":"Perfiles reales, no inventados","val3":"Sin cifras infladas",
+      "cierre.title":"Todo empieza <em>por ti.</em>","cierre.p":"Un minuto contigo misma puede cambiar el rumbo. Da el primer paso.","cierre.btn":"Dar el primer paso",
+      "foot.lema":"Transformar propósito en impacto","foot.escuela":"Escuela","foot.eventos":"Eventos","foot.contacto":"Contacto",
+      "foot.puente":"Puente entre Latinoamérica y Europa","foot.pilares":"Cuerpo · Mente · Alma · Planeta · Comunidad",
+      "pilares":[["Cuerpo","cuidado del cuerpo","sym-left"],["Mente","cuidado de la mente","sym-eye"],["Alma","cuidado del alma","sym-soul"],["Planeta","cuidado del planeta","sym-right"],["Comunidad","creando comunidad","sym-tri"]]
+    },
+    en:{
+      "nav.alquimistas":"Alchemists","nav.blog":"Blog","nav.comunidad":"Community",
+      "dd.portipo":"By type","tipo.terapeutas":"Therapists","tipo.coaches":"Coaches","tipo.marcas":"Conscious brands","tipo.proyectos":"Planet projects",
+      "alq.vertodos":"See all alchemists","dd.latam":"Latin America","dd.europa":"Europe","pais.nl":"Netherlands","dd.todospaises":"All countries",
+      "barnote":"Home mockup · the cart icon only appears when there's a purchase",
+      "hero.h1":"Not sure where to start?<br><em>Start with you.</em>",
+      "hero.lede":"Tell me how you feel today. An intimate reading —made with AI and with soul— connects you with the ideal alchemist for your moment.",
+      "pp.label":"Your first step","pp.ph":"Today I feel…","pp.note":"Free · private · no judgment","pp.btn":"Start my reading",
+      "rec.eyebrow":"Your journey","rec.title":"From how you feel, to how you want to be","rec.sub":"Three simple steps. No mazes, no cold diagnoses.",
+      "paso1.p":"Write how you feel. You get a personalized reading that gives you clarity, not labels.",
+      "paso2.h":"Connect with your alchemist","paso2.p":"We introduce you to the ideal person or project for you: therapists, coaches, brands and planet projects.",
+      "paso3.h":"Transform","paso3.p":"Book sessions, join the School and walk accompanied by the Community.",
+      "alq.title":"Find your alchemist","alq.p":"It's not just therapy. An alchemist can be a therapist, a coach, a conscious brand or a project that cares for the planet. All of them, truly verified.",
+      "pilar.cuerpo":"Body","pilar.mente":"Mind","pilar.alma":"Soul","pilar.planeta":"Planet","pilar.comunidad":"Community",
+      "dest.eyebrow":"Truly verified","dest.title":"Featured alchemists","dest.p":"Real people and projects. Every profile goes through a trust curation.",
+      "verif.f":"Verified","verif.m":"Verified","card.ver":"View profile →",
+      "card1.tipo":"Therapist · Soul","card1.desc":"Healing with sound and conscious breathing.",
+      "card2.tipo":"Coach · Mind","card2.desc":"Purpose and clarity to build without burning out.",
+      "card3.tipo":"Brand · Planet","card3.desc":"Natural cosmetics, zero waste and cruelty-free.","card3.meta":"Colombia · Ships to the EU",
+      "card4.tipo":"Project · Community","card4.desc":"Reforestation and environmental education in community.","card4.meta":"Latin America",
+      "hon.eyebrow":"Our seal","hon.title":"Honesty is the difference","hon.p":"We'd rather show a few real alchemists than boast of hundreds that don't exist. Here every profile is truly verified.",
+      "val1":"Verified certificates","val2":"Real profiles, not invented","val3":"No inflated numbers",
+      "cierre.title":"It all starts <em>with you.</em>","cierre.p":"A minute with yourself can change your course. Take the first step.","cierre.btn":"Take the first step",
+      "foot.lema":"Turning purpose into impact","foot.escuela":"School","foot.eventos":"Events","foot.contacto":"Contact",
+      "foot.puente":"A bridge between Latin America and Europe","foot.pilares":"Body · Mind · Soul · Planet · Community",
+      "pilares":[["Body","care of the body","sym-left"],["Mind","care of the mind","sym-eye"],["Soul","care of the soul","sym-soul"],["Planet","care of the planet","sym-right"],["Community","creating community","sym-tri"]]
+    },
+    nl:{
+      "nav.alquimistas":"Alchemisten","nav.blog":"Blog","nav.comunidad":"Gemeenschap",
+      "dd.portipo":"Op type","tipo.terapeutas":"Therapeuten","tipo.coaches":"Coaches","tipo.marcas":"Bewuste merken","tipo.proyectos":"Planeet-projecten",
+      "alq.vertodos":"Alle alchemisten","dd.latam":"Latijns-Amerika","dd.europa":"Europa","pais.nl":"Nederland","dd.todospaises":"Alle landen",
+      "barnote":"Home-mockup · het winkelmandje verschijnt alleen bij een aankoop",
+      "hero.h1":"Weet je niet waar te beginnen?<br><em>Begin bij jezelf.</em>",
+      "hero.lede":"Vertel me hoe je je vandaag voelt. Een intieme lezing —gemaakt met AI en met ziel— verbindt je met de ideale alchemist voor jouw moment.",
+      "pp.label":"Jouw eerste stap","pp.ph":"Vandaag voel ik me…","pp.note":"Gratis · privé · zonder oordeel","pp.btn":"Start mijn lezing",
+      "rec.eyebrow":"Jouw reis","rec.title":"Van hoe je je voelt, naar hoe je wilt zijn","rec.sub":"Drie eenvoudige stappen. Geen doolhof, geen koude diagnoses.",
+      "paso1.p":"Schrijf hoe je je voelt. Je krijgt een persoonlijke lezing die je helderheid geeft, geen etiketten.",
+      "paso2.h":"Verbind met jouw alchemist","paso2.p":"We stellen je voor aan de ideale persoon of project voor jou: therapeuten, coaches, merken en planeet-projecten.",
+      "paso3.h":"Transformeer","paso3.p":"Boek sessies, ga naar de School en loop begeleid door de Gemeenschap.",
+      "alq.title":"Vind jouw alchemist","alq.p":"Het is niet alleen therapie. Een alchemist kan een therapeut, een coach, een bewust merk of een project zijn dat voor de planeet zorgt. Allemaal, echt geverifieerd.",
+      "pilar.cuerpo":"Lichaam","pilar.mente":"Geest","pilar.alma":"Ziel","pilar.planeta":"Planeet","pilar.comunidad":"Gemeenschap",
+      "dest.eyebrow":"Echt geverifieerd","dest.title":"Uitgelichte alchemisten","dest.p":"Echte mensen en projecten. Elk profiel gaat door een vertrouwenscuratie.",
+      "verif.f":"Geverifieerd","verif.m":"Geverifieerd","card.ver":"Bekijk profiel →",
+      "card1.tipo":"Therapeut · Ziel","card1.desc":"Genezing met geluid en bewuste ademhaling.",
+      "card2.tipo":"Coach · Geest","card2.desc":"Doel en helderheid om te ondernemen zonder op te branden.",
+      "card3.tipo":"Merk · Planeet","card3.desc":"Natuurlijke cosmetica, zonder afval en diervriendelijk.","card3.meta":"Colombia · Verzending naar de EU",
+      "card4.tipo":"Project · Gemeenschap","card4.desc":"Herbebossing en milieueducatie in gemeenschap.","card4.meta":"Latijns-Amerika",
+      "hon.eyebrow":"Ons zegel","hon.title":"Eerlijkheid is het verschil","hon.p":"We tonen liever een paar echte alchemisten dan te pronken met honderden die niet bestaan. Hier wordt elk profiel echt geverifieerd.",
+      "val1":"Geverifieerde certificaten","val2":"Echte profielen, niet verzonnen","val3":"Geen opgeblazen cijfers",
+      "cierre.title":"Alles begint <em>bij jou.</em>","cierre.p":"Een minuut met jezelf kan je koers veranderen. Zet de eerste stap.","cierre.btn":"Zet de eerste stap",
+      "foot.lema":"Doel omzetten in impact","foot.escuela":"School","foot.eventos":"Evenementen","foot.contacto":"Contact",
+      "foot.puente":"Een brug tussen Latijns-Amerika en Europa","foot.pilares":"Lichaam · Geest · Ziel · Planeet · Gemeenschap",
+      "pilares":[["Lichaam","zorg voor het lichaam","sym-left"],["Geest","zorg voor de geest","sym-eye"],["Ziel","zorg voor de ziel","sym-soul"],["Planeet","zorg voor de planeet","sym-right"],["Gemeenschap","gemeenschap creëren","sym-tri"]]
+    }
+  };
+  var cur='es';
+  var pn=document.getElementById('pilarName'), ps=document.getElementById('pilarSub'), pi=0;
+  function hl(id){document.querySelectorAll('.sym-active').forEach(function(e){e.classList.remove('sym-active');});var el=document.getElementById(id);if(el)el.classList.add('sym-active');}
+  function renderPilar(){var arr=DICT[cur].pilares;var p=arr[pi%arr.length];if(pn){pn.textContent=p[0];ps.textContent=p[1];hl(p[2]);}}
+  function applyLang(l){
+    if(!DICT[l])return; cur=l; document.documentElement.lang=l; var d=DICT[l];
+    document.querySelectorAll('[data-i18n]').forEach(function(e){var v=d[e.getAttribute('data-i18n')];if(v!=null)e.textContent=v;});
+    document.querySelectorAll('[data-i18n-html]').forEach(function(e){var v=d[e.getAttribute('data-i18n-html')];if(v!=null)e.innerHTML=v;});
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(e){var v=d[e.getAttribute('data-i18n-ph')];if(v!=null)e.placeholder=v;});
+    var lbl=document.getElementById('langLabel');if(lbl)lbl.textContent=l.toUpperCase();
+    renderPilar();
+  }
+  if(pn){pn.style.transition=ps.style.transition='opacity .26s ease';
+    setInterval(function(){pi++;pn.style.opacity=0;ps.style.opacity=0;setTimeout(function(){renderPilar();pn.style.opacity=1;ps.style.opacity=1;},260);},2600);}
+  document.querySelectorAll('[data-lang]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();applyLang(a.getAttribute('data-lang'));document.querySelectorAll('.dd.open').forEach(function(o){o.classList.remove('open');});});});
+  document.querySelectorAll('[data-dd]').forEach(function(t){t.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var dd=t.closest('.dd');var open=dd.classList.contains('open');document.querySelectorAll('.dd.open').forEach(function(o){o.classList.remove('open');});if(!open)dd.classList.add('open');});});
+  document.addEventListener('click',function(){document.querySelectorAll('.dd.open').forEach(function(o){o.classList.remove('open');});});
+  applyLang('es');
 </script>
-</head>
-<body data-page="index">
-<div id="site-header"></div>
-<main>
-  <section class="hero">
-    <div class="hero-video" aria-hidden="true">
-      <video autoplay muted loop playsinline preload="metadata" poster="https://images.pexels.com/videos/10296172/pexels-photo-10296172.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280&amp;h=720&amp;fit=crop">
-        <source src="https://videos.pexels.com/video-files/10296172/10296172-hd_1920_1080_25fps.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow" data-i18n="idx.eyebrow">Marketplace de emprendedores conscientes</span>
-        <h1 data-i18n-html="idx.title">Donde el propósito<br>se vuelve <em>oro</em>.</h1>
-        <p class="lede" data-i18n="idx.lede">La plataforma digital que conecta a consumidores y emprendedores conscientes de Europa y Latinoamérica en torno al cuidado del cuerpo, la mente, el alma y el planeta. Damos visibilidad y clientes a negocios con propósito, e impulsamos el consumo consciente y sostenible.</p>
-        <div class="hero-cta">
-          <a href="marketplace.html" class="btn btn-gold btn-lg" data-i18n="idx.cta.explore">Explorar el marketplace</a>
-          <a href="registro.html" class="btn btn-ghost btn-lg" data-i18n="idx.cta.register">Regístrate</a>
-        </div>
-      </div>
-      <div class="glyph-stage">
-        <div class="halo"></div>
-        <svg class="logo-full" viewBox="130 30 420 320" aria-label="Logo Alquimia — transmutación">
-          <defs>
-            <path id="ladoIzq" d="M 217.0 249 L 329.6 54"/>
-            <path id="ladoDer" d="M 350.4 54 L 463.0 249"/>
-          </defs>
-          <g class="lf-logo">
-            <g id="outer" class="lf-enter lf-pop" style="animation-delay:0s">
-              <circle cx="340" cy="190" r="130" fill="none" stroke="#C6A15B" stroke-width="3.5"/>
-            </g>
-            <g id="aire" class="pillar lf-enter lf-top" style="animation-delay:.35s">
-              <polygon points="340,60 452.6,255 227.4,255" fill="#8E5BB0" fill-opacity=".2" stroke="#C6A15B" stroke-width="3"/>
-              <line x1="310.6" y1="110" x2="369.4" y2="110" stroke="#C6A15B" stroke-width="3"/>
-            </g>
-            <g id="agua" class="pillar lf-enter lf-left" style="animation-delay:.55s">
-              <polygon points="255.9,218 298.6,218 277.25,255" fill="none" stroke="#C6A15B" stroke-width="3"/>
-            </g>
-            <g id="tierra" class="pillar lf-enter lf-right" style="animation-delay:.55s">
-              <polygon points="381.4,218 424.1,218 402.75,255" fill="none" stroke="#C6A15B" stroke-width="3"/>
-              <line x1="395.9" y1="243" x2="409.6" y2="243" stroke="#C6A15B" stroke-width="3"/>
-            </g>
-            <g id="sal" class="pillar lf-enter lf-bottom" style="animation-delay:.8s">
-              <circle cx="340" cy="190" r="50" fill="none" stroke="#C6A15B" stroke-width="3"/>
-              <line x1="290" y1="190" x2="330" y2="190" stroke="#C6A15B" stroke-width="3"/>
-              <line x1="350" y1="190" x2="390" y2="190" stroke="#C6A15B" stroke-width="3"/>
-            </g>
-            <g id="sol" class="pillar lf-enter lf-pop" style="animation-delay:1.15s">
-              <circle cx="340" cy="190" r="10" fill="none" stroke="#C6A15B" stroke-width="3"/>
-              <circle class="dot" cx="340" cy="190" r="3.8" fill="#C6A15B"/>
-            </g>
-            <text class="lf-word" font-family="Georgia, 'Times New Roman', serif" font-size="17" letter-spacing="5" fill="#C6A15B"><textPath href="#ladoIzq" startOffset="50%" text-anchor="middle">ALQUIMIA</textPath></text>
-            <text class="lf-word" font-family="Georgia, 'Times New Roman', serif" font-size="16" letter-spacing="1.5" fill="#C6A15B"><textPath href="#ladoDer" startOffset="50%" text-anchor="middle">TRANSMUTACIÓN</textPath></text>
-            <text class="lf-word lf-soy" x="341" y="300" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" letter-spacing="11" fill="#C6A15B">SOY</text>
-          </g>
-        </svg>
-        <div class="logo-cap" id="logoCap"><span class="lc-name"></span><span class="lc-sub"></span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="band" style="text-align:center;background:radial-gradient(circle at 50% 0%,rgba(75,36,74,.35),var(--ink) 72%)">
-    <div class="wrap" id="reflexionCard"></div>
-  </section>
-
-  <section class="band">
-    <div class="wrap" style="text-align:center">
-      <span class="eyebrow" style="justify-content:center" data-i18n="cred.eyebrow">Ya en marcha</span>
-      <div class="steps-grid" style="margin-top:22px">
-        <div class="step" style="text-align:center">
-          <div style="font-size:48px;font-weight:600;color:var(--gold);line-height:1">3</div>
-          <p class="muted" style="margin-top:6px" data-i18n="cred.founders">emprendedoras fundadoras ya en Alquimia</p>
-        </div>
-        <div class="step" style="text-align:center">
-          <div class="num">✦</div>
-          <h3 data-i18n="cred.curation.t">Curaduría de confianza</h3>
-          <p data-i18n="cred.curation.d">Cada negocio entra por selección, no por volumen.</p>
-        </div>
-        <div class="step" style="text-align:center">
-          <div class="num">✦</div>
-          <h3 data-i18n="cred.bridge.t">Puente Europa ↔ Latinoamérica</h3>
-          <p data-i18n="cred.bridge.d">Conectamos la oferta consciente de Latinoamérica con clientes en Europa.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="band">
-    <div class="wrap">
-      <span class="eyebrow" data-i18n="cf.eyebrow">Cómo funciona</span>
-      <h2 style="font-size:clamp(24px,3vw,34px);font-weight:400;margin:14px 0 22px" data-i18n="cf.title">Cómo funciona Alquimia</h2>
-      <div class="cards2" style="align-items:start">
-        <div class="step">
-          <span class="eyebrow" data-i18n="cf.sellers.eyebrow">Para emprendedores</span>
-          <h3 style="font-size:22px;margin:10px 0 8px" data-i18n="cf.sellers.h">Muestra tu trabajo y encuentra a tu gente</h3>
-          <p data-i18n="cf.sellers.p">Crea tu perfil, publica tus productos o servicios y accede a clientes alineados con tus valores.</p>
-        </div>
-        <div class="step">
-          <span class="eyebrow" data-i18n="cf.buyers.eyebrow">Para compradores</span>
-          <h3 style="font-size:22px;margin:10px 0 8px" data-i18n="cf.buyers.h">Compra con sentido</h3>
-          <p data-i18n="cf.buyers.p">Descubre y apoya negocios con propósito, alineados con lo que te importa.</p>
-        </div>
-      </div>
-      <div class="row mt32"><a href="como-funciona.html" class="btn btn-ghost" data-i18n="home.seeHow">Ver cómo funciona</a></div>
-    </div>
-  </section>
-
-  <section class="band" style="background:radial-gradient(circle at 50% 0%,rgba(75,36,74,.28),var(--ink) 72%)">
-    <div class="wrap" style="max-width:820px">
-      <span class="eyebrow" data-i18n="ab.eyebrow">Nuestra esencia</span>
-      <h2 style="font-size:clamp(24px,3vw,34px);font-weight:400;margin:14px 0 12px" data-i18n="ab.what.h">¿Qué es Alquimia?</h2>
-      <p class="muted" style="max-width:64ch;margin-bottom:12px" data-i18n="ab.what.p1">Alquimia es un marketplace y una comunidad para emprendedores conscientes: personas que crean productos y servicios desde sus valores y quieren vivir de su propósito sin perder su esencia. En un mismo lugar reunimos a quienes ofrecen algo con alma y a quienes quieren comprar con sentido.</p>
-      <div class="row mt16"><a href="sobre.html" class="btn btn-ghost" data-i18n="home.seeAbout">Conócenos</a></div>
-    </div>
-  </section>
-
-  <section class="band">
-    <div class="wrap">
-      <span class="eyebrow" data-i18n="nav.news">Noticias</span>
-      <h2 style="font-size:clamp(24px,3vw,34px);font-weight:400;margin:14px 0 22px" data-i18n="idx.news.h">Lo último de Alquimia</h2>
-      <div class="news-carousel" id="newsCarousel">
-        <div class="nc-stage" id="ncStage">
-          <a class="news-card nc-card" data-pillar="Cuerpo" href="noticia-cuerpo.html">
-            <div class="band-top"><img class="news-photo" src="https://images.pexels.com/photos/7880192/pexels-photo-7880192.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=500&amp;fit=crop" alt="" loading="lazy"><span class="pill"><span data-i18n="cat.Cuerpo">Cuerpo</span> <span class="psym">🜔</span></span></div>
-            <div class="body"><h3>El bienestar de 2026 dejó de ser épico</h3><p>La gran tendencia en cuidado del cuerpo este año: agua, movimiento y descanso.</p><span class="more">Leer noticia →</span></div>
-          </a>
-          <a class="news-card nc-card" data-pillar="Mente" href="noticia-mente.html">
-            <div class="band-top"><img class="news-photo" src="https://images.pexels.com/photos/8436641/pexels-photo-8436641.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=500&amp;fit=crop" alt="" loading="lazy"><span class="pill"><span data-i18n="cat.Mente">Mente</span> <span class="psym">🜁</span></span></div>
-            <div class="body"><h3>Emprender te encanta. Tu cabeza no siempre opina lo mismo</h3><p>7 de cada 10 personas que emprenden han tenido problemas de salud mental ligados a su trabajo.</p><span class="more">Leer noticia →</span></div>
-          </a>
-          <a class="news-card nc-card" data-pillar="Alma" href="noticia-alma.html">
-            <div class="band-top"><img class="news-photo" src="https://images.pexels.com/photos/3628342/pexels-photo-3628342.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=500&amp;fit=crop" alt="" loading="lazy"><span class="pill"><span data-i18n="cat.Alma">Alma</span> <span class="psym">☉</span></span></div>
-            <div class="body"><h3>El propósito no paga las facturas, pero decide cuánto aguantas</h3><p>El propósito de verdad no se comunica, se vive.</p><span class="more">Leer noticia →</span></div>
-          </a>
-          <a class="news-card nc-card" data-pillar="Planeta" href="noticia-planeta.html">
-            <div class="band-top"><img class="news-photo" src="https://images.pexels.com/photos/7944412/pexels-photo-7944412.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=500&amp;fit=crop" alt="" loading="lazy"><span class="pill"><span data-i18n="cat.Planeta">Planeta</span> <span class="psym">🜃</span></span></div>
-            <div class="body"><h3>El planeta no te pide perfección. Te pide que dejes de mentir</h3><p>El 73% ya no cree a las marcas. Qué significa para quien emprende con propósito.</p><span class="more">Leer noticia →</span></div>
-          </a>
-          <a class="news-card nc-card" data-pillar="Comunidad" href="noticia-comunidad.html">
-            <div class="band-top"><img class="news-photo" src="https://images.pexels.com/photos/3830752/pexels-photo-3830752.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=500&amp;fit=crop" alt="" loading="lazy"><span class="pill"><span data-i18n="cat.Comunidad">Comunidad</span> <span class="psym">🜄</span></span></div>
-            <div class="body"><h3>Emprender en soledad es caro (y tu cerebro lo registra como amenaza)</h3><p>La conexión humana es el mayor predictor de salud y felicidad. La comunidad es un pilar.</p><span class="more">Leer noticia →</span></div>
-          </a>
-        </div>
-        <button class="nc-arw nc-prev" type="button" aria-label="Anterior">‹</button>
-        <button class="nc-arw nc-next" type="button" aria-label="Siguiente">›</button>
-        <div class="nc-dots" id="ncDots"></div>
-      </div>
-      <div class="row mt32"><a href="noticias.html" class="btn btn-ghost" data-i18n="idx.news.see">Ver todas las noticias</a></div>
-    </div>
-  </section>
-
-  <section class="band" id="registro" style="background:radial-gradient(circle at 50% 0%,rgba(75,36,74,.5),var(--ink) 62%);text-align:center">
-    <div class="wrap">
-      <span class="eyebrow" style="justify-content:center" data-i18n="idx.join.eyebrow">Únete a la primera comunidad</span>
-      <h2 style="font-size:clamp(30px,4.4vw,50px);font-weight:400;line-height:1.05;max-width:14em;margin:16px auto 6px" data-i18n-html="idx.join.title">Dos formas de entrar a <em style="font-style:italic;color:var(--gold)">Alquimia</em>.</h2>
-      <div class="doors">
-        <div class="door">
-          <div class="door-photo"><img src="https://images.pexels.com/photos/346746/pexels-photo-346746.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900&amp;h=560&amp;fit=crop" alt="" loading="lazy"></div>
-          <span class="eyebrow" data-i18n="idx.buyer.eyebrow">Comprador</span>
-          <h3 data-i18n="idx.buyer.title">Compra con propósito</h3>
-          <p data-i18n="idx.buyer.desc">Descubre y apoya negocios alineados con tus valores. Te avisamos cuando abramos.</p>
-          <a href="registro.html#comprador" class="btn btn-gold btn-block" data-i18n="idx.buyer.cta">Registrarme como comprador</a>
-        </div>
-        <div class="door">
-          <div class="door-photo"><img src="https://images.pexels.com/photos/276924/pexels-photo-276924.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900&amp;h=560&amp;fit=crop" alt="" loading="lazy"></div>
-          <span class="eyebrow" data-i18n="idx.seller.eyebrow">Vendedor</span>
-          <h3 data-i18n="idx.seller.title">Vende lo que haces</h3>
-          <p data-i18n="idx.seller.desc">Crea tu perfil, publica tus productos o servicios y recibe clientes alineados.</p>
-          <a href="create-profile.html" class="btn btn-gold btn-block" data-i18n="idx.seller.cta">Registrarme como vendedor</a>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-<div id="site-footer"></div>
-<script src="assets/i18n.js"></script>
-<script src="assets/data.js"></script>
-<script src="assets/app.js"></script>
-<script src="assets/pwa.js"></script>
-<script src="assets/reflexiones.js"></script>
-</body>
-</html>
