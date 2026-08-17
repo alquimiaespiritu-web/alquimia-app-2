@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketplace — Alquimia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="marketplace">
+<div id="site-header"></div>
+<main>
+  <div class="wrap">
+    <div class="page-head">
+      <span class="eyebrow" data-i18n="mk.eyebrow">El marketplace</span>
+      <h1 data-i18n="mk.title">Negocios con propósito, en un solo lugar.</h1>
+      <p class="sub" data-i18n="mk.sub">Productos y servicios de emprendedores conscientes. Toca cualquier publicación para verla y comprar o reservar.</p>
+    </div>
+    <div class="ai-finder">
+      <div class="ai-finder-head"><span class="ai-spark">✨</span><span data-i18n="ai.finder.q">¿No sabes por dónde empezar? Cuéntale a la IA qué necesitas y te recomienda.</span></div>
+      <div class="ai-finder-row">
+        <input id="aiQuery" type="text" placeholder="Ej. tengo ansiedad y busco algo natural para calmarme" data-i18n-ph="ai.finder.ph" aria-label="Describe lo que necesitas">
+        <button class="btn btn-gold" id="aiGo" data-i18n="ai.finder.go">Recomiéndame</button>
+      </div>
+      <div id="aiResults" class="ai-results" aria-live="polite"></div>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="mk-grid" id="feed"></div>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script src="assets/i18n.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script src="assets/pwa.js"></script>
+</body>
+</html>
