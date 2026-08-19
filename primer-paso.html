@@ -1,0 +1,343 @@
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<title>El Primer Paso — Alquimia Soy</title>
+<style>
+  :root{
+    --beige:#F1E7D4; --beige-deep:#E9DBC1; --crema:#FBF5EA; --lav:#ECE4F1; --linea:#E4D7BF;
+    --oro:#C6A15B; --oro-osc:#A9803F; --oro-claro:#E0C385;
+    --amatista:#7A4E9B; --plum:#4B244A; --tinta:#41313F; --muted:#8C7B86;
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Nunito',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --maxw:920px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--beige);color:var(--tinta);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .aq{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.16;margin:0;color:var(--plum);text-wrap:balance}
+  p{margin:0}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;color:var(--oro-osc);font-weight:700}
+  .btn{display:inline-flex;align-items:center;gap:.5em;font-family:var(--sans);font-weight:700;font-size:1rem;border:none;border-radius:999px;padding:14px 26px;cursor:pointer;transition:transform .15s ease;text-align:center}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-amatista{background:var(--amatista);color:#fff;box-shadow:0 10px 24px rgba(122,78,155,.26)}
+  .btn-gold{background:linear-gradient(180deg,var(--oro-claro),var(--oro));color:#4a300f}
+  .btn-ghost{background:transparent;border:1.6px solid var(--amatista);color:var(--amatista)}
+  .sello{display:block}
+
+  header.bar{position:sticky;top:0;z-index:20;background:#4B244A;border-bottom:1px solid rgba(224,195,133,.28)}
+  .bar-in{display:flex;align-items:center;gap:24px;height:70px;max-width:1140px;margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .sello{width:44px;height:38px}
+  .brand b{font-family:var(--serif);color:var(--oro-claro);font-size:1.15rem;letter-spacing:.14em;font-weight:500}
+  nav.main{display:flex;gap:26px;margin-left:14px}
+  nav.main a{color:#EEDFEB;font-size:.98rem;font-weight:600}
+  nav.main a:hover{color:var(--oro-claro)}
+  .bar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .avatar{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--oro);display:grid;place-items:center;color:var(--oro-claro);flex:none}
+
+  .top{background:linear-gradient(180deg,#F5EEE0,var(--beige));padding:52px 0 10px;text-align:center}
+  .top h1{font-size:clamp(2rem,4.4vw,3rem);margin:12px 0 0}
+  .top h1 em{font-style:italic;color:var(--oro-osc)}
+  .top .lede{color:var(--muted);font-size:1.08rem;margin:16px auto 0;max-width:52ch}
+
+  main{padding-bottom:70px}
+  .shared{background:var(--crema);border:1px solid var(--linea);border-radius:18px;padding:20px 22px;margin:34px 0}
+  .shared .lbl{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--oro-osc);font-weight:700;margin-bottom:8px}
+  .shared .txt{font-family:var(--serif);font-size:1.14rem;font-style:italic;color:var(--plum);line-height:1.5}
+  .shared .edit{margin-top:12px;font-size:.9rem;color:var(--amatista);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:none;border:none;padding:0}
+
+  .reading{background:#fff;border:1px solid var(--linea);border-radius:22px;padding:34px 32px;box-shadow:0 20px 50px rgba(75,36,74,.08)}
+  .pill-head{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+  .pill-ico{width:60px;height:60px;border-radius:16px;background:var(--lav);display:grid;place-items:center;color:var(--amatista);flex:none}
+  .pill-ico svg{width:34px;height:34px}
+  .pill-meta .k{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--oro-osc);font-weight:700}
+  .pill-meta h2{font-size:1.5rem;margin-top:2px}
+  .reading p.body{color:var(--tinta);font-size:1.08rem;margin-top:6px}
+
+  .rec{margin-top:40px}
+  .rec-head{text-align:center;margin-bottom:22px}
+  .rec-head h3{font-size:1.4rem}
+  .rec-head p{color:var(--muted);margin-top:6px}
+  .rec-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .rc{display:flex;align-items:center;gap:16px;background:var(--crema);border:1px solid var(--linea);border-radius:18px;padding:18px 20px;transition:transform .15s ease,box-shadow .15s ease}
+  .rc:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(75,36,74,.12)}
+  .rc .ava{width:54px;height:54px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--serif);font-size:1.2rem;color:#fff;background:linear-gradient(135deg,#8E5BB0,#4B244A)}
+  .rc .rn{font-family:var(--serif);font-size:1.14rem;color:var(--plum);font-weight:500}
+  .rc .rt{color:var(--muted);font-size:.92rem;margin-top:2px}
+  .rc .go{margin-left:auto;color:var(--amatista);flex:none}
+
+  .next{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .nx{background:var(--lav);border:1px solid #dccbe6;border-radius:18px;padding:22px 24px}
+  .nx h4{font-family:var(--serif);color:var(--plum);font-size:1.14rem;margin:0 0 6px}
+  .nx p{color:#6a5a67;font-size:.95rem;margin-bottom:14px}
+
+  .cierre{text-align:center;margin-top:46px}
+  .cierre .btn{margin:0 6px 10px}
+
+  /* estado inicial (sin texto) */
+  .ask{background:#fff;border:1px solid var(--linea);border-radius:22px;padding:32px;box-shadow:0 20px 50px rgba(75,36,74,.08);margin-top:34px}
+  .ask label{display:block;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--oro-osc);font-weight:700;margin-bottom:10px}
+  .ask textarea{width:100%;min-height:120px;resize:vertical;background:var(--crema);border:1px solid var(--linea);border-radius:14px;padding:14px 16px;font-family:var(--sans);font-size:1.02rem;color:var(--tinta)}
+  .ask textarea::placeholder{color:#b3a597}
+  .ask textarea:focus{outline:none;border-color:var(--oro);box-shadow:0 0 0 3px rgba(198,161,91,.16)}
+  .ask .row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;flex-wrap:wrap}
+  .ask .note{color:var(--muted);font-size:.9rem}
+  .hidden{display:none !important}
+
+  footer{background:var(--beige-deep);border-top:1px solid var(--linea);padding:38px 0;margin-top:20px}
+  .foot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;color:var(--muted);font-size:.9rem;max-width:1140px;margin:0 auto;padding:0 24px}
+  .foot b{font-family:var(--serif);color:var(--plum);letter-spacing:.12em}
+
+  @media (max-width:720px){
+    .rec-grid,.next{grid-template-columns:1fr}
+    nav.main{display:none}
+    .reading{padding:26px 22px}
+  }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sello" viewBox="130 30 420 320">
+    <defs>
+      <path id="ladoIzq" d="M 217.0 249 L 329.6 54"/>
+      <path id="ladoDer" d="M 350.4 54 L 463.0 249"/>
+    </defs>
+    <circle cx="340" cy="190" r="130" fill="none" stroke="#C6A15B" stroke-width="3.5"/>
+    <polygon points="340,60 452.6,255 227.4,255" fill="rgba(142,91,176,0.16)" stroke="#C6A15B" stroke-width="3"/>
+    <g fill="none" stroke="#C6A15B" stroke-width="3">
+      <line x1="310.6" y1="110" x2="369.4" y2="110"/>
+      <polygon points="255.9,218 298.6,218 277.25,255"/>
+      <polygon points="381.4,218 424.1,218 402.75,255"/>
+      <line x1="395.9" y1="243" x2="409.6" y2="243"/>
+      <circle cx="340" cy="190" r="50"/>
+      <line x1="290" y1="190" x2="330" y2="190"/>
+      <line x1="350" y1="190" x2="390" y2="190"/>
+      <circle cx="340" cy="190" r="10"/>
+    </g>
+    <circle cx="340" cy="190" r="3.8" fill="#C6A15B"/>
+    <g fill="#C6A15B" font-family="Georgia,'Times New Roman',serif">
+      <text font-size="17" letter-spacing="5"><textPath href="#ladoIzq" text-anchor="middle" startOffset="50%">ALQUIMIA</textPath></text>
+      <text font-size="16" letter-spacing="1.5"><textPath href="#ladoDer" text-anchor="middle" startOffset="50%">TRANSMUTACI&#211;N</textPath></text>
+      <text x="341" y="300" font-size="30" letter-spacing="11" text-anchor="middle">SOY</text>
+    </g>
+  </symbol>
+</svg>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="index.html"><svg class="sello"><use href="#sello"/></svg><b>ALQUIMIA&nbsp;SOY</b></a>
+    <nav class="main">
+      <a href="marketplace.html">Alquimistas</a>
+      <a href="experiencias.html">Experiencias</a>
+      <a href="comunidad.html">Comunidad</a>
+      <a href="noticias.html">Blog</a>
+    </nav>
+    <div class="bar-right">
+      <a class="avatar" href="registro.html" title="Tu perfil"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<section class="top">
+  <div class="aq">
+    <span class="eyebrow">El Primer Paso</span>
+    <h1 id="topTitle">Tu lectura <em>empieza aquí.</em></h1>
+    <p class="lede" id="topLede">Gracias por confiarnos cómo te sientes. Esto es lo que leemos en tus palabras: una guía cálida, no una etiqueta.</p>
+  </div>
+</section>
+
+<main>
+  <div class="aq">
+
+    <!-- ESTADO A: pedir texto (si llegó sin nada escrito) -->
+    <div class="ask hidden" id="askBox">
+      <label for="ppText">Cuéntame cómo te sientes hoy</label>
+      <textarea id="ppText" placeholder="Hoy me siento…"></textarea>
+      <div class="row">
+        <span class="note">Gratis · privado · sin juicios · esto no sale de tu navegador</span>
+        <button class="btn btn-amatista" id="readBtn">Iniciar mi lectura
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ESTADO B: resultado -->
+    <div id="resultBox" class="hidden">
+      <div class="shared" id="sharedBox">
+        <div class="lbl">Lo que compartiste</div>
+        <div class="txt" id="sharedText">—</div>
+        <button class="edit" id="editBtn">✎ Editar y volver a leer</button>
+      </div>
+
+      <div class="reading">
+        <div class="pill-head">
+          <div class="pill-ico" id="pillIco"></div>
+          <div class="pill-meta">
+            <div class="k">Tu pilar de hoy</div>
+            <h2 id="pillName">Alma</h2>
+          </div>
+        </div>
+        <h3 id="readTitle" style="font-size:1.3rem;margin-bottom:8px"></h3>
+        <p class="body" id="readBody"></p>
+      </div>
+
+      <div class="rec">
+        <div class="rec-head">
+          <h3>Alquimistas para tu momento</h3>
+          <p>Personas verificadas que acompañan justo lo que hoy pide tu atención.</p>
+        </div>
+        <div class="rec-grid" id="recGrid"></div>
+      </div>
+
+      <div class="next">
+        <div class="nx">
+          <h4>Vive una experiencia</h4>
+          <p>Encuentros, círculos y retiros para transformarte acompañada.</p>
+          <a class="btn btn-ghost" href="experiencias.html">Ver experiencias</a>
+        </div>
+        <div class="nx">
+          <h4>No camines sola</h4>
+          <p>Únete a la comunidad y encuentra apoyo real, sin juicios.</p>
+          <a class="btn btn-ghost" href="comunidad.html">Entrar a la comunidad</a>
+        </div>
+      </div>
+
+      <div class="cierre">
+        <a class="btn btn-gold" href="marketplace.html">Ver todos los alquimistas</a>
+        <button class="btn btn-ghost" id="againBtn">Hacer otra lectura</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="foot">
+    <span style="display:flex;align-items:center;gap:10px"><svg class="sello" style="width:40px;height:34px"><use href="#sello"/></svg><b>ALQUIMIA SOY</b></span>
+    <span>El Primer Paso · una guía, no un diagnóstico clínico</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var KEY = 'primerPaso';
+
+  // Símbolos alquímicos reales por pilar (mismos del home)
+  var ICON = {
+    cuerpo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><line x1="4" y1="12" x2="20" y2="12"/></svg>',
+    mente:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><polygon points="12,3 21,20 3,20"/><line x1="8.8" y1="9" x2="15.2" y2="9"/></svg>',
+    alma:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.1" fill="currentColor" stroke="none"/></svg>',
+    planeta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><polygon points="3,4 21,4 12,21"/><line x1="9.35" y1="16" x2="14.65" y2="16"/></svg>',
+    comunidad:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><polygon points="3,5 21,5 12,21"/></svg>'
+  };
+
+  var PILAR = {
+    cuerpo:{ name:'Cuerpo',
+      title:'Tu cuerpo te está pidiendo atención.',
+      body:'Lo que sientes hoy también vive en el cuerpo: el cansancio, la tensión, el sueño que no descansa. No es debilidad, es una señal. El primer paso puede ser volver a habitarte con suavidad —respirar, moverte, dormir, nutrirte—. Aquí hay alquimistas que acompañan ese regreso al cuerpo con calma y sin exigencias.' },
+    mente:{ name:'Mente',
+      title:'Tu mente ha estado cargando de más.',
+      body:'Se nota una mente que no para: pensamientos que dan vueltas, decisiones que pesan, un ruido que cuesta acallar. No estás sola en eso. El primer paso es poner un poco de orden y claridad, a tu ritmo. Estos alquimistas trabajan la mente y el propósito para que vuelvas a sentir foco y calma.' },
+    alma:{ name:'Alma',
+      title:'Algo en ti pide sentido y silencio.',
+      body:'Hay momentos en que lo que duele no tiene nombre: un vacío, una búsqueda, un duelo, la sensación de estar un poco perdida. Eso también merece cuidado. El primer paso es hacerle espacio a tu mundo interior, sin prisa. Estos alquimistas acompañan el alma con presencia y ternura.' },
+    planeta:{ name:'Planeta',
+      title:'Tu bienestar y el de la tierra van juntos.',
+      body:'Sientes el llamado de lo natural, de vivir más consciente y en coherencia con lo que te rodea. Ese vínculo con la tierra también sana. El primer paso es acercarte a prácticas y proyectos que cuidan el planeta mientras te cuidan a ti.' },
+    comunidad:{ name:'Comunidad',
+      title:'No tienes que sostenerlo sola.',
+      body:'Debajo de lo que sientes hay una necesidad muy humana: ser escuchada, acompañada, pertenecer. Buscar apoyo no te hace débil, te hace sabia. El primer paso es dejar de caminar en soledad. Aquí hay comunidad y personas listas para sostenerte.' }
+  };
+
+  // Alquimistas de ejemplo por pilar (2 c/u) → todos abren perfil-alquimista.html
+  var ALQ = {
+    cuerpo:[['Lucía Fernández','Terapeuta · Cuerpo','LF'],['Amara Wellness','Marca · Cuerpo','AW']],
+    mente:[['Daniel Ocampo','Coach · Mente','DO'],['María Torres','Coach · Mente','MT']],
+    alma:[['Valentina Ríos','Terapeuta · Alma','VR'],['Sofía Mejía','Terapeuta · Alma','SM']],
+    planeta:[['Raíz Consciente','Marca · Planeta','RC'],['Bosque Vivo','Proyecto · Planeta','BV']],
+    comunidad:[['Colectivo Semilla','Proyecto · Comunidad','CS'],['Tejido Común','Proyecto · Comunidad','TC']]
+  };
+
+  // Palabras clave → pilar (sin tildes, minúsculas)
+  var KW = {
+    cuerpo:['cansad','cansancio','agotad','dolor','cuerpo','energia','insomnio','dormir','sueno','sueño','salud','enferm','tension','peso','comer','aliment','movimiento','fatiga','espalda','cabeza','descans'],
+    mente:['ansiedad','ansios','estres','estresad','pensar','pensamiento','mente','claridad','decision','decidir','foco','concentr','confundid','preocup','miedo','bloque','trabajo','rumiar','control','abrumad','saturad','no puedo parar'],
+    alma:['vacio','vacío','sentido','alma','espiritu','espiritual','paz','triste','tristeza','perdid','proposito','propósito','conexion','conexión','meditar','calma','sanar','herida','duelo','llorar','desanim','desmotiv','existencia'],
+    planeta:['naturaleza','tierra','planeta','ambiente','sostenib','consciente','animal','huerta','campo','ecolog','plantas','mar','montana','montaña','aire libre'],
+    comunidad:['sola','soledad','solo','comunidad','apoyo','gente','amig','acompan','acompañ','pertenecer','familia','escuchar','compartir','grupo','aislad','nadie']
+  };
+  // prioridad para desempates
+  var ORDER = ['alma','mente','cuerpo','comunidad','planeta'];
+
+  function analiza(texto){
+    var t = (texto||'').toLowerCase();
+    var score = {cuerpo:0,mente:0,alma:0,planeta:0,comunidad:0};
+    Object.keys(KW).forEach(function(p){
+      KW[p].forEach(function(w){ if(t.indexOf(w)>-1) score[p]++; });
+    });
+    var best=null, bestN=0;
+    ORDER.forEach(function(p){ if(score[p]>bestN){bestN=score[p];best=p;} });
+    return { pilar: best, score: score, any: bestN>0 };
+  }
+
+  function esc(s){ return (s||'').replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];}); }
+
+  function render(texto){
+    var res = analiza(texto);
+    var pilar = res.pilar || 'alma';        // si no hay señal clara, empezamos por el Alma
+    var data = PILAR[pilar];
+
+    document.getElementById('sharedText').textContent = texto && texto.trim() ? '“'+texto.trim()+'”' : '—';
+    document.getElementById('sharedBox').style.display = (texto && texto.trim()) ? '' : 'none';
+    document.getElementById('pillIco').innerHTML = ICON[pilar];
+    document.getElementById('pillName').textContent = data.name;
+    document.getElementById('readTitle').textContent = data.title;
+    document.getElementById('readBody').textContent = res.any
+      ? data.body
+      : 'Leímos tus palabras con cuidado. Como cada persona es un mundo, empecemos suave por el Alma —tu centro— y desde ahí encontramos tu camino. '+data.body;
+
+    var grid = document.getElementById('recGrid');
+    grid.innerHTML = ALQ[pilar].map(function(a){
+      return '<a class="rc" href="perfil-alquimista.html">'
+        + '<span class="ava">'+a[2]+'</span>'
+        + '<span><span class="rn">'+a[0]+'</span><span class="rt">'+a[1]+'</span></span>'
+        + '<span class="go"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>'
+        + '</a>';
+    }).join('');
+
+    document.getElementById('askBox').classList.add('hidden');
+    document.getElementById('resultBox').classList.remove('hidden');
+    document.getElementById('topTitle').innerHTML = 'Tu lectura <em>está lista.</em>';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function showAsk(prefill){
+    document.getElementById('resultBox').classList.add('hidden');
+    document.getElementById('askBox').classList.remove('hidden');
+    document.getElementById('topTitle').innerHTML = 'Empecemos por <em>escucharte.</em>';
+    document.getElementById('topLede').textContent = 'Cuéntame en una o dos frases cómo te sientes hoy. No hay respuestas correctas: solo tú y el deseo de dar el primer paso.';
+    var ta = document.getElementById('ppText');
+    ta.value = prefill||''; ta.focus();
+  }
+
+  function leer(){
+    var texto = document.getElementById('ppText').value.trim();
+    try{ localStorage.setItem(KEY, texto); }catch(e){}
+    document.getElementById('topLede').textContent = 'Gracias por confiarnos cómo te sientes. Esto es lo que leemos en tus palabras: una guía cálida, no una etiqueta.';
+    render(texto);
+  }
+
+  document.getElementById('readBtn').addEventListener('click', leer);
+  document.getElementById('editBtn').addEventListener('click', function(){
+    var actual=''; try{ actual = localStorage.getItem(KEY)||''; }catch(e){}
+    showAsk(actual);
+  });
+  document.getElementById('againBtn').addEventListener('click', function(){
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    showAsk('');
+  });
+
+  // Arranque: si el home guardó un texto, mostramos la lectura; si no, pedimos el texto.
+  var saved=''; try{ saved = localStorage.getItem(KEY)||''; }catch(e){}
+  if(saved && saved.trim()) render(saved); else showAsk('');
+})();
+</script>
