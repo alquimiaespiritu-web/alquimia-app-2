@@ -11,5 +11,8 @@ node_modules/
 .env
 .env.*
 
+# Videos exportados con Remotion
+video/out/
+
 # Herramientas
 .claude/
