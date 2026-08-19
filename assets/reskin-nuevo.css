@@ -1,0 +1,56 @@
+/* ============================================================
+   Re-vestido CLARO para las páginas del motor viejo (app.js + styles.css).
+   Sobrescribe las variables del tema oscuro por la paleta nueva
+   (beige/morado) para que TODO el contenido se re-tematice solo,
+   sin tocar el HTML de cada página. La barra nueva la pone reskin-nuevo.js.
+   ============================================================ */
+:root{
+  --ink:#F1E7D4;            /* fondo de página: beige */
+  --ink-2:#FBF5EA;          /* superficies/tarjetas: crema */
+  --purple:#4B244A;         /* ciruela (acentos) */
+  --purple-soft:#ECE4F1;    /* lavanda suave */
+  --gold:#C6A15B;
+  --gold-2:#A9803F;         /* dorado más oscuro: mejor sobre fondo claro */
+  --parchment:#41313F;      /* texto principal: tinta oscura */
+  --parchment-dim:#6a5a67;  /* texto secundario */
+  --parchment-faint:#8C7B86;
+  --line:#E7D9C4;
+  --line-strong:#D9C7A8;
+}
+
+/* Fondo claro y borde sutil */
+html,body{background:var(--ink) !important;color:var(--parchment)}
+
+/* Arreglos donde el tema usaba --ink como "texto oscuro sobre dorado" */
+.btn-gold{color:#4a300f !important}
+::selection{background:var(--gold);color:#4a300f}
+
+/* Campos de formulario: fondo blanco, borde beige, texto oscuro (legibles sobre crema) */
+input:not([type=checkbox]):not([type=radio]),textarea,select{
+  background:#fff !important;border:1px solid #E4D7BF !important;color:#41313F !important;-webkit-text-fill-color:#41313F !important}
+input::placeholder,textarea::placeholder{color:#b3a597 !important}
+input:focus,textarea:focus,select:focus{border-color:#C6A15B !important;outline:none}
+
+/* Oculta el header viejo que inyecta el motor (usamos la barra nueva) */
+header.site,#site-header{display:none !important}
+
+/* Aclara el pie viejo si el motor lo pinta oscuro */
+footer.site,#site-footer{background:#E9DBC1 !important;color:var(--parchment)}
+footer.site a,#site-footer a{color:var(--purple)}
+
+/* Banner de cookies del motor: en morado, legible sobre beige */
+#cookieBanner{background:#4B244A !important;color:#EEDFEB !important;border-color:rgba(224,195,133,.3) !important}
+
+/* ===== Barra nueva (inyectada por reskin-nuevo.js) ===== */
+.nbar{background:#4B244A;border-bottom:1px solid rgba(224,195,133,.28);position:sticky;top:0;z-index:50}
+.naq{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:24px;height:70px}
+.nbrand{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nsello{width:44px;height:38px;display:block;flex:none}
+.nbrand b{font-family:"Fraunces",Georgia,serif;color:#E0C385;font-size:1.15rem;letter-spacing:.14em;font-weight:500}
+.nnav{display:flex;gap:26px;margin-left:14px}
+.nnav a{color:#EEDFEB;font-weight:600;font-size:.98rem;text-decoration:none}
+.nnav a:hover,.nnav a.active{color:#E0C385}
+.nright{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nsel{display:inline-flex;align-items:center;gap:6px;color:#EEDFEB;font-size:.9rem;font-weight:600;border:1px solid rgba(224,195,133,.34);border-radius:999px;padding:7px 13px}
+.navatar{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;color:#E0C385;flex:none}
+@media(max-width:760px){.nnav,.nsel.pais{display:none}}
