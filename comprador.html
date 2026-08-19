@@ -8,9 +8,51 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Re-vestido a diseño nuevo (beige/morado) — el motor (app.js) queda intacto */
+  #site-header,header.site,footer.site{display:none !important}
+  #cookieBanner{background:#4B244A !important;color:#EEDFEB !important;border-color:rgba(224,195,133,.3) !important}
+  body{background:#F1E7D4 !important;color:#41313F !important;font-family:'Nunito',ui-sans-serif,system-ui,sans-serif !important}
+  .nbar{background:#4B244A;border-bottom:1px solid rgba(224,195,133,.28);position:sticky;top:0;z-index:30}
+  .naq{max-width:1140px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:24px;height:70px}
+  .nbrand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .nsello{width:38px;height:38px;display:block}
+  .nbrand b{font-family:'Fraunces',Georgia,serif;color:#E0C385;font-size:1.15rem;letter-spacing:.14em;font-weight:500}
+  .nnav{display:flex;gap:26px;margin-left:14px}
+  .nnav a{color:#EEDFEB;font-weight:600;font-size:.98rem;text-decoration:none}
+  .nnav a:hover{color:#E0C385}
+  @media(max-width:760px){.nnav{display:none}}
+  main{padding-bottom:64px}
+  .page-head h1{color:#4B244A !important;font-family:'Fraunces',Georgia,serif !important}
+  .page-head p.sub{color:#8C7B86 !important}
+  .eyebrow{color:#A9803F !important;font-family:'Nunito',sans-serif !important;font-weight:700 !important}
+  .eyebrow::before{display:none !important}
+  .form-card{background:#FBF5EA !important;border:1px solid #E4D7BF !important;border-radius:20px !important}
+  .form-card label{color:#A9803F !important;font-weight:700 !important}
+  .form-card input,.form-card select,.form-card textarea{background:#fff !important;border:1px solid #E4D7BF !important;color:#41313F !important;border-radius:12px !important;-webkit-text-fill-color:#41313F !important}
+  .form-card input::placeholder,.form-card textarea::placeholder{color:#b3a597 !important}
+  .form-card input:focus,.form-card select:focus,.form-card textarea:focus{border-color:#C6A15B !important;outline:none;box-shadow:0 0 0 3px rgba(198,161,91,.16) !important}
+  .form-card input[type=file]{color:#7A4E9B !important}
+  .btn-gold{background:linear-gradient(180deg,#E0C385,#C6A15B) !important;color:#4a300f !important;border-radius:999px !important}
+  .btn-ghost{color:#7A4E9B !important;border:1.5px solid #7A4E9B !important;border-radius:999px !important}
+  .divider{background:#E4D7BF !important}
+  .note,.muted,.sub{color:#8C7B86 !important}
+  main a{color:#7A4E9B}
+  .avatar,.avatar.lg{background:#efe6d3 !important;color:#4B244A !important;border:1px solid #E4D7BF !important}
+  .upload span{color:#7A4E9B}
+  .pf-handle,.serif{color:#4B244A !important}
+  .pf-bio,.pf-live,.check{color:#41313F !important}
+  h1,h2,h3,h4{color:#4B244A !important}
+</style>
 </head>
 <body data-page="comprador">
 <div id="site-header"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sello" viewBox="0 0 200 200"><g fill="none" stroke="#C6A15B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><circle cx="100" cy="100" r="86"/><polygon points="100,14 174.5,143 25.5,143" fill="rgba(142,91,176,0.22)"/><line x1="82.7" y1="44" x2="117.3" y2="44"/><polygon points="43.4,118 72.3,118 57.85,143"/><polygon points="127.7,118 156.6,118 142.15,143"/><line x1="136.4" y1="133" x2="147.9" y2="133"/><circle cx="100" cy="100" r="33"/><line x1="67" y1="100" x2="92" y2="100"/><line x1="108" y1="100" x2="133" y2="100"/><circle cx="100" cy="100" r="8"/><circle cx="100" cy="100" r="3" fill="#C6A15B" stroke="none"/></g></symbol></svg>
+<header class="nbar"><div class="naq">
+  <a class="nbrand" href="index.html"><svg class="nsello"><use href="#sello"/></svg><b>ALQUIMIA&nbsp;SOY</b></a>
+  <nav class="nnav"><a href="marketplace.html">Alquimistas</a><a href="experiencias.html">Experiencias</a><a href="comunidad.html">Comunidad</a><a href="noticias.html">Blog</a></nav>
+</div></header>
 <main>
   <div class="wrap">
     <p class="note" style="padding-top:22px"><a href="marketplace.html" style="color:var(--parchment-dim)" data-i18n="ls.back">← Volver al marketplace</a></p>
